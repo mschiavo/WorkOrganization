@@ -1,0 +1,105 @@
+<h2>Pagina di Configurazione & Selezione Layout</h2>
+<p class="subtitle">Ottima idea: il motore logico e i dati rimangono unici e centralizzati, mentre l'interfaccia permette di cambiare layout in qualsiasi momento dalle Impostazioni o direttamente da un selettore rapido nell'header.</p>
+
+<div class="mockup" style="margin-bottom: 1.5rem;">
+  <div class="mockup-header" style="display:flex; justify-content:space-between; align-items:center;">
+    <span>⚙️ Centro Impostazioni & Regole Aziendali</span>
+    <span style="font-size:0.75rem; color:var(--accent);">Salvataggio automatico su Cloud</span>
+  </div>
+  <div class="mockup-body" style="background: var(--bg-primary); padding: 1.5rem;">
+    
+    <!-- Sezione 1: Layout & Aspetto -->
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">1. Layout dell'Applicazione & Tema</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Scegli quale modalità di visualizzazione usare come predefinita. Puoi anche passare da una all'altra rapidamente con l'icona nell'header.</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <div style="border: 2px solid var(--accent); background: var(--selected-bg); border-radius: 8px; padding: 10px; cursor: pointer;">
+          <div style="font-weight: 600; font-size: 0.85rem; color: var(--accent);">📑 A. A Schede (Tabbed)</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Pianificazione mese e Registro timbrature separati a tutto schermo.</div>
+        </div>
+        <div style="border: 1px solid var(--border); background: var(--bg-primary); border-radius: 8px; padding: 10px; cursor: pointer;">
+          <div style="font-weight: 600; font-size: 0.85rem;">🪟 B. Split Master-Detail</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Calendario a sinistra, dettaglio giorno attivo e timer a destra.</div>
+        </div>
+        <div style="border: 1px solid var(--border); background: var(--bg-primary); border-radius: 8px; padding: 10px; cursor: pointer;">
+          <div style="font-weight: 600; font-size: 0.85rem;">📊 C. Smart Sheet</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Widget "Oggi" in primo piano e tabella mensile fluida.</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1rem; display:flex; gap: 15px; align-items:center; font-size: 0.85rem;">
+        <span style="font-weight: 500;">Tema Interfaccia:</span>
+        <label><input type="radio" name="theme" checked> Dark Tecnologico</label>
+        <label><input type="radio" name="theme"> Light Pulito</label>
+        <label><input type="radio" name="theme"> Automatico (OS)</label>
+      </div>
+    </div>
+
+    <!-- Sezione 2: Parametri Regole Smart & Presenze -->
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">2. Vincoli & Parametri Smart Working</h3>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 0.85rem;">
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Massimo giorni Smart al mese:</label>
+          <input type="number" value="10" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Minimo giorni Presenza a settimana:</label>
+          <input type="number" value="1" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Max giorni Smart a settimana:</label>
+          <input type="number" value="4" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div style="display:flex; align-items:center; gap: 8px; padding-top: 18px;">
+          <input type="checkbox" id="ferieComp" disabled>
+          <label for="ferieComp">Ferie compensano la presenza (Disattivo da policy)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione 3: Parametri Orari, Tolleranze & Buoni -->
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">3. Orari, Banca Ore & Valori Buoni Pasto</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 0.85rem;">
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Ore giornaliere base:</label>
+          <input type="text" value="08:00" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Ore uscita ridotta:</label>
+          <input type="text" value="07:00" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Pausa minima obbligatoria:</label>
+          <input type="text" value="00:30" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Recupero max/giorno banca ore:</label>
+          <input type="text" value="01:00" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Costo buono mensa dipendente (€):</label>
+          <input type="number" step="0.10" value="1.50" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+        <div>
+          <label style="display:block; color:var(--text-secondary); margin-bottom: 4px;">Valore buono smart maturate (€):</label>
+          <input type="number" step="0.50" value="8.00" style="width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background:var(--bg-primary); color:var(--text-primary);">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione 4: Dati & Backup -->
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;">
+      <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">4. Database Cloud & Portabilità Dati</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">I tuoi dati risiedono nel tuo database Supabase crittografato. Puoi anche esportarli in qualsiasi momento.</p>
+      <div style="display:flex; gap: 10px;">
+        <button style="background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;">📥 Esporta Backup JSON</button>
+        <button style="background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary); padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;">📊 Esporta Excel (.xlsx)</button>
+        <button style="background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary); padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;">🔄 Sincronizza Adesso</button>
+      </div>
+    </div>
+
+  </div>
+</div>

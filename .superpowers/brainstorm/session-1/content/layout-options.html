@@ -1,0 +1,106 @@
+<h2>WorkOrganizer: Architettura UI & Layout dell'Applicazione</h2>
+<p class="subtitle">Abbiamo due anime principali: la <strong>Pianificazione del Calendario Mensile</strong> (con vincoli e alert smart) e il <strong>Registro Timbrature & Banca Ore</strong> (con orari di uscita dinamici, pause e buoni pasto). Come preferisci strutturare la navigazione e il flusso quotidiano?</p>
+
+<div class="options">
+  <div class="option" data-choice="tabbed" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content" style="width: 100%;">
+      <h3>Layout a Schede Tematiche (Tab Navigation)</h3>
+      <p style="margin-bottom: 0.8rem;">Header unificato con navigazione mese (`&lt; Ottobre 2026 &gt;`) e KPI globali sempre visibili (Smart 10/10, Banca Ore trimestrale, Buoni Pasto). Due viste dedicate ad alto focus: <strong>"Pianificazione Mese"</strong> (griglia calendario a blocchi) e <strong>"Registro Timbrature"</strong> (tabella orari completa con calcoli ed esportazione).</p>
+      
+      <!-- Mini Mockup Tabbed -->
+      <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px;">
+          <div style="font-weight: 700; font-size: 0.95rem; display:flex; align-items:center; gap: 8px;">
+            <span style="background: var(--accent); color: white; border-radius: 4px; padding: 2px 6px; font-size: 0.75rem;">WORK ORGANIZER</span>
+            <span>&larr; Ottobre 2026 &rarr;</span>
+          </div>
+          <div style="display:flex; gap: 12px; font-size: 0.8rem;">
+            <span style="color: var(--success); font-weight: 600;">● Smart: 10/10 OK</span>
+            <span style="color: var(--accent); font-weight: 600;">● Banca Ore Q4: +1h 45m</span>
+            <span>● Buoni Smart: 10 (80€)</span>
+          </div>
+        </div>
+        <div style="display:flex; gap: 8px; margin-bottom: 8px;">
+          <span style="background: var(--bg-secondary); border: 1px solid var(--accent); color: var(--accent); font-weight: 600; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem;">📅 Calendario & Pianificazione</span>
+          <span style="background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 12px; border-radius: 6px; font-size: 0.8rem;">⏱️ Registro Timbrature & Saldi</span>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 8px; border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); text-align: center;">
+          Vista dedicata a schermo intero con spazio ottimale per tabelle dense, indicatori settimanali e grafici di quadratura.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="split" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content" style="width: 100%;">
+      <h3>Dashboard All-in-One Split (Master-Detail interattivo)</h3>
+      <p style="margin-bottom: 0.8rem;">In una sola schermata: a sinistra il <strong>Calendario Mensile</strong> con badge colorati e alert vincoli per ogni settimana; a destra un <strong>Pannello Dettaglio Giornaliero</strong> che si aggiorna cliccando su qualsiasi giorno, con inserimento rapido delle timbrature, timer uscita calcolata (7h/8h), switch buono pasto e stato banca ore in tempo reale.</p>
+      
+      <!-- Mini Mockup Split -->
+      <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px;">
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 10px;">
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 8px;">
+            <div style="font-weight: 600; font-size: 0.8rem; margin-bottom: 6px; display:flex; justify-content:space-between;">
+              <span>Mese: Ottobre 2026</span>
+              <span style="font-size: 0.7rem; color: var(--success);">10 Smart / 8 Presenze</span>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 0.7rem; text-align:center;">
+              <span style="font-weight:600; color:var(--text-secondary)">L</span><span style="font-weight:600; color:var(--text-secondary)">M</span><span style="font-weight:600; color:var(--text-secondary)">M</span><span style="font-weight:600; color:var(--text-secondary)">G</span><span style="font-weight:600; color:var(--text-secondary)">V</span><span style="font-weight:600; color:var(--text-secondary)">S</span><span style="font-weight:600; color:var(--text-secondary)">D</span>
+              <span style="background: #e3f2fd; color: #0d47a1; border-radius: 3px; padding: 2px;">1 Pres</span>
+              <span style="background: #e8f5e9; color: #1b5e20; border-radius: 3px; padding: 2px;">2 Smart</span>
+              <span style="background: #fff3e0; color: #e65100; border-radius: 3px; padding: 2px;">3 Idea</span>
+              <span style="background: #e3f2fd; color: #0d47a1; border-radius: 3px; padding: 2px;">4 Pres</span>
+              <span style="background: #e8f5e9; color: #1b5e20; border-radius: 3px; padding: 2px;">5 Smart</span>
+              <span style="color:var(--text-secondary)">6</span><span style="color:var(--text-secondary)">7</span>
+            </div>
+            <div style="margin-top: 6px; font-size: 0.7rem; color: var(--success);">✓ Settimana 41: Regole rispettate (1 Presenza, 2 Smart)</div>
+          </div>
+          <div style="background: var(--bg-secondary); border: 1px solid var(--accent); border-radius: 6px; padding: 8px;">
+            <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent); margin-bottom: 4px;">Giovedì 1 Ottobre (Selezionato)</div>
+            <div style="font-size: 0.7rem; line-height: 1.4;">
+              <div>Entrata: <strong>08:01</strong> &rarr; Uscita Pranzo: <strong>12:06</strong></div>
+              <div>Rientro: <strong>12:35</strong> (Pausa 30m) &rarr; Uscita: <strong>17:36</strong></div>
+              <div style="color: var(--success); font-weight: 600; margin-top: 4px;">Uscita prev. 8h: 16:31 | 7h: 15:31</div>
+              <div style="margin-top: 2px;">Lavorato: <strong>9h 05m</strong> (Delta: <span style="color:var(--success)">+1h 05m</span>)</div>
+              <div>Mensa usata: <strong>Sì (1,50€)</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="smart-sheet" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content" style="width: 100%;">
+      <h3>Visualizzazione "Smart Sheet" (Tabellare Continua con Widget Oggi)</h3>
+      <p style="margin-bottom: 0.8rem;">Un layout orientato all'efficienza quotidiana: in cima un <strong>Widget "Oggi"</strong> che ti permette di timbrare/modificare subito la giornata corrente con un clic e vedere l'orario di uscita teorico. Sotto, una tabella fluida e densa con visual switch (vista Lista Giorni vs vista Griglia Calendario) che racchiude tutte le colonne del mese con filtri e calcolo automatico.</p>
+      
+      <!-- Mini Mockup Widget -->
+      <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px;">
+        <div style="background: linear-gradient(135deg, rgba(10,132,255,0.1), rgba(52,199,89,0.1)); border: 1px solid var(--accent); border-radius: 8px; padding: 10px; display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <div>
+            <div style="font-size: 0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-secondary);">OGGI • MERCOLEDÌ 4 NOVEMBRE</div>
+            <div style="font-size: 1rem; font-weight:700;">Presenza Ufficio • Ingressi: 08:15 &bull; 12:45</div>
+            <div style="font-size: 0.8rem; color: var(--accent); font-weight: 600;">Uscita minima 7h: 15:45 | Uscita standard 8h: 16:45</div>
+          </div>
+          <button style="background: var(--accent); color: white; border:none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor:pointer;">Timbra Uscita</button>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 8px; border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); text-align: center;">
+          Tabella mensile scrollabile con tutte le 31 righe del mese: Stato, Entrata, Pranzo, Uscita, Delta Banca Ore, Buono Pasto.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>Caratteristiche Chiave Condivise</h3>
+  <ul style="color: var(--text-secondary); font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
+    <li><strong>Design Moderno & Tecnologico:</strong> Interfaccia pulita e scattante con supporto automatico Dark/Light Mode, glassmorphism leggero sui widget di riepilogo e micro-interazioni fluide.</li>
+    <li><strong>Sincronizzazione Automatica:</strong> Il completamento delle timbrature reali aggiorna e convalida in automatico il calendario mensile (es. trasformazione automatica da <code>Idea Smart</code> a <code>Smart</code> o <code>Presenza</code>).</li>
+    <li><strong>Banca Ore & Buoni Pasto sempre quadrati:</strong> Calcolo immediato di straordinari/recuperi e bilancio economico della mensa e dei buoni smart.</li>
+  </ul>
+</div>
