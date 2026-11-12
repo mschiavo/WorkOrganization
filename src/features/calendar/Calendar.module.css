@@ -1,0 +1,516 @@
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.calendarContainer[data-compact="true"] {
+  gap: 0.75rem;
+}
+
+.calendarContainer[data-compact="true"] .dayCard {
+  min-height: 56px;
+  padding: 0.35rem 0.45rem;
+}
+
+.calendarContainer[data-compact="true"] .statusBadge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.3rem;
+}
+
+/* Weekday header */
+.weekdayHeaderRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.25rem;
+}
+
+.weekdayHeaderCell {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.weekdayHeaderCellWeekend {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.calendarContainer[data-compact="true"] .weekdayHeaderRow {
+  gap: 0.35rem;
+  padding: 0.2rem 0;
+  margin-bottom: 0.15rem;
+}
+
+.calendarContainer[data-compact="true"] .weekdayHeaderCell {
+  font-size: 0.72rem;
+  padding: 0.1rem 0;
+}
+
+/* Week rows */
+.weeksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.weeksContainerCompact {
+  gap: 0.35rem;
+}
+
+.weekRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0.65rem;
+}
+
+.weekRowCompact {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 0.15rem;
+}
+
+.weekSummaryWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.weekSummaryCompact {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  border-bottom: none;
+}
+
+.weekDaysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.daysGridCompact {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+}
+
+/* Day card */
+.dayCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 86px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+
+.dayCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.dayCardCompact {
+  min-height: 48px;
+  height: 52px;
+  padding: 0.25rem 0.35rem;
+  border-radius: var(--radius-sm);
+}
+
+.dayCardCompact:hover {
+  transform: none;
+}
+
+.dayCardCompact .cardHeader {
+  margin-bottom: 0.1rem;
+}
+
+.dayCardCompact .dayNumber {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.dayCardCompact .statusBadge {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.dayCard[data-selected="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+.dayCard[data-weekend="true"] {
+  background-color: rgba(0, 0, 0, 0.12);
+  border-style: dashed;
+}
+
+.dayCard[data-today="true"] {
+  border-left: 3px solid var(--accent);
+}
+
+.dayCard[data-today="true"] .dayNumber {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.dayCard[data-outside-month="true"] {
+  opacity: 0.35;
+  background-color: var(--bg-primary);
+  filter: grayscale(40%);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dayNumber {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.headerBadges {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.confirmedIcon {
+  font-size: 0.75rem;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.notesIcon {
+  font-size: 0.75rem;
+  cursor: help;
+  opacity: 0.8;
+}
+
+.holidayBadge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  padding: 0.05rem 0.3rem;
+  border-radius: var(--radius-sm);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.statusBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid transparent;
+}
+
+.statusBadge[data-status="presenza"] {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.statusBadge[data-status="smart"] {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.statusBadge[data-status="idea_smart"] {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.statusBadge[data-status="ferie"] {
+  background-color: rgba(139, 92, 246, 0.25);
+  color: #c084fc;
+  border-color: rgba(139, 92, 246, 0.45);
+}
+
+.statusBadge[data-status="idea_ferie"] {
+  background-color: rgba(192, 132, 252, 0.2);
+  color: #e9d5ff;
+  border: 1px dashed rgba(192, 132, 252, 0.5);
+}
+
+.statusBadge[data-status="chiusura"] {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.statusBadge[data-status="non_lavorativo"] {
+  background-color: rgba(100, 116, 139, 0.2);
+  color: #94a3b8;
+  border-color: rgba(100, 116, 139, 0.4);
+}
+
+.statusBadge[data-status="empty"] {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+}
+
+.notesExcerpt {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Week summary badge */
+.weekSummaryBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.weekSummaryBadge[data-compliant="true"] {
+  background-color: rgba(52, 199, 89, 0.15);
+  color: #34c759;
+  border-color: rgba(52, 199, 89, 0.3);
+}
+
+.weekSummaryBadge[data-compliant="false"] {
+  background-color: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+  border-color: rgba(255, 59, 48, 0.3);
+}
+
+.weekStats {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.weekErrorReason {
+  font-weight: 600;
+}
+
+/* Modal styles */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalContent {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  color: var(--text-primary);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modalCloseBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s;
+}
+
+.modalCloseBtn:hover {
+  color: var(--text-primary);
+}
+
+.statusButtonGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.statusOptionBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.statusOptionBtn:hover {
+  border-color: var(--accent);
+  background-color: var(--bg-secondary);
+}
+
+.statusOptionBtn[aria-pressed="true"],
+.statusOptionBtn[data-selected="true"] {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-light);
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.statusDot[data-status="presenza"] { background-color: var(--status-presenza); }
+.statusDot[data-status="smart"] { background-color: var(--status-smart); }
+.statusDot[data-status="idea_smart"] { background-color: var(--status-idea-smart); }
+.statusDot[data-status="ferie"] { background-color: var(--status-ferie); }
+.statusDot[data-status="chiusura"] { background-color: var(--status-chiusura); }
+.statusDot[data-status="non_lavorativo"] { background-color: var(--status-non-lavorativo); }
+
+.notesFieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.notesLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.notesTextarea {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.notesTextarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancelBtn {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelBtn:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.saveBtn {
+  background-color: var(--accent);
+  border: 1px solid transparent;
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveBtn:hover {
+  background-color: var(--accent-hover);
+}
