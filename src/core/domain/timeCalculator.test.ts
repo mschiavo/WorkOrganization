@@ -107,6 +107,23 @@ describe('TimeCalculator Domain Service', () => {
         deltaMinutes: 0,
       });
     });
+
+    it('handles smart working with permission minutes subtracting from worked time while completing nominal 8h', () => {
+      const input: TimeEntryInput = {
+        isSmartWork: true,
+        permissionMinutes: 180, // 3 ore di permesso
+      };
+
+      const result = calculateDailyTime(input);
+
+      expect(result).toEqual({
+        lunchDurationMinutes: 0,
+        workedMinutes: 300, // 480 - 180 = 300 min (5h lavorate)
+        expectedExit8h: null,
+        expectedExit7h: null,
+        deltaMinutes: 0,
+      });
+    });
   });
 
   describe('calculateDailyTime - Standard Presence with Lunch < 30 minutes', () => {

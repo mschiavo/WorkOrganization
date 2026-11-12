@@ -76,9 +76,13 @@ export function calculateDailyTime(
 ): TimeCalculationResult {
   // 1. Smart Working rule: exactly 8h nominal worked, 0m lunch, 0 delta, no exit times.
   if (input.isSmartWork) {
+    const permission = input.permissionMinutes ?? 0;
+    const nominalMinutes = 480;
+    const workedMinutes = Math.max(0, nominalMinutes - permission);
+
     return {
       lunchDurationMinutes: 0,
-      workedMinutes: 480,
+      workedMinutes,
       expectedExit8h: null,
       expectedExit7h: null,
       deltaMinutes: 0,

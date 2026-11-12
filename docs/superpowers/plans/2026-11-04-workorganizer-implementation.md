@@ -1,6 +1,6 @@
 # WorkOrganizer Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Stato:** COMPLETATO AL 100% (Tutti i 12 Task implementati, verificati con 170 test unitari e di integrazione passati, zero errori TypeScript, build di produzione Vite generata in data 2026-11-06).
 
 **Goal:** Realizzare una webapp personale (React 19 + TypeScript + Vite) per la pianificazione mensile delle presenze/smart working e la registrazione delle timbrature con calcolo banca ore e buoni pasto, sincronizzata con Supabase e deployabile su GitHub Pages.
 
@@ -45,30 +45,30 @@
 **Interfaces:**
 - Produces: ambiente di sviluppo Vite, configurazione TypeScript strict, harness di test Vitest funzionante.
 
-- [ ] **Step 1: Inizializzare package.json con dipendenze necessarie**
+- [x] **Step 1: Inizializzare package.json con dipendenze necessarie**
 Creare `package.json` con React 19, `@supabase/supabase-js`, `lucide-react`, `xlsx`, `vite`, `vitest`, `@testing-library/react`, `typescript`.
 
-- [ ] **Step 2: Configurare TypeScript (`tsconfig.json` e `tsconfig.node.json`)**
+- [x] **Step 2: Configurare TypeScript (`tsconfig.json` e `tsconfig.node.json`)**
 Abilitare strict mode, jsx react-jsx, alias `@/*` -> `src/*`.
 
-- [ ] **Step 3: Configurare Vite e Vitest (`vite.config.ts`, `vitest.config.ts`)**
+- [x] **Step 3: Configurare Vite e Vitest (`vite.config.ts`, `vitest.config.ts`)**
 Impostare `base: './'` per compatibilità con GitHub Pages e jsdom per l'ambiente di test.
 
-- [ ] **Step 4: Scrivere il test iniziale `src/App.test.tsx`**
+- [x] **Step 4: Scrivere il test iniziale `src/App.test.tsx`**
 Verificare il render dell'header dell'app "WorkOrganizer".
 
-- [ ] **Step 5: Eseguire il test per verificare che fallisca**
+- [x] **Step 5: Eseguire il test per verificare che fallisca**
 Run: `npm test` (o `npx vitest run`)
 Expected: FAIL (file sorgenti mancanti).
 
-- [ ] **Step 6: Creare `index.html`, `src/index.css`, `src/App.tsx`, `src/main.tsx`**
+- [x] **Step 6: Creare `index.html`, `src/index.css`, `src/App.tsx`, `src/main.tsx`**
 Strutturare lo scheletro iniziale dell'app con variabili CSS Dark/Light e titolo WorkOrganizer.
 
-- [ ] **Step 7: Eseguire il test per verificare che passi**
+- [x] **Step 7: Eseguire il test per verificare che passi**
 Run: `npx vitest run`
 Expected: PASS
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 ```bash
 git add .
 git commit -m "chore: setup vite react typescript and vitest harness"
@@ -107,7 +107,7 @@ git commit -m "chore: setup vite react typescript and vitest harness"
   export function hhMmToMinutes(timeStr: string): number;
   ```
 
-- [ ] **Step 1: Scrivere i test unitari in `src/core/domain/timeCalculator.test.ts`**
+- [x] **Step 1: Scrivere i test unitari in `src/core/domain/timeCalculator.test.ts`**
 Coprire:
 - Conversione ore/minuti (`"08:01"` -> 481 min, 481 min -> `"08:01"`).
 - Giornata smart: workedMinutes = 480, lunchDuration = 0, delta = 0, uscite = null.
@@ -115,18 +115,18 @@ Coprire:
 - Giornata con pausa lunga (45 min): rispetto della durata reale di 45 min.
 - Giornata con permessi orari (es. 90 min permessi sommati al totale lavorato).
 
-- [ ] **Step 2: Eseguire il test per verificare il fallimento**
+- [x] **Step 2: Eseguire il test per verificare il fallimento**
 Run: `npx vitest run src/core/domain/timeCalculator.test.ts`
 Expected: FAIL (`calculateDailyTime` non definito).
 
-- [ ] **Step 3: Implementare `timeCalculator.ts`**
+- [x] **Step 3: Implementare `timeCalculator.ts`**
 Implementare l'aritmetica su minuti con gestione rollover mezzanotte, minimo 30m pausa e calcolo orari uscita 7h/8h.
 
-- [ ] **Step 4: Eseguire il test per verificare che passi**
+- [x] **Step 4: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/core/domain/timeCalculator.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/core/domain/timeCalculator.ts src/core/domain/timeCalculator.test.ts
 git commit -m "feat(core): implement timeCalculator with 30m min lunch and 7h/8h exits"
@@ -189,7 +189,7 @@ git commit -m "feat(core): implement timeCalculator with 30m min lunch and 7h/8h
   ): MonthValidationResult;
   ```
 
-- [ ] **Step 1: Scrivere i test unitari in `src/core/domain/policyValidator.test.ts`**
+- [x] **Step 1: Scrivere i test unitari in `src/core/domain/policyValidator.test.ts`**
 Coprire:
 - Target 10 smart: 10 totali -> 'OK', 8 -> 'INCOMPLETO' (mancano 2), 12 -> 'ERRORE'.
 - Regola settimanale: 1 presenza e 4 smart -> Compliant.
@@ -200,18 +200,18 @@ Coprire:
 - Settimana a cavallo di mese: considera i giorni adiacenti per la presenza.
 - Conteggio giorni feriali escludendo weekend e festività italiane fisse.
 
-- [ ] **Step 2: Eseguire il test per verificare il fallimento**
+- [x] **Step 2: Eseguire il test per verificare il fallimento**
 Run: `npx vitest run src/core/domain/policyValidator.test.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implementare `policyValidator.ts`**
+- [x] **Step 3: Implementare `policyValidator.ts`**
 Implementare algoritmo di calcolo calendario, raggruppamento per settimana ISO (Lunedì-Domenica), conteggi e festività italiane.
 
-- [ ] **Step 4: Eseguire il test per verificare che passi**
+- [x] **Step 4: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/core/domain/policyValidator.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/core/domain/policyValidator.ts src/core/domain/policyValidator.test.ts
 git commit -m "feat(core): implement policyValidator for smart constraints and weekly presence"
@@ -261,25 +261,25 @@ git commit -m "feat(core): implement policyValidator for smart constraints and w
   ): MealVoucherSummary;
   ```
 
-- [ ] **Step 1: Scrivere test per `bancaOreManager.test.ts` e `mealVouchersLedger.test.ts`**
+- [x] **Step 1: Scrivere test per `bancaOreManager.test.ts` e `mealVouchersLedger.test.ts`**
 Coprire:
 - Riconoscimento trimestri (Mesi 1-3 -> Q1, 4-6 -> Q2, 7-9 -> Q3, 10-12 -> Q4).
 - Verifica regola mese 1 delta $\ge 0$.
 - Calcolo cumulato trimestrale con azzeramento.
 - Calcolo buoni pasto mensa (6 usati a 1,50€ = 9,00€ spesa) e buoni smart (10 a 8,00€ = 80,00€ valore), saldo netto +71,00€.
 
-- [ ] **Step 2: Eseguire i test per verificare il fallimento**
+- [x] **Step 2: Eseguire i test per verificare il fallimento**
 Run: `npx vitest run src/core/domain/bancaOreManager.test.ts src/core/domain/mealVouchersLedger.test.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implementare `bancaOreManager.ts` e `mealVouchersLedger.ts`**
+- [x] **Step 3: Implementare `bancaOreManager.ts` e `mealVouchersLedger.ts`**
 Funzioni pure di calcolo e bilancio economico.
 
-- [ ] **Step 4: Eseguire i test per verificare che passino**
+- [x] **Step 4: Eseguire i test per verificare che passino**
 Run: `npx vitest run src/core/domain/bancaOreManager.test.ts src/core/domain/mealVouchersLedger.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/core/domain/bancaOreManager.ts src/core/domain/mealVouchersLedger.ts src/core/domain/*.test.ts
 git commit -m "feat(core): implement bancaOreManager and mealVouchersLedger"
@@ -302,23 +302,23 @@ git commit -m "feat(core): implement bancaOreManager and mealVouchersLedger"
   - `useAuth()` hook per stato utente, login, logout, registrazione.
   - `localCache` per salvataggio offline/fallback se l'utente lavora disconnesso o prima di configurare Supabase.
 
-- [ ] **Step 1: Scrivere lo script di migrazione SQL `supabase/migrations/20261104_init_workorganizer.sql`**
+- [x] **Step 1: Scrivere lo script di migrazione SQL `supabase/migrations/20261104_init_workorganizer.sql`**
 Definire tabelle con vincoli foreign key su `auth.users(id)` e policy RLS per SELECT, INSERT, UPDATE, DELETE.
 
-- [ ] **Step 2: Scrivere test per `localCache.test.ts`**
+- [x] **Step 2: Scrivere test per `localCache.test.ts`**
 Testare serializzazione, lettura, salvataggio e fallback su default settings.
 
-- [ ] **Step 3: Implementare `localCache.ts` e `client.ts`**
+- [x] **Step 3: Implementare `localCache.ts` e `client.ts`**
 Inizializzare Supabase client leggendo da variabili d'ambiente (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) o LocalStorage (configurabili da UI).
 
-- [ ] **Step 4: Implementare `AuthContext.tsx`**
+- [x] **Step 4: Implementare `AuthContext.tsx`**
 Fornire `user`, `session`, `login(email, password)`, `signUp(email, password)`, `logout()`.
 
-- [ ] **Step 5: Eseguire i test**
+- [x] **Step 5: Eseguire i test**
 Run: `npx vitest run src/services/storage/localCache.test.ts`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 ```bash
 git add supabase/ src/services/
 git commit -m "feat(services): implement supabase client, auth context and local storage cache"
@@ -338,20 +338,20 @@ git commit -m "feat(services): implement supabase client, auth context and local
   - Interfaccia unificata per caricamento e salvataggio dei giorni di calendario, timbrature e impostazioni, con sincronizzazione trasparente Supabase + cache locale.
   - Sincronizzazione automatica: inserimento timbrature -> aggiorna lo stato del giorno (es. da `idea_smart` a `smart` o `presenza`).
 
-- [ ] **Step 1: Scrivere test unitario per `workDataService.test.ts`**
+- [x] **Step 1: Scrivere test unitario per `workDataService.test.ts`**
 Verificare il salvataggio di un giorno e la propagazione automatica dello stato confermato.
 
-- [ ] **Step 2: Implementare `workDataService.ts`**
+- [x] **Step 2: Implementare `workDataService.ts`**
 CRUD con Supabase e sincronizzazione speculare su `localCache`.
 
-- [ ] **Step 3: Implementare `WorkOrganizerContext.tsx`**
+- [x] **Step 3: Implementare `WorkOrganizerContext.tsx`**
 Provider React che espone stato del mese attivo (`currentYear`, `currentMonth`, `days`, `timeEntries`, `settings`), funzioni di mutazione (`updateDayStatus`, `updateTimeEntry`, `updateSettings`) e calcoli derivati.
 
-- [ ] **Step 4: Eseguire i test**
+- [x] **Step 4: Eseguire i test**
 Run: `npx vitest run src/services/repository/workDataService.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/services/repository/ src/context/
 git commit -m "feat(state): implement unified workDataService and WorkOrganizerContext"
@@ -378,17 +378,17 @@ git commit -m "feat(state): implement unified workDataService and WorkOrganizerC
     - Theme Toggle: Dark / Light
     - Tasto Impostazioni / Login / Logout
 
-- [ ] **Step 1: Scrivere test in `src/components/Header/Header.test.tsx`**
+- [x] **Step 1: Scrivere test in `src/components/Header/Header.test.tsx`**
 Verificare il render dei componenti, il cambio mese tramite i bottoni avanti/indietro e la visualizzazione corretta dei KPI.
 
-- [ ] **Step 2: Implementare `MonthSelector.tsx`, `KpiBadges.tsx`, `Header.tsx` e relativo CSS**
+- [x] **Step 2: Implementare `MonthSelector.tsx`, `KpiBadges.tsx`, `Header.tsx` e relativo CSS**
 Design moderno con badge colorati ad alto contrasto.
 
-- [ ] **Step 3: Eseguire il test per verificare che passi**
+- [x] **Step 3: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/components/Header/Header.test.tsx`
 Expected: PASS
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add src/components/Header/
 git commit -m "feat(ui): implement modern Header with MonthSelector, Kpis and LayoutSwitcher"
@@ -412,17 +412,17 @@ git commit -m "feat(ui): implement modern Header with MonthSelector, Kpis and La
   - Badge di conformità settimanale su ciascuna riga (verde se OK, rosso con motivazione se violata la policy).
   - Popover / modal rapido per cambiare causale con un click.
 
-- [ ] **Step 1: Scrivere test in `CalendarGrid.test.tsx`**
+- [x] **Step 1: Scrivere test in `CalendarGrid.test.tsx`**
 Verificare rendering dei giorni del mese, assegnazione causale tramite click e visualizzazione dell'alert sulla settimana non conforme.
 
-- [ ] **Step 2: Implementare i componenti del Calendario e relativo CSS**
+- [x] **Step 2: Implementare i componenti del Calendario e relativo CSS**
 Stili cromatici corrispondenti al foglio originale (Blu per Presenza, Verde chiaro Smart, Arancio Idea Smart, Verde scuro Ferie, Rosso Chiusura).
 
-- [ ] **Step 3: Eseguire il test per verificare che passi**
+- [x] **Step 3: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/features/calendar/CalendarGrid.test.tsx`
 Expected: PASS
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add src/features/calendar/
 git commit -m "feat(ui): implement CalendarGrid with status picker and weekly policy badges"
@@ -448,17 +448,17 @@ git commit -m "feat(ui): implement CalendarGrid with status picker and weekly po
   - Scheda interattiva per editing rapido del singolo giorno.
   - Tabella di riepilogo mensile a piè pagina (giorni lavorativi, lavorati, buoni pasto, banca ore).
 
-- [ ] **Step 1: Scrivere test in `TimbratureTable.test.tsx`**
+- [x] **Step 1: Scrivere test in `TimbratureTable.test.tsx`**
 Verificare inserimento timbratura mattina, comparsa dell'uscita prevista calcolata e calcolo totale lavorato.
 
-- [ ] **Step 2: Implementare componenti timbrature e validazione input orari**
+- [x] **Step 2: Implementare componenti timbrature e validazione input orari**
 Supporto orario veloce con auto-tab e formattazione "HH:mm".
 
-- [ ] **Step 3: Eseguire il test per verificare che passi**
+- [x] **Step 3: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/features/timbrature/TimbratureTable.test.tsx`
 Expected: PASS
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add src/features/timbrature/
 git commit -m "feat(ui): implement TimbratureTable with live exit predictions and summary ledger"
@@ -483,17 +483,17 @@ git commit -m "feat(ui): implement TimbratureTable with live exit predictions an
     - **Split**: Due colonne affiancate (Calendario interattivo a sinistra, Editor giorno attivo con orari e uscite a destra).
     - **Smart Sheet**: Hero Widget "Oggi" in primo piano (timbratura veloce in un clic) + tabella continua mensile densa.
 
-- [ ] **Step 1: Scrivere test in `LayoutManager.test.tsx`**
+- [x] **Step 1: Scrivere test in `LayoutManager.test.tsx`**
 Verificare il cambio di layout in base alla preferenza salvata.
 
-- [ ] **Step 2: Implementare `TodayHeroWidget.tsx` e i tre layout dedicati**
+- [x] **Step 2: Implementare `TodayHeroWidget.tsx` e i tre layout dedicati**
 Integrazione responsive per desktop, tablet e mobile.
 
-- [ ] **Step 3: Eseguire il test per verificare che passi**
+- [x] **Step 3: Eseguire il test per verificare che passi**
 Run: `npx vitest run src/layouts/LayoutManager.test.tsx`
 Expected: PASS
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add src/layouts/
 git commit -m "feat(ui): implement all three switchable layouts with TodayHeroWidget"
@@ -523,20 +523,20 @@ git commit -m "feat(ui): implement all three switchable layouts with TodayHeroWi
   - Modale credenziali Supabase (URL + Anon Key)
   - Esportatore Excel (.xlsx) formattato come il foglio originale e Backup JSON completo
 
-- [ ] **Step 1: Scrivere test per export Excel/JSON e salvataggio impostazioni**
+- [x] **Step 1: Scrivere test per export Excel/JSON e salvataggio impostazioni**
 Verificare che i parametri modificati aggiornino le regole dell'applicazione.
 
-- [ ] **Step 2: Implementare `excelExporter.ts` con SheetJS e `jsonBackup.ts`**
+- [x] **Step 2: Implementare `excelExporter.ts` con SheetJS e `jsonBackup.ts`**
 Generazione file scaricabile direttamente dal browser.
 
-- [ ] **Step 3: Implementare `SettingsPage.tsx` e `SupabaseConfigModal.tsx`**
+- [x] **Step 3: Implementare `SettingsPage.tsx` e `SupabaseConfigModal.tsx`**
 Interfaccia chiara e moderna.
 
-- [ ] **Step 4: Eseguire i test**
+- [x] **Step 4: Eseguire i test**
 Run: `npx vitest run src/features/settings/SettingsPage.test.tsx src/services/export/excelExporter.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/features/settings/ src/services/export/
 git commit -m "feat(settings): implement settings page, supabase config and excel/json export"
@@ -558,20 +558,20 @@ git commit -m "feat(settings): implement settings page, supabase config and exce
   - Workflow GitHub Actions per build automatica e deploy su GitHub Pages ad ogni push su `main`.
   - Verifica complessiva dell'applicazione (test di integrazione, build `npm run build` senza warning).
 
-- [ ] **Step 1: Implementare `AuthScreen.tsx` e collegarlo ad `App.tsx`**
+- [x] **Step 1: Implementare `AuthScreen.tsx` e collegarlo ad `App.tsx`**
 Se l'utente non è autenticato e non è in modalità ospite, mostra il login.
 
-- [ ] **Step 2: Configurare `.github/workflows/deploy.yml`**
+- [x] **Step 2: Configurare `.github/workflows/deploy.yml`**
 Pipeline CI/CD: checkout, setup node, install, test, build, deploy su GitHub Pages.
 
-- [ ] **Step 3: Scrivere ed eseguire test di integrazione end-to-end `App.integration.test.tsx`**
+- [x] **Step 3: Scrivere ed eseguire test di integrazione end-to-end `App.integration.test.tsx`**
 Verificare il flusso completo: navigazione mese, cambio causale, inserimento timbratura, verifica alert e cambio layout.
 
-- [ ] **Step 4: Eseguire la suite di test completa e il build di produzione**
+- [x] **Step 4: Eseguire la suite di test completa e il build di produzione**
 Run: `npm test && npm run build`
 Expected: Tutti i test passano, il bundle di produzione viene generato correttamente nella cartella `dist/`.
 
-- [ ] **Step 5: Commit finale**
+- [x] **Step 5: Commit finale**
 ```bash
 git add .
 git commit -m "feat(app): finalize auth screen, github actions deploy and integration tests"
