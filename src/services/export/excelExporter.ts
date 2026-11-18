@@ -12,6 +12,8 @@ const STATUS_LABELS: Record<DayStatus, string> = {
   idea_smart: 'Idea Smart',
   ferie: 'Ferie',
   idea_ferie: 'Idea Ferie',
+  par: 'PAR',
+  idea_par: 'Idea PAR',
   chiusura: 'Chiusura',
   non_lavorativo: 'Non Lavorativo',
 };

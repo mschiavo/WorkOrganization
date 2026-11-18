@@ -1,4 +1,13 @@
-export type DayStatus = 'presenza' | 'smart' | 'idea_smart' | 'ferie' | 'idea_ferie' | 'chiusura' | 'non_lavorativo';
+export type DayStatus =
+  | 'presenza'
+  | 'smart'
+  | 'idea_smart'
+  | 'ferie'
+  | 'idea_ferie'
+  | 'par'
+  | 'idea_par'
+  | 'chiusura'
+  | 'non_lavorativo';
 
 export interface CalendarDayInfo {
   date: string; // Formato "YYYY-MM-DD"
@@ -267,6 +276,8 @@ export function validateMonthPolicy(
           const isCoveredNonWorking =
             dayInfo?.status === 'ferie' ||
             dayInfo?.status === 'idea_ferie' ||
+            dayInfo?.status === 'par' ||
+            dayInfo?.status === 'idea_par' ||
             dayInfo?.status === 'chiusura';
 
         // Check if day is outside the target month

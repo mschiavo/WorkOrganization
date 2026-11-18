@@ -60,4 +60,26 @@ describe('leaveManager Domain Engine', () => {
     // 100 - 4.5 = 95.5 ore rimanenti
     expect(summary.parRemainingHours).toBe(95.5);
   });
+
+  it('calculates PAR taken from full day par status plus hourly permissionMinutes and planned PAR', () => {
+    const daysMap = {
+      // 1 giorno intero di PAR = 8h
+      '2026-03-16': { date: '2026-03-16', status: 'par' as const },
+      // 1 giorno di PAR pianificato = 8h
+      '2026-11-20': { date: '2026-11-20', status: 'idea_par' as const },
+    };
+
+    const timeEntriesMap = {
+      // 3 ore di permesso (180 min) in un giorno lavorativo
+      '2026-05-12': { date: '2026-05-12', permissionMinutes: 180 },
+    };
+
+    const summary = calculateAnnualLeaveBalance(2026, daysMap, timeEntriesMap, defaultSettings);
+
+    // Par taken: 8h (giornata par) + 3h (permesso orario) = 11h
+    expect(summary.parTakenHours).toBe(11);
+    expect(summary.parPlannedHours).toBe(8);
+    // 100 - 11 - 8 = 81 ore rimanenti
+    expect(summary.parRemainingHours).toBe(81);
+  });
 });

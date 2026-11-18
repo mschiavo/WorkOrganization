@@ -174,15 +174,33 @@ describe('DayDetailCard Feature', () => {
     expect(screen.getByTestId('detail-worked-time')).toHaveTextContent('07:00');
     expect(screen.getByTestId('detail-delta')).toHaveTextContent('-01:00');
 
-    // Add 60 minutes permission
+    // Add 1 hour (1h) permission
     const permInput = screen.getByTestId('input-permissionMinutes');
     await act(async () => {
-      fireEvent.change(permInput, { target: { value: '60' } });
+      fireEvent.change(permInput, { target: { value: '1h' } });
     });
 
     // 7h + 1h permission = 8h worked, delta 0
     expect(screen.getByTestId('detail-worked-time')).toHaveTextContent('08:00');
     expect(screen.getByTestId('detail-delta')).toHaveTextContent('+00:00');
+  });
+
+  it('allows selecting PAR and Idea PAR statuses directly from buttons', async () => {
+    await renderWithProviders(<DayDetailCard date="2026-10-15" />);
+
+    const parBtn = screen.getByTestId('btn-status-par');
+    expect(parBtn).toBeInTheDocument();
+    expect(parBtn).toHaveTextContent('PAR');
+
+    const ideaParBtn = screen.getByTestId('btn-status-idea_par');
+    expect(ideaParBtn).toBeInTheDocument();
+    expect(ideaParBtn).toHaveTextContent('Idea PAR');
+
+    await act(async () => {
+      fireEvent.click(parBtn);
+    });
+
+    expect(parBtn).toHaveAttribute('data-active', 'true');
   });
 
   it('calls onClose when close button is clicked', async () => {

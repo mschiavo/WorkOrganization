@@ -23,6 +23,10 @@ function getStatusLabel(status?: DayStatus): string {
       return 'Ferie';
     case 'idea_ferie':
       return 'Idea Ferie';
+    case 'par':
+      return 'PAR';
+    case 'idea_par':
+      return 'Idea PAR';
     case 'chiusura':
       return 'Chiusura';
     case 'non_lavorativo':
@@ -44,6 +48,10 @@ function getStatusClass(status?: DayStatus): string {
       return styles.statusFerie;
     case 'idea_ferie':
       return styles.statusIdeaFerie;
+    case 'par':
+      return styles.statusPar;
+    case 'idea_par':
+      return styles.statusIdeaPar;
     case 'chiusura':
       return styles.statusChiusura;
     case 'non_lavorativo':
@@ -221,6 +229,8 @@ export const TimbratureTable: React.FC<TimbratureTableProps> = ({ onRowClick, re
                       <option value="idea_smart">Idea Smart</option>
                       <option value="ferie">Ferie</option>
                       <option value="idea_ferie">Idea Ferie</option>
+                      <option value="par">PAR</option>
+                      <option value="idea_par">Idea PAR</option>
                       <option value="chiusura">Chiusura</option>
                       <option value="non_lavorativo">Non Lavorativo</option>
                     </select>

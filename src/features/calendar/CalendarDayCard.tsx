@@ -13,6 +13,7 @@ export interface CalendarDayCardProps {
   isOutsideMonth?: boolean;
   isHoliday?: boolean;
   isWeekend?: boolean;
+  isFuture?: boolean;
   holidayName?: string;
   compact?: boolean;
   onClick?: (date: string) => void;
@@ -24,6 +25,8 @@ const STATUS_LABELS: Record<DayStatus, string> = {
   idea_smart: 'Idea Smart',
   ferie: 'Ferie',
   idea_ferie: 'Idea Ferie',
+  par: 'PAR',
+  idea_par: 'Idea PAR',
   chiusura: 'Chiusura',
   non_lavorativo: 'Non Lavorativo',
 };
@@ -39,6 +42,7 @@ export const CalendarDayCard: React.FC<CalendarDayCardProps> = ({
   isOutsideMonth = false,
   isHoliday = false,
   isWeekend = false,
+  isFuture,
   holidayName,
   compact = false,
   onClick,
@@ -53,6 +57,12 @@ export const CalendarDayCard: React.FC<CalendarDayCardProps> = ({
       onClick?.(date);
     }
   };
+
+  const isFutureDay = isFuture !== undefined ? isFuture : (() => {
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return date > todayStr;
+  })();
 
   const statusLabel = status
     ? (isHoliday && status === 'non_lavorativo' ? 'Festivo' : STATUS_LABELS[status])
@@ -89,13 +99,23 @@ export const CalendarDayCard: React.FC<CalendarDayCardProps> = ({
             </span>
           )}
           {isConfirmed && (
-            <span
-              className={styles.confirmedIcon}
-              data-testid="day-confirmed-icon"
-              title="Confermato"
-            >
-              ✓
-            </span>
+            isFutureDay ? (
+              <span
+                className={styles.pendingFutureClock}
+                data-testid="day-pending-future-icon"
+                title="Pianificato in attesa"
+              >
+                ⏳
+              </span>
+            ) : (
+              <span
+                className={styles.confirmedIcon}
+                data-testid="day-confirmed-icon"
+                title="Confermato"
+              >
+                ✓
+              </span>
+            )
           )}
           {notes && (
             <span

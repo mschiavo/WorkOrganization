@@ -74,6 +74,36 @@ describe('Calendar & Month Planning Grid Feature', () => {
       expect(screen.getByTestId('day-notes-indicator')).toHaveAttribute('title', 'Incontro con cliente');
     });
 
+    it('renders checkmark for past confirmed days and yellow clock for future planned days', () => {
+      // Past day
+      const { rerender } = render(
+        <CalendarDayCard
+          date="2020-01-01"
+          dayNumber={1}
+          status="presenza"
+          isConfirmed={true}
+          isFuture={false}
+        />
+      );
+
+      expect(screen.getByTestId('day-confirmed-icon')).toBeInTheDocument();
+      expect(screen.queryByTestId('day-pending-future-icon')).not.toBeInTheDocument();
+
+      // Future day
+      rerender(
+        <CalendarDayCard
+          date="2099-01-01"
+          dayNumber={1}
+          status="smart"
+          isConfirmed={true}
+          isFuture={true}
+        />
+      );
+
+      expect(screen.getByTestId('day-pending-future-icon')).toBeInTheDocument();
+      expect(screen.queryByTestId('day-confirmed-icon')).not.toBeInTheDocument();
+    });
+
     it('renders today and selected states with appropriate data attributes', () => {
       render(
         <CalendarDayCard

@@ -105,6 +105,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ onSelectDay, compact
                       isOutsideMonth={dateMonth !== currentMonth}
                       isHoliday={isHoliday}
                       isWeekend={isWeekend}
+                      isFuture={dateStr > todayString}
                       compact={compact}
                       onClick={handleDayClick}
                     />

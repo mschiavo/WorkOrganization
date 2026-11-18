@@ -22,12 +22,19 @@
 - **Permessi orari:** minuti di permesso che concorrono alla quadratura della giornata lavorativa.
 - **Smart Working automatico:** il giorno marcato come smart vale automaticamente **8h nominali** (480 minuti) senza richiedere orari.
 
-### 3. Contatori Annuali Ferie & Permessi (PAR) (v0.4)
+### 3. Contatori Annuali Ferie & Permessi (PAR) e Input Intelligente (v0.5)
 - **Ferie Annuali:** configurazione delle ore spettanti nell'anno e del residuo dell'anno precedente. Monitoraggio algebrico continuo:
   - *Ferie Godute:* giorni effettivi passati con causale **Ferie** (colorati in **Viola**).
   - *Ferie Pianificate:* giorni futuri programmati con causale **Idea Ferie** (colorati in **Lilla tratteggiato**).
   - *Ferie Residue:* saldo ore ancora disponibili al netto di godute e pianificate.
-- **PAR / Permessi Annuali:** spettanze annue e residui passati, con decurtazione automatica di tutti i minuti di permesso inseriti nell'anno.
+- **PAR / Permessi Annuali:** distinzione contabile precisa:
+  - *Giornate intere o frazioni di PAR:* giorni marcati con causale **PAR** (colorati in **Ciano `#06b6d4`**) e **Idea PAR** (colorati in **Ciano tratteggiato**), ciascuno computato a 8h standard.
+  - *Permessi orari infrasettimanali:* decurtazione algebrica automatica di tutti i minuti/ore di permesso inseriti nei giorni lavorativi o smart working.
+- **Input Flessibile delle Ore di Permesso (`DurationInput`):** accetta digitazione naturale e flessibile:
+  - `3` o `3h` $\rightarrow$ 3 ore (180 minuti)
+  - `50m` $\rightarrow$ 50 minuti
+  - `3h50` o `3h50m` o `3:50` $\rightarrow$ 3 ore e 50 minuti (230 minuti)
+  - `1.5` o `1.5h` o `1,5h` $\rightarrow$ 1 ora e 30 minuti (90 minuti)
 - **Smart Working con Permesso:** se un giorno si effettua Smart Working con ore di permesso (es. 5h lavorate + 3h permesso), la giornata quadra comunque alle 8h nominali standard, il buono pasto smart è garantito e le 3 ore vengono scalate dal monte PAR.
 
 ### 4. Banca Ore Trimestrale
@@ -39,9 +46,12 @@
 - **Mensa in sede:** spesa di **-1,50 €** a pasto consumato a carico del dipendente.
 - Calcolo automatico del consuntivo economico netto del mese.
 
-### 6. Due Layout Interscambiabili a Caldo (v0.4)
-- **Layout Split (Master-Detail):** pagina calendario a griglia mensile classica a sinistra (1 riga per settimana da Lunedì a Domenica con sabati/domeniche non lavorativi di default e zero scrolling verticale) e scheda di dettaglio del giorno selezionato a destra, completa di pulsanti rapidi per assegnare la causale (Presenza, Smart, Idea Smart, Ferie, Idea Ferie, Chiusura, Non Lav.) a zero popup.
-- **Layout Smart Sheet:** dashboard di report mensile analitico di **pura consultazione** in testata con tutte le statistiche di quadratura (ore lavorate, delta banca ore, contatori annuali Ferie e PAR, conteggio presenze/smart/ferie, buoni pasto e saldo economico netto), abbinato alla tabella mensile analitica in modalità lettura con i controlli di inserimento commentati nel codice per un ripristino immediato.
+### 6. Due Layout Interscambiabili a Caldo (v0.5)
+- **Layout Split (Master-Detail):** pagina calendario a griglia mensile classica a sinistra (1 riga per settimana da Lunedì a Domenica con sabati/domeniche non lavorativi di default e zero scrolling verticale) e scheda di dettaglio del giorno selezionato a destra, completa di pulsanti rapidi per assegnare la causale (Presenza, Smart, Idea Smart, Ferie, Idea Ferie, PAR, Idea PAR, Chiusura, Non Lav.) a zero popup.
+- **Indicatori Temporali sul Calendario:**
+  - *Giorni passati e odierni consolidati (`date <= oggi`):* spunta verde **`✓`**.
+  - *Giorni futuri compilati o pianificati (`date > oggi`):* orologino giallo **`⏳`** a indicare che il giorno è pronto ma in attesa.
+- **Layout Smart Sheet:** dashboard di report mensile analitico di **pura consultazione** in testata con tutte le statistiche di quadratura (ore lavorate, delta banca ore, contatori annuali Ferie e PAR, conteggio presenze/smart/ferie/par, buoni pasto e saldo economico netto), abbinato alla tabella mensile analitica in modalità lettura con i controlli di inserimento commentati nel codice per un ripristino immediato.
 
 ### 7. Persistenza & Sincronizzazione Dati
 - **Cloud Database (Supabase):** PostgreSQL con tabelle indicizzate, vincoli di unicità e **Row Level Security (RLS)** per utente.

@@ -3,6 +3,7 @@ import { useWorkOrganizer } from '../../context/WorkOrganizerContext';
 import { calculateDailyTime, minutesToHHmm } from '../../core/domain/timeCalculator';
 import { DayStatus } from '../../core/domain/policyValidator';
 import { TimeInput } from '../../components/common/TimeInput';
+import { DurationInput } from '../../components/common/DurationInput';
 import styles from './Timbrature.module.css';
 
 export interface DayDetailCardProps {
@@ -16,6 +17,8 @@ const STATUS_OPTIONS: { status: DayStatus; label: string }[] = [
   { status: 'idea_smart', label: 'Idea Smart' },
   { status: 'ferie', label: 'Ferie' },
   { status: 'idea_ferie', label: 'Idea Ferie' },
+  { status: 'par', label: 'PAR' },
+  { status: 'idea_par', label: 'Idea PAR' },
   { status: 'chiusura', label: 'Chiusura' },
   { status: 'non_lavorativo', label: 'Non Lav.' },
 ];
@@ -234,17 +237,14 @@ export const DayDetailCard: React.FC<DayDetailCardProps> = ({ date, onClose }) =
       {/* Permissions, Canteen, and Notes */}
       <div className={styles.extraInputsRow}>
         <div className={styles.permInputWrapper}>
-          <label className={styles.timeInputLabel}>Permesso (minuti):</label>
-          <input
-            type="number"
-            min="0"
-            step="15"
+          <label className={styles.timeInputLabel}>Permesso (es. 3h, 50m, 3h50):</label>
+          <DurationInput
             data-testid="input-permissionMinutes"
             className={styles.permInput}
             value={entry.permissionMinutes ?? 0}
-            onChange={(e) =>
+            onChange={(minutes) =>
               updateTimeEntry(targetDate, {
-                permissionMinutes: parseInt(e.target.value, 10) || 0,
+                permissionMinutes: minutes,
               })
             }
           />
