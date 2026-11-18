@@ -73,6 +73,9 @@ export const TimbratureTable: React.FC<TimbratureTableProps> = ({ onRowClick, re
     updateDayStatus,
   } = useWorkOrganizer();
 
+  const now = new Date();
+  const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
   const monthDates = useMemo(() => {
     const lastDay = new Date(currentYear, currentMonth, 0).getDate();
     return Array.from({ length: lastDay }, (_, i) => {
@@ -225,12 +228,19 @@ export const TimbratureTable: React.FC<TimbratureTableProps> = ({ onRowClick, re
                     >
                       <option value="">-</option>
                       <option value="presenza">Presenza</option>
-                      <option value="smart">Smart Working</option>
-                      <option value="idea_smart">Idea Smart</option>
-                      <option value="ferie">Ferie</option>
-                      <option value="idea_ferie">Idea Ferie</option>
-                      <option value="par">PAR</option>
-                      <option value="idea_par">Idea PAR</option>
+                      {row.dateStr < todayString ? (
+                        <>
+                          <option value="smart">Smart Working</option>
+                          <option value="ferie">Ferie</option>
+                          <option value="par">PAR</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="idea_smart">Idea Smart</option>
+                          <option value="idea_ferie">Idea Ferie</option>
+                          <option value="idea_par">Idea PAR</option>
+                        </>
+                      )}
                       <option value="chiusura">Chiusura</option>
                       <option value="non_lavorativo">Non Lavorativo</option>
                     </select>

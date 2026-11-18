@@ -88,9 +88,8 @@ describe('DayDetailCard Feature', () => {
 
     expect(screen.getByTestId('btn-status-presenza')).toBeInTheDocument();
     expect(screen.getByTestId('btn-status-smart')).toBeInTheDocument();
-    expect(screen.getByTestId('btn-status-idea_smart')).toBeInTheDocument();
     expect(screen.getByTestId('btn-status-ferie')).toBeInTheDocument();
-    expect(screen.getByTestId('btn-status-idea_ferie')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-par')).toBeInTheDocument();
     expect(screen.getByTestId('btn-status-chiusura')).toBeInTheDocument();
     expect(screen.getByTestId('btn-status-non_lavorativo')).toBeInTheDocument();
 
@@ -186,21 +185,62 @@ describe('DayDetailCard Feature', () => {
   });
 
   it('allows selecting PAR and Idea PAR statuses directly from buttons', async () => {
-    await renderWithProviders(<DayDetailCard date="2026-10-15" />);
+    // Past date for PAR
+    const { unmount } = await renderWithProviders(<DayDetailCard date="2020-10-15" />);
 
     const parBtn = screen.getByTestId('btn-status-par');
     expect(parBtn).toBeInTheDocument();
     expect(parBtn).toHaveTextContent('PAR');
 
+    await act(async () => {
+      fireEvent.click(parBtn);
+    });
+    expect(parBtn).toHaveAttribute('data-active', 'true');
+
+    unmount();
+
+    // Future date for Idea PAR
+    await renderWithProviders(<DayDetailCard date="2099-10-15" />);
     const ideaParBtn = screen.getByTestId('btn-status-idea_par');
     expect(ideaParBtn).toBeInTheDocument();
     expect(ideaParBtn).toHaveTextContent('Idea PAR');
 
     await act(async () => {
-      fireEvent.click(parBtn);
+      fireEvent.click(ideaParBtn);
     });
+    expect(ideaParBtn).toHaveAttribute('data-active', 'true');
+  });
 
-    expect(parBtn).toHaveAttribute('data-active', 'true');
+  it('renders only actual statuses (Smart, Ferie, PAR) for past dates (< today) and hides Idea* statuses', async () => {
+    // A past date
+    await renderWithProviders(<DayDetailCard date="2020-01-15" />);
+
+    // Actual statuses must exist
+    expect(screen.getByTestId('btn-status-smart')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-ferie')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-par')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-presenza')).toBeInTheDocument();
+
+    // Idea* planning statuses must NOT exist
+    expect(screen.queryByTestId('btn-status-idea_smart')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('btn-status-idea_ferie')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('btn-status-idea_par')).not.toBeInTheDocument();
+  });
+
+  it('renders only planning statuses (Idea Smart, Idea Ferie, Idea PAR) for future dates (>= today) and hides actual statuses', async () => {
+    // A future date
+    await renderWithProviders(<DayDetailCard date="2099-01-15" />);
+
+    // Idea* planning statuses must exist
+    expect(screen.getByTestId('btn-status-idea_smart')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-idea_ferie')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-idea_par')).toBeInTheDocument();
+    expect(screen.getByTestId('btn-status-presenza')).toBeInTheDocument();
+
+    // Actual statuses must NOT exist
+    expect(screen.queryByTestId('btn-status-smart')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('btn-status-ferie')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('btn-status-par')).not.toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', async () => {

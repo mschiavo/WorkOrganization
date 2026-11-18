@@ -50,6 +50,14 @@ export const DayDetailCard: React.FC<DayDetailCardProps> = ({ date, onClose }) =
   const day = days[targetDate];
   const isSmart = Boolean(entry.isSmartWork || day?.status === 'smart');
 
+  const now = new Date();
+  const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isPast = targetDate < todayString;
+
+  const availableStatuses = isPast
+    ? STATUS_OPTIONS.filter((opt) => !['idea_smart', 'idea_ferie', 'idea_par'].includes(opt.status))
+    : STATUS_OPTIONS.filter((opt) => !['smart', 'ferie', 'par'].includes(opt.status));
+
   const calc = calculateDailyTime(
     {
       morningIn: entry.morningIn,
@@ -121,7 +129,7 @@ export const DayDetailCard: React.FC<DayDetailCardProps> = ({ date, onClose }) =
       <div className={styles.statusSection}>
         <div className={styles.statusSectionLabel}>Stato Giornata:</div>
         <div className={styles.statusButtonsGrid}>
-          {STATUS_OPTIONS.map((opt) => (
+          {availableStatuses.map((opt) => (
             <button
               key={opt.status}
               type="button"
