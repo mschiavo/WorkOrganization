@@ -53,18 +53,17 @@ function mapAppSettingsToSupabase(settings: Partial<AppSettings>, userId: string
 export const workDataService = {
   async loadMonthData(
     year: number,
-    month: number,
+    _month: number,
     userId?: string | null
   ): Promise<{
     days: Record<string, CalendarDayInfo>;
     timeEntries: Record<string, StoredTimeEntry>;
     settings: AppSettings;
   }> {
-    const paddedMonth = String(month).padStart(2, '0');
-    const startDate = `${year}-${paddedMonth}-01`;
-    // End date can safely encompass up to the end of next month or full year
-    const lastDay = new Date(year, month, 0).getDate();
-    const endDate = `${year}-${paddedMonth}-${String(lastDay).padStart(2, '0')}`;
+    // Query the full year so that annual leave counters (Ferie/PAR) and quarterly bank hours
+    // are immediately accurate without requiring the user to navigate to each past month.
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
 
     let settings = localCache.getSettings();
     let days = localCache.getCalendarDays();
@@ -262,5 +261,53 @@ export const workDataService = {
     }
 
     return merged;
+  },
+
+  async syncAllData(
+    days: Record<string, CalendarDayInfo>,
+    timeEntries: Record<string, StoredTimeEntry>,
+    userId?: string | null
+  ): Promise<void> {
+    if (!userId) return;
+    const client = getSupabaseClient();
+    if (!client) return;
+
+    try {
+      const daysRows = Object.values(days).map((d) => ({
+        user_id: userId,
+        date: d.date,
+        status: d.status,
+        notes: d.notes ?? null,
+        is_confirmed: d.isConfirmed ?? false,
+        updated_at: new Date().toISOString(),
+      }));
+
+      if (daysRows.length > 0) {
+        for (let i = 0; i < daysRows.length; i += 100) {
+          await client.from('calendar_days').upsert(daysRows.slice(i, i + 100), { onConflict: 'user_id,date' });
+        }
+      }
+
+      const entryRows = Object.values(timeEntries).map((e) => ({
+        user_id: userId,
+        date: e.date,
+        morning_in: e.morningIn ?? null,
+        lunch_out: e.lunchOut ?? null,
+        lunch_in: e.lunchIn ?? null,
+        evening_out: e.eveningOut ?? null,
+        permission_minutes: e.permissionMinutes ?? 0,
+        canteen_used: e.canteenUsed ?? false,
+        is_smart_work: e.isSmartWork ?? false,
+        updated_at: new Date().toISOString(),
+      }));
+
+      if (entryRows.length > 0) {
+        for (let i = 0; i < entryRows.length; i += 100) {
+          await client.from('time_entries').upsert(entryRows.slice(i, i + 100), { onConflict: 'user_id,date' });
+        }
+      }
+    } catch {
+      // ignore error in offline mode
+    }
   },
 };

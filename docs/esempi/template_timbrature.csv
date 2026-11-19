@@ -1,0 +1,8 @@
+Data;Stato;Entrata1;Uscita1;Entrata2;Uscita2;Permesso;Mensa;Note
+2026-11-02;presenza;08:30;12:30;13:00;17:00;;Si;Giorno standard in presenza
+2026-11-03;smart;;;;;;;Giornata di smart working
+2026-11-04;presenza;08:00;12:00;12:30;16:30;1h;Si;Uscita con 1 ora di permesso
+2026-11-05;ferie;;;;;;;Giornata di ferie
+2026-11-06;par;;;;;;;Giornata di riposo PAR
+2026-11-07;non_lavorativo;;;;;;;Sabato
+2026-11-08;non_lavorativo;;;;;;;Domenica

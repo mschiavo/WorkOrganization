@@ -11,6 +11,8 @@ import {
   Palmtree,
 } from 'lucide-react';
 import { useWorkOrganizer } from '../../context/WorkOrganizerContext';
+import { useAuth } from '../../services/supabase/authContext';
+import { workDataService } from '../../services/repository/workDataService';
 import { DEFAULT_SETTINGS, localCache } from '../../services/storage/localCache';
 import { createBackupJson, parseAndValidateBackup } from '../../services/export/backupService';
 import { downloadMonthExcel } from '../../services/export/excelExporter';
@@ -31,6 +33,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     updateSettings,
     refreshData,
   } = useWorkOrganizer();
+  const { user } = useAuth();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -139,8 +142,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       localCache.saveCalendarDays(backup.days);
       localCache.saveTimeEntries(backup.timeEntries);
 
+      if (user?.id) {
+        await updateSettings(backup.settings);
+        await workDataService.syncAllData(backup.days, backup.timeEntries, user.id);
+      }
+
       await refreshData();
-      alert('Backup ripristinato con successo!');
+      alert('Backup ripristinato e sincronizzato con successo!');
       onClose();
     } catch (err: any) {
       alert(`Errore nel ripristino del backup: ${err.message}`);

@@ -240,6 +240,36 @@ describe('workDataService', () => {
       expect(localCache.getTimeEntries()['2026-10-12']).toBeDefined();
     });
 
+    it('queries the entire annual range (01-01 to 12-31) so leave counters and bank hours are immediately accurate across all months', async () => {
+      const gteSpy = vi.fn().mockReturnThis();
+      const lteSpy = vi.fn().mockResolvedValue({ data: [], error: null });
+
+      const mockClient = {
+        from: vi.fn((table: string) => {
+          if (table === 'app_settings') {
+            return {
+              select: vi.fn().mockReturnThis(),
+              eq: vi.fn().mockReturnThis(),
+              maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+            };
+          }
+          return {
+            select: vi.fn().mockReturnThis(),
+            eq: vi.fn().mockReturnThis(),
+            gte: gteSpy,
+            lte: lteSpy,
+          };
+        }),
+      };
+
+      vi.spyOn(supabaseClientModule, 'getSupabaseClient').mockReturnValue(mockClient as any);
+
+      await workDataService.loadMonthData(2026, 11, 'user-123');
+
+      expect(gteSpy).toHaveBeenCalledWith('date', '2026-01-01');
+      expect(lteSpy).toHaveBeenCalledWith('date', '2026-12-31');
+    });
+
     it('falls back gracefully to localCache when Supabase query fails with error', async () => {
       localCache.saveCalendarDay('2026-10-13', {
         date: '2026-10-13',

@@ -1,0 +1,2865 @@
+{
+  "version": "1.0.0",
+  "exportedAt": "2026-11-19T13:43:56.770Z",
+  "settings": {
+    "maxSmartDaysMonth": 10,
+    "minPresenceDaysWeek": 1,
+    "maxSmartDaysWeek": 4,
+    "ferieCompensatesPresence": false,
+    "standardDayHours": 8,
+    "reducedDayHours": 7,
+    "minLunchBreakMinutes": 30,
+    "maxDailyBankRecoveryMinutes": 60,
+    "canteenVoucherCost": 1.5,
+    "smartVoucherValue": 8,
+    "yearlyFerieHours": 160,
+    "prevYearFerieResidualHours": 0,
+    "yearlyParHours": 88,
+    "prevYearParResidualHours": 0,
+    "preferredLayout": "split",
+    "preferredTheme": "dark"
+  },
+  "days": {
+    "2026-01-01": {
+      "date": "2026-01-01",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-02": {
+      "date": "2026-01-02",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-01-03": {
+      "date": "2026-01-03",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-04": {
+      "date": "2026-01-04",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-05": {
+      "date": "2026-01-05",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-01-06": {
+      "date": "2026-01-06",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-07": {
+      "date": "2026-01-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-08": {
+      "date": "2026-01-08",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-09": {
+      "date": "2026-01-09",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-10": {
+      "date": "2026-01-10",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-11": {
+      "date": "2026-01-11",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-12": {
+      "date": "2026-01-12",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-13": {
+      "date": "2026-01-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-14": {
+      "date": "2026-01-14",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-15": {
+      "date": "2026-01-15",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-16": {
+      "date": "2026-01-16",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-17": {
+      "date": "2026-01-17",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-18": {
+      "date": "2026-01-18",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-19": {
+      "date": "2026-01-19",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-20": {
+      "date": "2026-01-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-21": {
+      "date": "2026-01-21",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-22": {
+      "date": "2026-01-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-23": {
+      "date": "2026-01-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-24": {
+      "date": "2026-01-24",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-25": {
+      "date": "2026-01-25",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-01-26": {
+      "date": "2026-01-26",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-01-27": {
+      "date": "2026-01-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-28": {
+      "date": "2026-01-28",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-29": {
+      "date": "2026-01-29",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-30": {
+      "date": "2026-01-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-01-31": {
+      "date": "2026-01-31",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-01": {
+      "date": "2026-02-01",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-02": {
+      "date": "2026-02-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-03": {
+      "date": "2026-02-03",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-04": {
+      "date": "2026-02-04",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-05": {
+      "date": "2026-02-05",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-06": {
+      "date": "2026-02-06",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-07": {
+      "date": "2026-02-07",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-08": {
+      "date": "2026-02-08",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-09": {
+      "date": "2026-02-09",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-10": {
+      "date": "2026-02-10",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-11": {
+      "date": "2026-02-11",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-12": {
+      "date": "2026-02-12",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-13": {
+      "date": "2026-02-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-14": {
+      "date": "2026-02-14",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-15": {
+      "date": "2026-02-15",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-16": {
+      "date": "2026-02-16",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-17": {
+      "date": "2026-02-17",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-18": {
+      "date": "2026-02-18",
+      "status": "non_lavorativo",
+      "isConfirmed": false,
+      "notes": "2:00"
+    },
+    "2026-02-19": {
+      "date": "2026-02-19",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-20": {
+      "date": "2026-02-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-21": {
+      "date": "2026-02-21",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-22": {
+      "date": "2026-02-22",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-02-23": {
+      "date": "2026-02-23",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-24": {
+      "date": "2026-02-24",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-02-25": {
+      "date": "2026-02-25",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-26": {
+      "date": "2026-02-26",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-27": {
+      "date": "2026-02-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-02-28": {
+      "date": "2026-02-28",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-01": {
+      "date": "2026-03-01",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-02": {
+      "date": "2026-03-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-03": {
+      "date": "2026-03-03",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-04": {
+      "date": "2026-03-04",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-05": {
+      "date": "2026-03-05",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-06": {
+      "date": "2026-03-06",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-07": {
+      "date": "2026-03-07",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-08": {
+      "date": "2026-03-08",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-09": {
+      "date": "2026-03-09",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-10": {
+      "date": "2026-03-10",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-11": {
+      "date": "2026-03-11",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-12": {
+      "date": "2026-03-12",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-13": {
+      "date": "2026-03-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-14": {
+      "date": "2026-03-14",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-15": {
+      "date": "2026-03-15",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-16": {
+      "date": "2026-03-16",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-17": {
+      "date": "2026-03-17",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-18": {
+      "date": "2026-03-18",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-19": {
+      "date": "2026-03-19",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-20": {
+      "date": "2026-03-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-21": {
+      "date": "2026-03-21",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-22": {
+      "date": "2026-03-22",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-23": {
+      "date": "2026-03-23",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-24": {
+      "date": "2026-03-24",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-25": {
+      "date": "2026-03-25",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-26": {
+      "date": "2026-03-26",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-27": {
+      "date": "2026-03-27",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-03-28": {
+      "date": "2026-03-28",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-29": {
+      "date": "2026-03-29",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-03-30": {
+      "date": "2026-03-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-03-31": {
+      "date": "2026-03-31",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-01": {
+      "date": "2026-04-01",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-02": {
+      "date": "2026-04-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-03": {
+      "date": "2026-04-03",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-04-04": {
+      "date": "2026-04-04",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-05": {
+      "date": "2026-04-05",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-06": {
+      "date": "2026-04-06",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-04-07": {
+      "date": "2026-04-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-08": {
+      "date": "2026-04-08",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-09": {
+      "date": "2026-04-09",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-10": {
+      "date": "2026-04-10",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-11": {
+      "date": "2026-04-11",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-12": {
+      "date": "2026-04-12",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-13": {
+      "date": "2026-04-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-14": {
+      "date": "2026-04-14",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-15": {
+      "date": "2026-04-15",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-16": {
+      "date": "2026-04-16",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-17": {
+      "date": "2026-04-17",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-18": {
+      "date": "2026-04-18",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-19": {
+      "date": "2026-04-19",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-20": {
+      "date": "2026-04-20",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-21": {
+      "date": "2026-04-21",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-22": {
+      "date": "2026-04-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-23": {
+      "date": "2026-04-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-24": {
+      "date": "2026-04-24",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-25": {
+      "date": "2026-04-25",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-26": {
+      "date": "2026-04-26",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-04-27": {
+      "date": "2026-04-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-04-28": {
+      "date": "2026-04-28",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-29": {
+      "date": "2026-04-29",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-04-30": {
+      "date": "2026-04-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-01": {
+      "date": "2026-05-01",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-05-02": {
+      "date": "2026-05-02",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-03": {
+      "date": "2026-05-03",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-04": {
+      "date": "2026-05-04",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-05": {
+      "date": "2026-05-05",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-06": {
+      "date": "2026-05-06",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-07": {
+      "date": "2026-05-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-08": {
+      "date": "2026-05-08",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-09": {
+      "date": "2026-05-09",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-10": {
+      "date": "2026-05-10",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-11": {
+      "date": "2026-05-11",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-12": {
+      "date": "2026-05-12",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-13": {
+      "date": "2026-05-13",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-14": {
+      "date": "2026-05-14",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-15": {
+      "date": "2026-05-15",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-16": {
+      "date": "2026-05-16",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-17": {
+      "date": "2026-05-17",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-18": {
+      "date": "2026-05-18",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-19": {
+      "date": "2026-05-19",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-20": {
+      "date": "2026-05-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-21": {
+      "date": "2026-05-21",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-22": {
+      "date": "2026-05-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-23": {
+      "date": "2026-05-23",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-24": {
+      "date": "2026-05-24",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-25": {
+      "date": "2026-05-25",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-26": {
+      "date": "2026-05-26",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-05-27": {
+      "date": "2026-05-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-28": {
+      "date": "2026-05-28",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-29": {
+      "date": "2026-05-29",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-05-30": {
+      "date": "2026-05-30",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-05-31": {
+      "date": "2026-05-31",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-01": {
+      "date": "2026-06-01",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-02": {
+      "date": "2026-06-02",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-03": {
+      "date": "2026-06-03",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-04": {
+      "date": "2026-06-04",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-05": {
+      "date": "2026-06-05",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-06": {
+      "date": "2026-06-06",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-07": {
+      "date": "2026-06-07",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-08": {
+      "date": "2026-06-08",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-09": {
+      "date": "2026-06-09",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-10": {
+      "date": "2026-06-10",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-11": {
+      "date": "2026-06-11",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-12": {
+      "date": "2026-06-12",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-13": {
+      "date": "2026-06-13",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-14": {
+      "date": "2026-06-14",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-15": {
+      "date": "2026-06-15",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-16": {
+      "date": "2026-06-16",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-06-17": {
+      "date": "2026-06-17",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-18": {
+      "date": "2026-06-18",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-19": {
+      "date": "2026-06-19",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-20": {
+      "date": "2026-06-20",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-21": {
+      "date": "2026-06-21",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-22": {
+      "date": "2026-06-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-23": {
+      "date": "2026-06-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-24": {
+      "date": "2026-06-24",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-06-25": {
+      "date": "2026-06-25",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-26": {
+      "date": "2026-06-26",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-06-27": {
+      "date": "2026-06-27",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-28": {
+      "date": "2026-06-28",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-06-29": {
+      "date": "2026-06-29",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-06-30": {
+      "date": "2026-06-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-01": {
+      "date": "2026-07-01",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-02": {
+      "date": "2026-07-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-03": {
+      "date": "2026-07-03",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-04": {
+      "date": "2026-07-04",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-05": {
+      "date": "2026-07-05",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-06": {
+      "date": "2026-07-06",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-07": {
+      "date": "2026-07-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-08": {
+      "date": "2026-07-08",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-07-09": {
+      "date": "2026-07-09",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-10": {
+      "date": "2026-07-10",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-11": {
+      "date": "2026-07-11",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-12": {
+      "date": "2026-07-12",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-13": {
+      "date": "2026-07-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-14": {
+      "date": "2026-07-14",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-15": {
+      "date": "2026-07-15",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-18": {
+      "date": "2026-07-18",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-19": {
+      "date": "2026-07-19",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-20": {
+      "date": "2026-07-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-23": {
+      "date": "2026-07-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-25": {
+      "date": "2026-07-25",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-26": {
+      "date": "2026-07-26",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-07-27": {
+      "date": "2026-07-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-28": {
+      "date": "2026-07-28",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-01": {
+      "date": "2026-08-01",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-02": {
+      "date": "2026-08-02",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-03": {
+      "date": "2026-08-03",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-08": {
+      "date": "2026-08-08",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-09": {
+      "date": "2026-08-09",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-10": {
+      "date": "2026-08-10",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-15": {
+      "date": "2026-08-15",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-16": {
+      "date": "2026-08-16",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-17": {
+      "date": "2026-08-17",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-22": {
+      "date": "2026-08-22",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-23": {
+      "date": "2026-08-23",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-24": {
+      "date": "2026-08-24",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-25": {
+      "date": "2026-08-25",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-26": {
+      "date": "2026-08-26",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-28": {
+      "date": "2026-08-28",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-08-29": {
+      "date": "2026-08-29",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-30": {
+      "date": "2026-08-30",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-08-31": {
+      "date": "2026-08-31",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-01": {
+      "date": "2026-09-01",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-02": {
+      "date": "2026-09-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-03": {
+      "date": "2026-09-03",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-04": {
+      "date": "2026-09-04",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-09-05": {
+      "date": "2026-09-05",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-06": {
+      "date": "2026-09-06",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-07": {
+      "date": "2026-09-07",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-09-08": {
+      "date": "2026-09-08",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-09": {
+      "date": "2026-09-09",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-10": {
+      "date": "2026-09-10",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-11": {
+      "date": "2026-09-11",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-12": {
+      "date": "2026-09-12",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-13": {
+      "date": "2026-09-13",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-14": {
+      "date": "2026-09-14",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-15": {
+      "date": "2026-09-15",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-16": {
+      "date": "2026-09-16",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-18": {
+      "date": "2026-09-18",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-19": {
+      "date": "2026-09-19",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-20": {
+      "date": "2026-09-20",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-21": {
+      "date": "2026-09-21",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-22": {
+      "date": "2026-09-22",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-23": {
+      "date": "2026-09-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-24": {
+      "date": "2026-09-24",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-25": {
+      "date": "2026-09-25",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-26": {
+      "date": "2026-09-26",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-27": {
+      "date": "2026-09-27",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-09-28": {
+      "date": "2026-09-28",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-09-29": {
+      "date": "2026-09-29",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-09-30": {
+      "date": "2026-09-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-01": {
+      "date": "2026-10-01",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-02": {
+      "date": "2026-10-02",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-03": {
+      "date": "2026-10-03",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-04": {
+      "date": "2026-10-04",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-05": {
+      "date": "2026-10-05",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-06": {
+      "date": "2026-10-06",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-07": {
+      "date": "2026-10-07",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-08": {
+      "date": "2026-10-08",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-09": {
+      "date": "2026-10-09",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-10": {
+      "date": "2026-10-10",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-11": {
+      "date": "2026-10-11",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-12": {
+      "date": "2026-10-12",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-10-13": {
+      "date": "2026-10-13",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-10-14": {
+      "date": "2026-10-14",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-10-15": {
+      "date": "2026-10-15",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-10-16": {
+      "date": "2026-10-16",
+      "status": "ferie",
+      "isConfirmed": true
+    },
+    "2026-10-17": {
+      "date": "2026-10-17",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-18": {
+      "date": "2026-10-18",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-19": {
+      "date": "2026-10-19",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-21": {
+      "date": "2026-10-21",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-22": {
+      "date": "2026-10-22",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-24": {
+      "date": "2026-10-24",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-25": {
+      "date": "2026-10-25",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    },
+    "2026-10-26": {
+      "date": "2026-10-26",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-27": {
+      "date": "2026-10-27",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-28": {
+      "date": "2026-10-28",
+      "status": "presenza",
+      "isConfirmed": true
+    },
+    "2026-10-29": {
+      "date": "2026-10-29",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-30": {
+      "date": "2026-10-30",
+      "status": "smart",
+      "isConfirmed": true
+    },
+    "2026-10-31": {
+      "date": "2026-10-31",
+      "status": "non_lavorativo",
+      "isConfirmed": false
+    }
+  },
+  "timeEntries": {
+    "2026-01-07": {
+      "date": "2026-01-07",
+      "morningIn": "08:13",
+      "lunchOut": "11:56",
+      "lunchIn": "12:27",
+      "eveningOut": "16:59",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-08": {
+      "date": "2026-01-08",
+      "morningIn": "08:09",
+      "lunchOut": "12:00",
+      "lunchIn": "12:31",
+      "eveningOut": "16:49",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-09": {
+      "date": "2026-01-09",
+      "morningIn": "08:29",
+      "lunchOut": "12:01",
+      "lunchIn": "12:35",
+      "eveningOut": "17:18",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-12": {
+      "date": "2026-01-12",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-13": {
+      "date": "2026-01-13",
+      "morningIn": "08:10",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:57",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-14": {
+      "date": "2026-01-14",
+      "morningIn": "08:36",
+      "lunchOut": "12:01",
+      "lunchIn": "12:31",
+      "eveningOut": "17:21",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-15": {
+      "date": "2026-01-15",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-16": {
+      "date": "2026-01-16",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-19": {
+      "date": "2026-01-19",
+      "morningIn": "07:51",
+      "lunchOut": "12:03",
+      "lunchIn": "12:31",
+      "eveningOut": "17:35",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-20": {
+      "date": "2026-01-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-21": {
+      "date": "2026-01-21",
+      "morningIn": "08:20",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "19:24",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-22": {
+      "date": "2026-01-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-23": {
+      "date": "2026-01-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-26": {
+      "date": "2026-01-26",
+      "morningIn": "07:55",
+      "lunchOut": "12:01",
+      "lunchIn": "12:28",
+      "eveningOut": "17:02",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-01-27": {
+      "date": "2026-01-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-28": {
+      "date": "2026-01-28",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-29": {
+      "date": "2026-01-29",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-01-30": {
+      "date": "2026-01-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-02": {
+      "date": "2026-02-02",
+      "morningIn": "07:51",
+      "lunchOut": "12:03",
+      "lunchIn": "12:31",
+      "eveningOut": "17:30",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-02-03": {
+      "date": "2026-02-03",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-04": {
+      "date": "2026-02-04",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-05": {
+      "date": "2026-02-05",
+      "morningIn": "08:52",
+      "lunchOut": "12:04",
+      "lunchIn": "12:45",
+      "eveningOut": "17:11",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-02-06": {
+      "date": "2026-02-06",
+      "morningIn": "08:13",
+      "lunchOut": "12:12",
+      "lunchIn": "12:49",
+      "eveningOut": "17:15",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-02-09": {
+      "date": "2026-02-09",
+      "morningIn": "08:04",
+      "lunchOut": "11:59",
+      "lunchIn": "12:30",
+      "eveningOut": "17:34",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-02-10": {
+      "date": "2026-02-10",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-11": {
+      "date": "2026-02-11",
+      "morningIn": "08:05",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "19:20",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-02-12": {
+      "date": "2026-02-12",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-13": {
+      "date": "2026-02-13",
+      "morningIn": "08:28",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:35",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-02-16": {
+      "date": "2026-02-16",
+      "morningIn": "08:11",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:51",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-02-17": {
+      "date": "2026-02-17",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-19": {
+      "date": "2026-02-19",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-20": {
+      "date": "2026-02-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-23": {
+      "date": "2026-02-23",
+      "morningIn": "08:04",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:53",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-02-24": {
+      "date": "2026-02-24",
+      "morningIn": "08:09",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:30",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-02-25": {
+      "date": "2026-02-25",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-26": {
+      "date": "2026-02-26",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-02-27": {
+      "date": "2026-02-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-02": {
+      "date": "2026-03-02",
+      "morningIn": "08:13",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:55",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-03": {
+      "date": "2026-03-03",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-04": {
+      "date": "2026-03-04",
+      "morningIn": "07:57",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:09",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-05": {
+      "date": "2026-03-05",
+      "morningIn": "08:02",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:10",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-06": {
+      "date": "2026-03-06",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-09": {
+      "date": "2026-03-09",
+      "morningIn": "08:09",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:02",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-10": {
+      "date": "2026-03-10",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-11": {
+      "date": "2026-03-11",
+      "morningIn": "08:06",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:30",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-12": {
+      "date": "2026-03-12",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-13": {
+      "date": "2026-03-13",
+      "morningIn": "08:11",
+      "lunchOut": "11:59",
+      "lunchIn": "12:38",
+      "eveningOut": "17:15",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-03-16": {
+      "date": "2026-03-16",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-17": {
+      "date": "2026-03-17",
+      "morningIn": "07:44",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:53",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-03-18": {
+      "date": "2026-03-18",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-19": {
+      "date": "2026-03-19",
+      "morningIn": "07:45",
+      "lunchOut": "12:10",
+      "lunchIn": "12:50",
+      "eveningOut": "16:51",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-03-20": {
+      "date": "2026-03-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-23": {
+      "date": "2026-03-23",
+      "morningIn": "08:06",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:09",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-03-24": {
+      "date": "2026-03-24",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-25": {
+      "date": "2026-03-25",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-26": {
+      "date": "2026-03-26",
+      "morningIn": "07:21",
+      "lunchOut": "12:07",
+      "lunchIn": "12:51",
+      "eveningOut": "16:01",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-03-27": {
+      "date": "2026-03-27",
+      "morningIn": "08:30",
+      "lunchOut": "12:43",
+      "lunchIn": "13:12",
+      "eveningOut": "16:08",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-03-30": {
+      "date": "2026-03-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-03-31": {
+      "date": "2026-03-31",
+      "morningIn": "07:56",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:00",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-01": {
+      "date": "2026-04-01",
+      "morningIn": "08:17",
+      "lunchOut": "13:13",
+      "lunchIn": "13:56",
+      "eveningOut": "17:08",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-02": {
+      "date": "2026-04-02",
+      "morningIn": "08:29",
+      "lunchOut": "12:09",
+      "lunchIn": "12:28",
+      "eveningOut": "18:17",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-07": {
+      "date": "2026-04-07",
+      "morningIn": "07:59",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:45",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-08": {
+      "date": "2026-04-08",
+      "morningIn": "08:34",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:12",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-09": {
+      "date": "2026-04-09",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-10": {
+      "date": "2026-04-10",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-13": {
+      "date": "2026-04-13",
+      "morningIn": "07:56",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:45",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-14": {
+      "date": "2026-04-14",
+      "morningIn": "08:15",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:06",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-15": {
+      "date": "2026-04-15",
+      "morningIn": "08:02",
+      "lunchOut": "12:52",
+      "lunchIn": "14:02",
+      "eveningOut": "16:39",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-16": {
+      "date": "2026-04-16",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-17": {
+      "date": "2026-04-17",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-20": {
+      "date": "2026-04-20",
+      "morningIn": "08:22",
+      "lunchOut": "11:53",
+      "lunchIn": "12:25",
+      "eveningOut": "17:11",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-21": {
+      "date": "2026-04-21",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-22": {
+      "date": "2026-04-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-23": {
+      "date": "2026-04-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-24": {
+      "date": "2026-04-24",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-27": {
+      "date": "2026-04-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-04-28": {
+      "date": "2026-04-28",
+      "morningIn": "08:11",
+      "lunchOut": "12:28",
+      "lunchIn": "13:17",
+      "eveningOut": "16:30",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-29": {
+      "date": "2026-04-29",
+      "morningIn": "08:30",
+      "lunchOut": "11:57",
+      "lunchIn": "12:32",
+      "eveningOut": "17:02",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-04-30": {
+      "date": "2026-04-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-04": {
+      "date": "2026-05-04",
+      "morningIn": "08:14",
+      "lunchOut": "11:57",
+      "lunchIn": "12:34",
+      "eveningOut": "17:13",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-05-05": {
+      "date": "2026-05-05",
+      "morningIn": "08:05",
+      "lunchOut": "12:44",
+      "lunchIn": "13:33",
+      "eveningOut": "17:11",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-05-06": {
+      "date": "2026-05-06",
+      "morningIn": "07:51",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:12",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-05-07": {
+      "date": "2026-05-07",
+      "morningIn": "08:06",
+      "lunchOut": "12:43",
+      "lunchIn": "14:07",
+      "eveningOut": "17:20",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-08": {
+      "date": "2026-05-08",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-11": {
+      "date": "2026-05-11",
+      "morningIn": "08:13",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:53",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-12": {
+      "date": "2026-05-12",
+      "morningIn": "08:07",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:51",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-13": {
+      "date": "2026-05-13",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-14": {
+      "date": "2026-05-14",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-15": {
+      "date": "2026-05-15",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-18": {
+      "date": "2026-05-18",
+      "morningIn": "08:00",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:58",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-19": {
+      "date": "2026-05-19",
+      "morningIn": "07:53",
+      "lunchOut": "12:25",
+      "lunchIn": "13:00",
+      "eveningOut": "16:28",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-20": {
+      "date": "2026-05-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-21": {
+      "date": "2026-05-21",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-22": {
+      "date": "2026-05-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-25": {
+      "date": "2026-05-25",
+      "morningIn": "08:11",
+      "lunchOut": "12:52",
+      "lunchIn": "13:18",
+      "eveningOut": "17:08",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-26": {
+      "date": "2026-05-26",
+      "morningIn": "08:04",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "17:16",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-05-27": {
+      "date": "2026-05-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-28": {
+      "date": "2026-05-28",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-05-29": {
+      "date": "2026-05-29",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-01": {
+      "date": "2026-06-01",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-15": {
+      "date": "2026-06-15",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-16": {
+      "date": "2026-06-16",
+      "morningIn": "08:29",
+      "lunchOut": "13:13",
+      "lunchIn": "13:37",
+      "eveningOut": "16:15",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-06-17": {
+      "date": "2026-06-17",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-18": {
+      "date": "2026-06-18",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-19": {
+      "date": "2026-06-19",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-22": {
+      "date": "2026-06-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-23": {
+      "date": "2026-06-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-24": {
+      "date": "2026-06-24",
+      "morningIn": "08:04",
+      "lunchOut": "12:01",
+      "lunchIn": "12:33",
+      "eveningOut": "15:36",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-06-25": {
+      "date": "2026-06-25",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-29": {
+      "date": "2026-06-29",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-06-30": {
+      "date": "2026-06-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-01": {
+      "date": "2026-07-01",
+      "morningIn": "08:16",
+      "lunchOut": "11:58",
+      "lunchIn": "12:30",
+      "eveningOut": "17:30",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-02": {
+      "date": "2026-07-02",
+      "morningIn": "07:43",
+      "lunchOut": "12:22",
+      "lunchIn": "12:57",
+      "eveningOut": "16:20",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-03": {
+      "date": "2026-07-03",
+      "morningIn": "07:56",
+      "lunchOut": "12:36",
+      "lunchIn": "13:06",
+      "eveningOut": "16:30",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-06": {
+      "date": "2026-07-06",
+      "morningIn": "07:51",
+      "lunchOut": "11:57",
+      "lunchIn": "12:23",
+      "eveningOut": "16:54",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-07": {
+      "date": "2026-07-07",
+      "morningIn": "07:43",
+      "lunchOut": "12:26",
+      "lunchIn": "13:13",
+      "eveningOut": "16:48",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-09": {
+      "date": "2026-07-09",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-10": {
+      "date": "2026-07-10",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-13": {
+      "date": "2026-07-13",
+      "morningIn": "08:37",
+      "lunchOut": "11:58",
+      "lunchIn": "12:22",
+      "eveningOut": "17:22",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-14": {
+      "date": "2026-07-14",
+      "morningIn": "08:04",
+      "lunchOut": "12:00",
+      "lunchIn": "12:30",
+      "eveningOut": "16:42",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-15": {
+      "date": "2026-07-15",
+      "morningIn": "08:15",
+      "lunchOut": "12:45",
+      "lunchIn": "13:17",
+      "eveningOut": "17:14",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "morningIn": "07:56",
+      "lunchOut": "12:10",
+      "lunchIn": "12:49",
+      "eveningOut": "17:48",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "morningIn": "07:46",
+      "lunchOut": "12:44",
+      "lunchIn": "13:17",
+      "eveningOut": "16:23",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-07-20": {
+      "date": "2026-07-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "morningIn": "07:55",
+      "lunchOut": "12:01",
+      "lunchIn": "12:41",
+      "eveningOut": "17:15",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-23": {
+      "date": "2026-07-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-27": {
+      "date": "2026-07-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-28": {
+      "date": "2026-07-28",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "morningIn": "08:02",
+      "lunchOut": "12:42",
+      "lunchIn": "14:04",
+      "eveningOut": "17:09",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-03": {
+      "date": "2026-08-03",
+      "morningIn": "08:06",
+      "lunchOut": "12:05",
+      "lunchIn": "12:35",
+      "eveningOut": "16:58",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "morningIn": "07:50",
+      "lunchOut": "11:52",
+      "lunchIn": "12:21",
+      "eveningOut": "16:26",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "morningIn": "08:07",
+      "lunchOut": "12:01",
+      "lunchIn": "12:32",
+      "eveningOut": "16:46",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "morningIn": "09:05",
+      "lunchOut": "12:21",
+      "lunchIn": "12:56",
+      "eveningOut": "17:36",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "morningIn": "08:07",
+      "lunchOut": "12:00",
+      "lunchIn": "12:38",
+      "eveningOut": "17:21",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-10": {
+      "date": "2026-08-10",
+      "morningIn": "07:46",
+      "lunchOut": "12:01",
+      "lunchIn": "12:51",
+      "eveningOut": "16:43",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "morningIn": "08:03",
+      "lunchOut": "12:23",
+      "lunchIn": "12:56",
+      "eveningOut": "16:45",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "morningIn": "07:50",
+      "lunchOut": "12:10",
+      "lunchIn": "12:40",
+      "eveningOut": "16:50",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-08-17": {
+      "date": "2026-08-17",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-24": {
+      "date": "2026-08-24",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-25": {
+      "date": "2026-08-25",
+      "morningIn": "08:00",
+      "lunchOut": "12:53",
+      "lunchIn": "13:30",
+      "eveningOut": "16:07",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-26": {
+      "date": "2026-08-26",
+      "morningIn": "07:48",
+      "lunchOut": "12:14",
+      "lunchIn": "12:45",
+      "eveningOut": "16:46",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-28": {
+      "date": "2026-08-28",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-08-31": {
+      "date": "2026-08-31",
+      "morningIn": "08:06",
+      "lunchOut": "12:34",
+      "lunchIn": "14:01",
+      "eveningOut": "16:37",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-01": {
+      "date": "2026-09-01",
+      "morningIn": "07:49",
+      "lunchOut": "12:03",
+      "lunchIn": "12:33",
+      "eveningOut": "16:38",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-09-02": {
+      "date": "2026-09-02",
+      "morningIn": "07:54",
+      "lunchOut": "12:36",
+      "lunchIn": "13:14",
+      "eveningOut": "16:44",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-09-03": {
+      "date": "2026-09-03",
+      "morningIn": "07:57",
+      "lunchOut": "12:29",
+      "lunchIn": "13:13",
+      "eveningOut": "15:57",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-09-08": {
+      "date": "2026-09-08",
+      "morningIn": "08:02",
+      "lunchOut": "12:19",
+      "lunchIn": "12:56",
+      "eveningOut": "16:39",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-09": {
+      "date": "2026-09-09",
+      "morningIn": "08:11",
+      "lunchOut": "12:23",
+      "lunchIn": "12:37",
+      "eveningOut": "16:53",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-10": {
+      "date": "2026-09-10",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-11": {
+      "date": "2026-09-11",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-14": {
+      "date": "2026-09-14",
+      "morningIn": "08:13",
+      "lunchOut": "12:32",
+      "lunchIn": "13:03",
+      "eveningOut": "16:45",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-15": {
+      "date": "2026-09-15",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-16": {
+      "date": "2026-09-16",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-18": {
+      "date": "2026-09-18",
+      "morningIn": "07:58",
+      "lunchOut": "12:26",
+      "lunchIn": "13:01",
+      "eveningOut": "15:45",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-21": {
+      "date": "2026-09-21",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-22": {
+      "date": "2026-09-22",
+      "morningIn": "07:51",
+      "lunchOut": "12:11",
+      "lunchIn": "12:48",
+      "eveningOut": "15:38",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-09-23": {
+      "date": "2026-09-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-24": {
+      "date": "2026-09-24",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-25": {
+      "date": "2026-09-25",
+      "morningIn": "08:00",
+      "lunchOut": "12:08",
+      "lunchIn": "12:44",
+      "eveningOut": "15:40",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-28": {
+      "date": "2026-09-28",
+      "morningIn": "09:00",
+      "eveningOut": "12:00",
+      "permissionMinutes": 300,
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-09-29": {
+      "date": "2026-09-29",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-09-30": {
+      "date": "2026-09-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-01": {
+      "date": "2026-10-01",
+      "morningIn": "08:01",
+      "lunchOut": "12:06",
+      "lunchIn": "12:35",
+      "eveningOut": "17:36",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-02": {
+      "date": "2026-10-02",
+      "morningIn": "07:59",
+      "lunchOut": "11:59",
+      "lunchIn": "12:33",
+      "eveningOut": "16:05",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-05": {
+      "date": "2026-10-05",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-06": {
+      "date": "2026-10-06",
+      "morningIn": "08:08",
+      "lunchOut": "13:00",
+      "lunchIn": "13:39",
+      "eveningOut": "17:00",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-07": {
+      "date": "2026-10-07",
+      "morningIn": "08:13",
+      "lunchOut": "12:47",
+      "lunchIn": "13:23",
+      "eveningOut": "16:33",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-08": {
+      "date": "2026-10-08",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-09": {
+      "date": "2026-10-09",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-19": {
+      "date": "2026-10-19",
+      "morningIn": "08:08",
+      "lunchOut": "12:34",
+      "lunchIn": "13:07",
+      "eveningOut": "17:13",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "morningIn": "08:14",
+      "lunchOut": "12:07",
+      "lunchIn": "12:58",
+      "eveningOut": "16:50",
+      "canteenUsed": true,
+      "isSmartWork": false
+    },
+    "2026-10-21": {
+      "date": "2026-10-21",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-22": {
+      "date": "2026-10-22",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-26": {
+      "date": "2026-10-26",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-27": {
+      "date": "2026-10-27",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-28": {
+      "date": "2026-10-28",
+      "morningIn": "08:02",
+      "lunchOut": "11:56",
+      "lunchIn": "12:25",
+      "eveningOut": "16:28",
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-10-29": {
+      "date": "2026-10-29",
+      "canteenUsed": false,
+      "isSmartWork": true
+    },
+    "2026-10-30": {
+      "date": "2026-10-30",
+      "canteenUsed": false,
+      "isSmartWork": true
+    }
+  }
+}
