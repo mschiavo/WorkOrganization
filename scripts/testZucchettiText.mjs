@@ -1,65 +1,128 @@
-const sampleText = `1 Dom FES
-2 Lun 08:0012:0512:3716:47 0:15ORE POSITIVE S25
-3 Mar 07:5412:0112:4016:28 0:05ORE NEGATIVE FULL-TIME dalle 16:28 alle 16:33 S25
-4 Mer 08:0311:5912:3316:53 0:16ORE POSITIVE S25
-5 Gio 08:1512:0012:3016:47 0:02ORE POSITIVE S25
-6 Ven 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-7 Sab SAB
-8 Dom DOM
-9 Lun 8:00FERIE dalle 07:30 alle 11:30 FERIE dalle 12:00 alle 16:00 FERIE S25
-10 Mar 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-11 Mer 07:5612:1012:4316:50 0:21ORE POSITIVE S25
-12 Gio 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-13 Ven 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-14 Sab SAB
-15 Dom DOM
-16 Lun 8:00PAR GIORNO dalle 07:30 alle 11:30 PAR GIORNO dalle 12:00 alle 16:00 PAR GIORNO S25
-17 Mar 08:1112:0212:4816:44 0:13ORE NEGATIVE FULL-TIME dalle 16:44 alle 16:57 S25
-18 Mer 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-19 Gio 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00 S25
-20 Ven 1SW - SMART WORKING/LAVORO AGILE S25
-21 Sab SAB
-22 Dom DOM
-23 Lun PAR GIORNO S25
-24 Mar S25
-25 Mer S25
-26 Gio S25
-27 Ven S25
-28 Sab SAB
-29 Dom DOM
-30 Lun S25`;
-
-const dayRegex = /(\d{1,2})\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b([\s\S]*?)(?=(?:(?:\r?\n)\s*\d{1,2}\s+(?:Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b)|$)/gi;
-let match;
-let count = 0;
-
-while ((match = dayRegex.exec(sampleText)) !== null) {
-  const dayNum = parseInt(match[1], 10);
-  const weekday = match[2];
-  const content = match[3].replace(/\s+/g, ' ').trim();
-
-  // Find 4 times: 08:0012:0512:3716:47
-  const timesMatch = content.match(/(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})/);
-  let status = 'presenza';
-  let in1, out1, in2, out2;
-
-  if (timesMatch) {
-    in1 = timesMatch[1];
-    out1 = timesMatch[2];
-    in2 = timesMatch[3];
-    out2 = timesMatch[4];
-  } else if (/SMART WORKING/i.test(content) || /\b1SW\b/.test(content)) {
-    status = 'smart';
-  } else if (/FERIE/i.test(content)) {
-    status = 'ferie';
-  } else if (/PAR/i.test(content) || /ROL/i.test(content)) {
-    status = 'par';
-  } else if (weekday === 'Sab' || weekday === 'Dom' || /FES/i.test(content)) {
-    status = 'non_lavorativo';
-  }
-
-  count++;
-  console.log(`Day ${String(dayNum).padStart(2, '0')} (${weekday}): status=${status.padEnd(14)} ${in1 ? `| ${in1} - ${out1} / ${in2} - ${out2}` : ''}`);
-}
-
-console.log('Total days matched:', count);
+(async function autoCrawlYear2026() {
+      console.log("🚀 Avvio estrazione completa Anno 2026 da Zucchetti...");
+   
+      function getCartellinoFrame() {
+        const winList = [window.top || window];
+        try {
+          for (let i = 0; i < (window.top || window).frames.length; i++) {
+            try { winList.push((window.top || window).frames[i]); } catch(e){}
+          }
+        } catch(e){}
+        for (const w of winList) {
+          try {
+            if (w.document && w.document.body && /\b\d{1,2}\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b/i.test(w.document.body.innerText)) {
+              return w;
+            }
+          } catch(e){}
+        }
+        return window;
+      }
+   
+      const frame = getCartellinoFrame();
+      const doc = frame.document;
+   
+      const months = [
+        { name: 'Gennaio', num: 1 },
+        { name: 'Febbraio', num: 2 },
+        { name: 'Marzo', num: 3 },
+        { name: 'Aprile', num: 4 },
+        { name: 'Maggio', num: 5 },
+        { name: 'Giugno', num: 6 },
+        { name: 'Luglio', num: 7 },
+        { name: 'Agosto', num: 8 },
+        { name: 'Settembre', num: 9 },
+        { name: 'Ottobre', num: 10 },
+        { name: 'Novembre', num: 11 }
+      ];
+   
+      const allDays = {};
+      const allTimeEntries = {};
+   
+      function parseCurrentView(monthNum) {
+        const rawText = frame.document.body.innerText;
+        const year = 2026;
+        const paddedM = String(monthNum).padStart(2, '0');
+        const dayRegex = /(\d{1,2})\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b([\s\S]*?)(?=(?:(?:\r?\n)\s*\d{1,2}\s+(?:Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b)|$)/gi;
+        let match;
+   
+        while ((match = dayRegex.exec(rawText)) !== null) {
+          const dayNum = parseInt(match[1], 10);
+          const weekday = match[2];
+          const content = match[3].replace(/\s+/g, ' ').trim();
+          const paddedD = String(dayNum).padStart(2, '0');
+          const dateStr = `${year}-${paddedM}-${paddedD}`;
+   
+          const timesMatch = content.match(/(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})/);
+          let status = 'presenza';
+          let isSmart = false;
+          let in1, out1, in2, out2;
+   
+          if (timesMatch) {
+            in1 = timesMatch[1]; out1 = timesMatch[2]; in2 = timesMatch[3]; out2 = timesMatch[4];
+            status = 'presenza';
+          } else if (/SMART WORKING/i.test(content) || /\b1SW\b/.test(content)) {
+            status = 'smart'; isSmart = true;
+          } else if (/FERIE/i.test(content)) {
+            status = 'ferie';
+          } else if (/PAR/i.test(content) || /ROL/i.test(content)) {
+            status = 'par';
+          } else if (/FES/i.test(content)) {
+            status = 'chiusura';
+          } else if (weekday === 'Sab' || weekday === 'Dom') {
+            status = 'non_lavorativo';
+          }
+   
+          const canteenUsed = Boolean(in1 && out2 && status === 'presenza');
+          allDays[dateStr] = { date: dateStr, status, isConfirmed: status !== 'non_lavorativo' };
+          if (status === 'smart' || in1 || canteenUsed) {
+            allTimeEntries[dateStr] = { date: dateStr, morningIn: in1, lunchOut: out1, lunchIn: in2, eveningOut: out2, canteenUsed, isSmartWork: isSmart };
+          }
+        }
+      }
+   
+      // Trova gli elementi cliccabili dei mesi
+      for (const m of months) {
+        const allClickables = Array.from(doc.querySelectorAll('a, button, span, td, div'));
+        const monthBtn = allClickables.find(el => el.innerText && el.innerText.trim().toLowerCase() === m.name.toLowerCase() && el.children.length === 0);
+   
+        if (monthBtn) {
+          console.log(`⏳ Caricamento ${m.name} 2026...`);
+          monthBtn.click();
+          // Attesa rendering AJAX di Zucchetti
+          await new Promise(r => setTimeout(r, 900));
+          parseCurrentView(m.num);
+          console.log(`✅ ${m.name} estratto! (Totale progressivo: ${Object.keys(allDays).length} giorni)`);
+        } else {
+          console.log(`⚠️ Pulsante ${m.name} non cliccabile direttamente, estrazione vista corrente...`);
+          parseCurrentView(m.num);
+        }
+      }
+   
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        settings: {
+          maxSmartDaysMonth: 10, minPresenceDaysWeek: 1, maxSmartDaysWeek: 4,
+          standardDayHours: 8, reducedDayHours: 7, minLunchBreakMinutes: 30,
+          canteenVoucherCost: 1.5, smartVoucherValue: 8.0, yearlyFerieHours: 160,
+          yearlyParHours: 88, preferredLayout: 'split', preferredTheme: 'dark'
+        },
+        days: allDays,
+        timeEntries: allTimeEntries
+      };
+   
+      const totalCount = Object.keys(allDays).length;
+      console.log(`🎉 COMPLETATO! Estratti in totale ${totalCount} giorni per tutto il 2026.`);
+   
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `WorkOrganization_Zucchetti_Anno_2026.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+   
+      console.log("📁 File 'WorkOrganization_Zucchetti_Anno_2026.json' scaricato! Caricalo in WorkOrganizer.");
+    })();

@@ -1,17 +1,13 @@
 // ==UserScript==
 // @name         Zucchetti to WorkOrganizer Exporter
 // @namespace    https://github.com/mschiavo/WorkOrganization
-// @version      2.0.0
+// @version      2.1.0
 // @description  Estrae le timbrature e il cartellino dal portale Zucchetti (HR Workflow / Presenze) e le esporta per WorkOrganizer in formato JSON e CSV.
 // @author       mschiavo & Gemini CLI
 // @match        https://saas.hrzucchetti.it/*
 // @match        https://*.hrzucchetti.it/*
 // @match        https://*.zucchetti.it/*
-// @match        *://*/WFINFOCAMERE/*
-// @match        *://*/HRPortal/*
-// @match        *://*/Presenze/*
-// @match        *://*/ZConnect/*
-// @include      /^https?:\/\/.*zucchetti.*$/
+// @match        *://*/*
 // @grant        GM_setClipboard
 // @run-at       document-end
 // ==/UserScript==
