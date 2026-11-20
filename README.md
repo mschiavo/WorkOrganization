@@ -172,6 +172,12 @@ Se desideri sincronizzare i dati su Supabase invece di operare unicamente in loc
 
 ---
 
+## 🧩 Integrazione Zucchetti (Tampermonkey Userscript)
+
+È disponibile uno Userscript pronto per **Tampermonkey** in [`tools/tampermonkey/zucchetti-to-workorganizer.user.js`](tools/tampermonkey/zucchetti-to-workorganizer.user.js) che inietta un pulsante galleggiante sul portale web Zucchetti aziendale (HR Portal, Infinity, Presenze Web, ZConnect) per esportare con 1 clic le timbrature, lo smart working, le ferie e la mensa del mese in formato JSON o CSV pronto per WorkOrganizer. Consulta la guida in [`tools/tampermonkey/README.md`](tools/tampermonkey/README.md).
+
+---
+
 ## 🚀 Deploy su GitHub Pages
 
 Il repository include già il workflow GitHub Actions configurato in `.github/workflows/deploy.yml`.

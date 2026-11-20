@@ -57,7 +57,7 @@ describe('Header & Global Navigation Components', () => {
     it('renders the WorkOrganizer brand title and version badge', async () => {
       await renderWithProviders(<Header />);
       expect(screen.getByText('WorkOrganizer')).toBeInTheDocument();
-      expect(screen.getByText(/v0\.6/i)).toBeInTheDocument();
+      expect(screen.getByText(/v0\.7/i)).toBeInTheDocument();
     });
 
     it('triggers onOpenSettings callback when settings button is clicked', async () => {
