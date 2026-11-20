@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zucchetti to WorkOrganizer Exporter
 // @namespace    https://github.com/mschiavo/WorkOrganization
-// @version      2.1.0
+// @version      2.2.0
 // @description  Estrae le timbrature e il cartellino dal portale Zucchetti (HR Workflow / Presenze) e le esporta per WorkOrganizer in formato JSON e CSV.
 // @author       mschiavo & Gemini CLI
 // @match        https://saas.hrzucchetti.it/*
@@ -15,8 +15,7 @@
 (function () {
   'use strict';
 
-  function findCartellinoText() {
-    let text = '';
+  function findCartellinoFrame() {
     const winList = [window.top || window];
     try {
       for (let i = 0; i < (window.top || window).frames.length; i++) {
@@ -29,45 +28,23 @@
         if (w.document && w.document.body) {
           const bodyText = w.document.body.innerText;
           if (/\b\d{1,2}\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b/i.test(bodyText)) {
-            text = bodyText;
-            break;
+            return w;
           }
         }
       } catch (e) {}
     }
 
-    return text;
+    return window;
   }
 
-  function detectPeriod(text) {
-    const yearMatch = text.match(/\b(202[0-9])\b/);
-    const year = yearMatch ? parseInt(yearMatch[1], 10) : new Date().getFullYear();
-
-    const monthMap = {
-      gennaio: 1, febbraio: 2, marzo: 3, aprile: 4, maggio: 5, giugno: 6,
-      luglio: 7, agosto: 8, settembre: 9, ottobre: 10, novembre: 11, dicembre: 12
-    };
-
-    let month = new Date().getMonth() + 1;
-    // Look for active selected month radio/button if present in documents
-    try {
-      const activeEl = document.querySelector('input[type="radio"]:checked, option:selected, .selected, .active');
-      if (activeEl && activeEl.innerText) {
-        const m = monthMap[activeEl.innerText.trim().toLowerCase()];
-        if (m) month = m;
-      }
-    } catch (e) {}
-
-    return { year, month };
-  }
-
-  function parseWorkflowCartellino(rawText, year, month) {
-    const days = {};
-    const timeEntries = {};
+  function parseCurrentCartellino(frame, year, month) {
+    const rawText = frame.document.body.innerText;
     const paddedM = String(month).padStart(2, '0');
-
     const dayRegex = /(\d{1,2})\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b([\s\S]*?)(?=(?:(?:\r?\n)\s*\d{1,2}\s+(?:Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b)|$)/gi;
     let match;
+
+    const days = {};
+    const timeEntries = {};
 
     while ((match = dayRegex.exec(rawText)) !== null) {
       const dayNum = parseInt(match[1], 10);
@@ -76,20 +53,19 @@
       const paddedD = String(dayNum).padStart(2, '0');
       const dateStr = `${year}-${paddedM}-${paddedD}`;
 
-      const timesMatch = content.match(/(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})/);
+      const times = content.match(/\d{2}:\d{2}/g) || [];
       let status = 'presenza';
       let isSmart = false;
       let in1, out1, in2, out2;
 
-      if (timesMatch) {
-        in1 = timesMatch[1];
-        out1 = timesMatch[2];
-        in2 = timesMatch[3];
-        out2 = timesMatch[4];
+      if (times.length >= 4) {
+        in1 = times[0]; out1 = times[1]; in2 = times[2]; out2 = times[3];
+        status = 'presenza';
+      } else if (times.length >= 2) {
+        in1 = times[0]; out2 = times[1];
         status = 'presenza';
       } else if (/SMART WORKING/i.test(content) || /\b1SW\b/.test(content)) {
-        status = 'smart';
-        isSmart = true;
+        status = 'smart'; isSmart = true;
       } else if (/FERIE/i.test(content)) {
         status = 'ferie';
       } else if (/PAR/i.test(content) || /ROL/i.test(content)) {
@@ -98,8 +74,6 @@
         status = 'chiusura';
       } else if (weekday === 'Sab' || weekday === 'Dom') {
         status = 'non_lavorativo';
-      } else {
-        status = 'presenza';
       }
 
       const canteenUsed = Boolean(in1 && out2 && status === 'presenza');
@@ -123,30 +97,7 @@
       }
     }
 
-    return {
-      version: '1.0.0',
-      exportedAt: new Date().toISOString(),
-      settings: {
-        maxSmartDaysMonth: 10,
-        minPresenceDaysWeek: 1,
-        maxSmartDaysWeek: 4,
-        ferieCompensatesPresence: false,
-        standardDayHours: 8,
-        reducedDayHours: 7,
-        minLunchBreakMinutes: 30,
-        maxDailyBankRecoveryMinutes: 60,
-        canteenVoucherCost: 1.5,
-        smartVoucherValue: 8.0,
-        yearlyFerieHours: 160,
-        prevYearFerieResidualHours: 0,
-        yearlyParHours: 88,
-        prevYearParResidualHours: 0,
-        preferredLayout: 'split',
-        preferredTheme: 'dark',
-      },
-      days,
-      timeEntries,
-    };
+    return { days, timeEntries };
   }
 
   function downloadJson(payload, fileName) {
@@ -195,16 +146,13 @@
       transition: transform 0.2s, box-shadow 0.2s;
     `;
 
-    btn.onmouseenter = () => (btn.style.transform = 'scale(1.06)');
-    btn.onmouseleave = () => (btn.style.transform = 'scale(1.0)');
-
     const panel = rootDoc.createElement('div');
     panel.style.cssText = `
       display: none;
       position: absolute;
       bottom: 58px;
       right: 0;
-      width: 300px;
+      width: 310px;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 12px;
@@ -216,13 +164,12 @@
     btn.onclick = () => {
       panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
       if (panel.style.display === 'block') {
-        const text = findCartellinoText();
-        const { year, month } = detectPeriod(text);
-        const payload = parseWorkflowCartellino(text, year, month);
-        const count = Object.keys(payload.days).length;
+        const frame = findCartellinoFrame();
+        const { days } = parseCurrentCartellino(frame, 2026, new Date().getMonth() + 1);
+        const count = Object.keys(days).length;
         const statusInfo = panel.querySelector('#wo-status-info');
         if (count > 0) {
-          statusInfo.innerText = `✅ Rilevati ${count} giorni (${year}-${String(month).padStart(2, '0')})!`;
+          statusInfo.innerText = `✅ Rilevati ${count} giorni nel cartellino!`;
           statusInfo.style.color = '#4ade80';
         } else {
           statusInfo.innerText = `⚠️ Nessun giorno rilevato nel cartellino.`;
@@ -237,14 +184,17 @@
         <span id="wo-close-btn" style="cursor: pointer; opacity: 0.6; font-size: 16px;">✕</span>
       </div>
       <div style="font-size: 12px; color: #94a3b8; margin-bottom: 12px; line-height: 1.4;">
-        Estrae le timbrature del cartellino per l'importazione diretta in WorkOrganizer.
+        Estrae le timbrature del cartellino Zucchetti per WorkOrganizer.
       </div>
       <div id="wo-status-info" style="font-size: 12px; padding: 8px; background: rgba(56, 189, 248, 0.1); border-radius: 6px; margin-bottom: 14px; color: #38bdf8;">
         Pronto per l'estrazione...
       </div>
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <button id="wo-btn-json" style="background: #0284c7; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
-          📥 Scarica JSON per WorkOrganizer
+        <button id="wo-btn-current" style="background: #0284c7; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+          📥 Scarica Mese Corrente (JSON)
+        </button>
+        <button id="wo-btn-crawl" style="background: #059669; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+          ⚡ Estrai TUTTO il 2026 (Gen-Nov)
         </button>
         <button id="wo-btn-copy" style="background: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
           📋 Copia JSON negli appunti
@@ -258,18 +208,93 @@
 
     panel.querySelector('#wo-close-btn').onclick = () => (panel.style.display = 'none');
 
-    panel.querySelector('#wo-btn-json').onclick = () => {
-      const text = findCartellinoText();
-      const { year, month } = detectPeriod(text);
-      const payload = parseWorkflowCartellino(text, year, month);
-      const fileName = `WorkOrganization_Zucchetti_${year}-${String(month).padStart(2, '0')}.json`;
-      downloadJson(payload, fileName);
+    // Scarica Mese Corrente
+    panel.querySelector('#wo-btn-current').onclick = () => {
+      const frame = findCartellinoFrame();
+      const month = new Date().getMonth() + 1;
+      const { days, timeEntries } = parseCurrentCartellino(frame, 2026, month);
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        settings: {
+          maxSmartDaysMonth: 10, minPresenceDaysWeek: 1, maxSmartDaysWeek: 4,
+          standardDayHours: 8, reducedDayHours: 7, minLunchBreakMinutes: 30,
+          canteenVoucherCost: 1.5, smartVoucherValue: 8.0, yearlyFerieHours: 160,
+          yearlyParHours: 88, preferredLayout: 'split', preferredTheme: 'dark'
+        },
+        days, timeEntries
+      };
+      downloadJson(payload, `WorkOrganization_Zucchetti_2026-${String(month).padStart(2, '0')}.json`);
     };
 
+    // Estrai Tutto il 2026
+    panel.querySelector('#wo-btn-crawl').onclick = async () => {
+      const frame = findCartellinoFrame();
+      const selectMese = frame.document.querySelector('select[id*="TxtMese"]');
+      const statusInfo = panel.querySelector('#wo-status-info');
+
+      if (!selectMese) {
+        statusInfo.innerText = "⚠️ Selettore mesi non trovato.";
+        statusInfo.style.color = "#f87171";
+        return;
+      }
+
+      const allDays = {};
+      const allTimeEntries = {};
+      const totalMonths = 11; // Gen - Nov
+
+      for (let i = 0; i < totalMonths; i++) {
+        const monthNum = i + 1;
+        const opt = selectMese.options[i];
+        statusInfo.innerText = `⏳ Caricamento ${opt ? opt.text.trim() : monthNum} 2026...`;
+        statusInfo.style.color = '#38bdf8';
+
+        selectMese.selectedIndex = i;
+        selectMese.value = selectMese.options[i].value;
+        if (typeof selectMese.onchange === 'function') selectMese.onchange();
+        selectMese.dispatchEvent(new Event('change', { bubbles: true }));
+
+        await new Promise((r) => setTimeout(r, 1600));
+
+        const { days, timeEntries } = parseCurrentCartellino(frame, 2026, monthNum);
+        Object.assign(allDays, days);
+        Object.assign(allTimeEntries, timeEntries);
+      }
+
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        settings: {
+          maxSmartDaysMonth: 10, minPresenceDaysWeek: 1, maxSmartDaysWeek: 4,
+          standardDayHours: 8, reducedDayHours: 7, minLunchBreakMinutes: 30,
+          canteenVoucherCost: 1.5, smartVoucherValue: 8.0, yearlyFerieHours: 160,
+          yearlyParHours: 88, preferredLayout: 'split', preferredTheme: 'dark'
+        },
+        days: allDays,
+        timeEntries: allTimeEntries
+      };
+
+      downloadJson(payload, `WorkOrganization_Zucchetti_Tutto_2026.json`);
+      statusInfo.innerText = `🎉 2026 Completo! Scaricato in Download.`;
+      statusInfo.style.color = '#4ade80';
+    };
+
+    // Copia
     panel.querySelector('#wo-btn-copy').onclick = () => {
-      const text = findCartellinoText();
-      const { year, month } = detectPeriod(text);
-      const payload = parseWorkflowCartellino(text, year, month);
+      const frame = findCartellinoFrame();
+      const month = new Date().getMonth() + 1;
+      const { days, timeEntries } = parseCurrentCartellino(frame, 2026, month);
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        settings: {
+          maxSmartDaysMonth: 10, minPresenceDaysWeek: 1, maxSmartDaysWeek: 4,
+          standardDayHours: 8, reducedDayHours: 7, minLunchBreakMinutes: 30,
+          canteenVoucherCost: 1.5, smartVoucherValue: 8.0, yearlyFerieHours: 160,
+          yearlyParHours: 88, preferredLayout: 'split', preferredTheme: 'dark'
+        },
+        days, timeEntries
+      };
       const jsonStr = JSON.stringify(payload, null, 2);
       if (typeof GM_setClipboard !== 'undefined') {
         GM_setClipboard(jsonStr);
