@@ -24,7 +24,7 @@ import {
   LeaveBalanceSummary,
   calculateAnnualLeaveBalance,
 } from '../core/domain/leaveManager';
-import { AppSettings, DEFAULT_SETTINGS } from '../services/storage/localCache';
+import { AppSettings, localCache } from '../services/storage/localCache';
 
 export interface WorkOrganizerContextType {
   currentYear: number;
@@ -76,27 +76,36 @@ export const WorkOrganizerProvider: React.FC<{
 
   const [days, setDays] = useState<Record<string, CalendarDayInfo>>({});
   const [timeEntries, setTimeEntries] = useState<Record<string, StoredTimeEntry>>({});
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<AppSettings>(() => localCache.getSettings());
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Load user settings on mount or when auth user changes
+  useEffect(() => {
+    workDataService.loadSettings(user?.id).then((loadedSettings) => {
+      setSettings(loadedSettings);
+    });
+  }, [user?.id]);
+
+  // Load calendar days & time entries for the current year
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await workDataService.loadMonthData(currentYear, currentMonth, user?.id);
-      setDays(data.days);
-      setTimeEntries(data.timeEntries);
-      setSettings(data.settings);
+      setDays((prev) => ({ ...prev, ...data.days }));
+      setTimeEntries((prev) => ({ ...prev, ...data.timeEntries }));
     } finally {
       setLoading(false);
     }
-  }, [currentYear, currentMonth, user?.id]);
+  }, [currentYear, user?.id]);
 
   useEffect(() => {
-    if (!user?.id) {
-      setDays({});
-      setTimeEntries({});
-    }
     loadData();
+  }, [loadData]);
+
+  const refreshData = useCallback(async () => {
+    const s = await workDataService.loadSettings(user?.id);
+    setSettings(s);
+    await loadData();
   }, [loadData, user?.id]);
 
   const setMonth = useCallback((year: number, month: number) => {
@@ -260,7 +269,7 @@ export const WorkOrganizerProvider: React.FC<{
         updateDayStatus,
         updateTimeEntry,
         updateSettings,
-        refreshData: loadData,
+        refreshData,
         monthValidation,
         quarterSummary,
         mealVouchers,

@@ -168,4 +168,44 @@ describe('WorkOrganizerContext', () => {
 
     expect(screen.getByTestId('max-smart').textContent).toBe('12');
   });
+
+  it('maintains customized settings and annual leave balances when navigating between months', async () => {
+    // Save custom settings: yearlyFerieHours = 180, yearlyParHours = 104
+    localCache.saveSettings({
+      yearlyFerieHours: 180,
+      yearlyParHours: 104,
+    });
+
+    // Save a ferie day in October (8h taken)
+    localCache.saveCalendarDay('2026-10-12', {
+      date: '2026-10-12',
+      status: 'ferie',
+      isConfirmed: true,
+    });
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <WorkOrganizerProvider initialYear={2026} initialMonth={10}>
+            <TestConsumer />
+          </WorkOrganizerProvider>
+        </AuthProvider>
+      );
+    });
+
+    // Initial check on October:
+    // 180h - 8h (1 ferie day) = 172h
+    expect(screen.getByTestId('ferie-remaining').textContent).toBe('172');
+    expect(screen.getByTestId('par-remaining').textContent).toBe('104');
+
+    // Navigate to November:
+    await act(async () => {
+      screen.getByTestId('btn-next').click();
+    });
+
+    expect(screen.getByTestId('month').textContent).toBe('11');
+    // Must remain 172h and 104h! (NOT reset to 160h or 88h or drop October's ferie)
+    expect(screen.getByTestId('ferie-remaining').textContent).toBe('172');
+    expect(screen.getByTestId('par-remaining').textContent).toBe('104');
+  });
 });

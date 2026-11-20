@@ -1,6 +1,6 @@
 import { CalendarDayInfo, DayStatus } from '../../core/domain/policyValidator';
 import { TimeEntryInput } from '../../core/domain/timeCalculator';
-import { localCache, AppSettings, DEFAULT_SETTINGS } from '../storage/localCache';
+import { localCache, AppSettings } from '../storage/localCache';
 import { getSupabaseClient } from '../supabase/client';
 
 export interface StoredTimeEntry extends TimeEntryInput {
@@ -9,23 +9,36 @@ export interface StoredTimeEntry extends TimeEntryInput {
 }
 
 function mapSupabaseSettingsToAppSettings(data: any): AppSettings {
+  const current = localCache.getSettings();
   return {
-    maxSmartDaysMonth: data.max_smart_days_month ?? DEFAULT_SETTINGS.maxSmartDaysMonth,
-    minPresenceDaysWeek: data.min_presence_days_week ?? DEFAULT_SETTINGS.minPresenceDaysWeek,
-    maxSmartDaysWeek: data.max_smart_days_week ?? DEFAULT_SETTINGS.maxSmartDaysWeek,
-    ferieCompensatesPresence: data.ferie_compensates_presence ?? DEFAULT_SETTINGS.ferieCompensatesPresence,
-    standardDayHours: Number(data.standard_day_hours ?? DEFAULT_SETTINGS.standardDayHours),
-    reducedDayHours: Number(data.reduced_day_hours ?? DEFAULT_SETTINGS.reducedDayHours),
-    minLunchBreakMinutes: data.min_lunch_break_minutes ?? DEFAULT_SETTINGS.minLunchBreakMinutes,
-    maxDailyBankRecoveryMinutes: data.max_daily_bank_recovery_minutes ?? DEFAULT_SETTINGS.maxDailyBankRecoveryMinutes,
-    canteenVoucherCost: Number(data.canteen_voucher_cost ?? DEFAULT_SETTINGS.canteenVoucherCost),
-    smartVoucherValue: Number(data.smart_voucher_value ?? DEFAULT_SETTINGS.smartVoucherValue),
-    yearlyFerieHours: Number(data.yearly_ferie_hours ?? DEFAULT_SETTINGS.yearlyFerieHours),
-    prevYearFerieResidualHours: Number(data.prev_year_ferie_residual_hours ?? DEFAULT_SETTINGS.prevYearFerieResidualHours),
-    yearlyParHours: Number(data.yearly_par_hours ?? DEFAULT_SETTINGS.yearlyParHours),
-    prevYearParResidualHours: Number(data.prev_year_par_residual_hours ?? DEFAULT_SETTINGS.prevYearParResidualHours),
-    preferredLayout: data.preferred_layout ?? DEFAULT_SETTINGS.preferredLayout,
-    preferredTheme: data.preferred_theme ?? DEFAULT_SETTINGS.preferredTheme,
+    maxSmartDaysMonth: data.max_smart_days_month ?? current.maxSmartDaysMonth,
+    minPresenceDaysWeek: data.min_presence_days_week ?? current.minPresenceDaysWeek,
+    maxSmartDaysWeek: data.max_smart_days_week ?? current.maxSmartDaysWeek,
+    ferieCompensatesPresence: data.ferie_compensates_presence ?? current.ferieCompensatesPresence,
+    standardDayHours: Number(data.standard_day_hours ?? current.standardDayHours),
+    reducedDayHours: Number(data.reduced_day_hours ?? current.reducedDayHours),
+    minLunchBreakMinutes: data.min_lunch_break_minutes ?? current.minLunchBreakMinutes,
+    maxDailyBankRecoveryMinutes: data.max_daily_bank_recovery_minutes ?? current.maxDailyBankRecoveryMinutes,
+    canteenVoucherCost: Number(data.canteen_voucher_cost ?? current.canteenVoucherCost),
+    smartVoucherValue: Number(data.smart_voucher_value ?? current.smartVoucherValue),
+    yearlyFerieHours:
+      data.yearly_ferie_hours !== undefined && data.yearly_ferie_hours !== null && !isNaN(Number(data.yearly_ferie_hours))
+        ? Number(data.yearly_ferie_hours)
+        : current.yearlyFerieHours,
+    prevYearFerieResidualHours:
+      data.prev_year_ferie_residual_hours !== undefined && data.prev_year_ferie_residual_hours !== null && !isNaN(Number(data.prev_year_ferie_residual_hours))
+        ? Number(data.prev_year_ferie_residual_hours)
+        : current.prevYearFerieResidualHours,
+    yearlyParHours:
+      data.yearly_par_hours !== undefined && data.yearly_par_hours !== null && !isNaN(Number(data.yearly_par_hours))
+        ? Number(data.yearly_par_hours)
+        : current.yearlyParHours,
+    prevYearParResidualHours:
+      data.prev_year_par_residual_hours !== undefined && data.prev_year_par_residual_hours !== null && !isNaN(Number(data.prev_year_par_residual_hours))
+        ? Number(data.prev_year_par_residual_hours)
+        : current.prevYearParResidualHours,
+    preferredLayout: data.preferred_layout ?? current.preferredLayout,
+    preferredTheme: data.preferred_theme ?? current.preferredTheme,
   };
 }
 
@@ -51,6 +64,32 @@ function mapAppSettingsToSupabase(settings: Partial<AppSettings>, userId: string
 }
 
 export const workDataService = {
+  async loadSettings(userId?: string | null): Promise<AppSettings> {
+    let settings = localCache.getSettings();
+    if (!userId) {
+      return settings;
+    }
+    const client = getSupabaseClient();
+    if (!client) {
+      return settings;
+    }
+    try {
+      const { data, error } = await client
+        .from('app_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (data && !error) {
+        settings = mapSupabaseSettingsToAppSettings(data);
+        localCache.saveSettings(settings);
+      }
+    } catch {
+      // offline fallback
+    }
+    return settings;
+  },
+
   async loadMonthData(
     year: number,
     _month: number,
@@ -253,7 +292,19 @@ export const workDataService = {
       if (client) {
         try {
           const payload = mapAppSettingsToSupabase(merged, userId);
-          await client.from('app_settings').upsert(payload, { onConflict: 'user_id' });
+          const { error } = await client.from('app_settings').upsert(payload, { onConflict: 'user_id' });
+          if (error) {
+            console.warn('Supabase app_settings upsert error:', error.message);
+            // If the remote table is missing the newly added ferie/par columns, retry with base columns
+            const {
+              yearly_ferie_hours,
+              prev_year_ferie_residual_hours,
+              yearly_par_hours,
+              prev_year_par_residual_hours,
+              ...basePayload
+            } = payload;
+            await client.from('app_settings').upsert(basePayload, { onConflict: 'user_id' });
+          }
         } catch {
           // ignore error in offline mode
         }

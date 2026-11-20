@@ -240,6 +240,37 @@ describe('workDataService', () => {
       expect(localCache.getTimeEntries()['2026-10-12']).toBeDefined();
     });
 
+    it('loadSettings loads from Supabase, preserving custom localCache ferie/par hours if remote returns null', async () => {
+      // Local cache has custom settings
+      localCache.saveSettings({
+        yearlyFerieHours: 200,
+        yearlyParHours: 120,
+      });
+
+      const mockSettingsWithoutFerie = {
+        user_id: 'user-789',
+        max_smart_days_month: 8,
+        yearly_ferie_hours: null,
+        yearly_par_hours: null,
+      };
+
+      const mockClient = {
+        from: vi.fn(() => ({
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          maybeSingle: vi.fn().mockResolvedValue({ data: mockSettingsWithoutFerie, error: null }),
+        })),
+      };
+
+      vi.spyOn(supabaseClientModule, 'getSupabaseClient').mockReturnValue(mockClient as any);
+
+      const loaded = await workDataService.loadSettings('user-789');
+
+      expect(loaded.maxSmartDaysMonth).toBe(8);
+      expect(loaded.yearlyFerieHours).toBe(200);
+      expect(loaded.yearlyParHours).toBe(120);
+    });
+
     it('queries the entire annual range (01-01 to 12-31) so leave counters and bank hours are immediately accurate across all months', async () => {
       const gteSpy = vi.fn().mockReturnThis();
       const lteSpy = vi.fn().mockResolvedValue({ data: [], error: null });
