@@ -118,18 +118,6 @@ export const workDataService = {
     }
 
     try {
-      // Load Settings
-      const { data: settingsData } = await client
-        .from('app_settings')
-        .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (settingsData) {
-        settings = mapSupabaseSettingsToAppSettings(settingsData);
-        localCache.saveSettings(settings);
-      }
-
       // Load Calendar Days
       const { data: daysData } = await client
         .from('calendar_days')

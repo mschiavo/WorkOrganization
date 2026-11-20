@@ -215,8 +215,6 @@ describe('workDataService', () => {
 
       const result = await workDataService.loadMonthData(2026, 10, 'user-123');
 
-      expect(result.settings.maxSmartDaysMonth).toBe(8);
-      expect(result.settings.preferredLayout).toBe('split');
       expect(result.days['2026-10-12']).toEqual({
         date: '2026-10-12',
         status: 'presenza',
@@ -235,7 +233,6 @@ describe('workDataService', () => {
       });
 
       // Verify mirroring into localCache
-      expect(localCache.getSettings().maxSmartDaysMonth).toBe(8);
       expect(localCache.getCalendarDays()['2026-10-12']).toBeDefined();
       expect(localCache.getTimeEntries()['2026-10-12']).toBeDefined();
     });
