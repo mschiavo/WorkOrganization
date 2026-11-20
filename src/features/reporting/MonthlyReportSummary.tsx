@@ -122,9 +122,9 @@ export const MonthlyReportSummary: React.FC = () => {
           </span>
         </div>
 
-        {/* Bilancio Buoni Pasto */}
+        {/* Bilancio Buoni Pasto Trimestrali */}
         <div className={styles.statBox}>
-          <span className={styles.statLabel}>Saldo Buoni Pasto</span>
+          <span className={styles.statLabel}>Saldo Buoni Pasto ({mealVouchers.quarterId || 'Trimestre'})</span>
           <span
             className={`${styles.statValue} ${
               mealVouchers.netBalance >= 0 ? styles.statPositive : styles.statNegative

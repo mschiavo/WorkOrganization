@@ -57,7 +57,7 @@ describe('Header & Global Navigation Components', () => {
     it('renders the WorkOrganizer brand title and version badge', async () => {
       await renderWithProviders(<Header />);
       expect(screen.getByText('WorkOrganizer')).toBeInTheDocument();
-      expect(screen.getByText(/v0\.5\.3/i)).toBeInTheDocument();
+      expect(screen.getByText(/v0\.6/i)).toBeInTheDocument();
     });
 
     it('triggers onOpenSettings callback when settings button is clicked', async () => {
@@ -163,7 +163,7 @@ describe('Header & Global Navigation Components', () => {
       expect(bancaOreBadge).toHaveTextContent(/2026-Q4:\s*\+00:00/i);
 
       const buoniBadge = await screen.findByTestId('kpi-buoni');
-      expect(buoniBadge).toHaveTextContent(/Buoni:\s*€\s*0\.00/i);
+      expect(buoniBadge).toHaveTextContent(/Buoni.*€\s*0\.00/i);
 
       const ferieBadge = await screen.findByTestId('kpi-ferie');
       expect(ferieBadge).toHaveTextContent(/Ferie:\s*160h/i);

@@ -33,6 +33,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ onSelectDay, compact
     selectedDate,
     setSelectedDate,
     days,
+    timeEntries,
     monthValidation,
   } = useWorkOrganizer();
 
@@ -106,6 +107,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ onSelectDay, compact
                       isHoliday={isHoliday}
                       isWeekend={isWeekend}
                       isFuture={dateStr > todayString}
+                      canteenUsed={timeEntries[dateStr]?.canteenUsed}
                       compact={compact}
                       onClick={handleDayClick}
                     />

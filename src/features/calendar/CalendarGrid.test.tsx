@@ -104,6 +104,48 @@ describe('Calendar & Month Planning Grid Feature', () => {
       expect(screen.queryByTestId('day-confirmed-icon')).not.toBeInTheDocument();
     });
 
+    it('renders canteen used icon 🍽️ and canteen not used icon 🥪 on presence days', () => {
+      // Presence day with canteen used:
+      const { rerender } = render(
+        <CalendarDayCard
+          date="2026-10-01"
+          dayNumber={1}
+          status="presenza"
+          canteenUsed={true}
+        />
+      );
+
+      const canteenIcon = screen.getByTestId('day-canteen-icon');
+      expect(canteenIcon).toBeInTheDocument();
+      expect(canteenIcon).toHaveTextContent('🍽️');
+      expect(canteenIcon).toHaveAttribute('data-used', 'true');
+
+      // Presence day with canteen NOT used:
+      rerender(
+        <CalendarDayCard
+          date="2026-10-01"
+          dayNumber={1}
+          status="presenza"
+          canteenUsed={false}
+        />
+      );
+
+      const noCanteenIcon = screen.getByTestId('day-canteen-icon');
+      expect(noCanteenIcon).toHaveTextContent('🥪');
+      expect(noCanteenIcon).toHaveAttribute('data-used', 'false');
+
+      // Non-presence day (e.g. smart): no canteen icon
+      rerender(
+        <CalendarDayCard
+          date="2026-10-02"
+          dayNumber={2}
+          status="smart"
+          canteenUsed={false}
+        />
+      );
+      expect(screen.queryByTestId('day-canteen-icon')).not.toBeInTheDocument();
+    });
+
     it('renders today and selected states with appropriate data attributes', () => {
       render(
         <CalendarDayCard

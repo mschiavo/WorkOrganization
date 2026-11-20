@@ -227,6 +227,14 @@
   line-height: 1;
 }
 
+.canteenIcon {
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .notesIcon {
   font-size: 0.75rem;
   cursor: help;

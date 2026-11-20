@@ -15,6 +15,11 @@ export interface MealVoucherSummary {
   netBalance: number;                // totalSmartVouchersValue - totalCanteenExpense
 }
 
+export interface QuarterlyMealVoucherSummary extends MealVoucherSummary {
+  quarterId: string;
+  quarterNumber: number;
+}
+
 /**
  * Calculates meal vouchers ledger summary.
  *
@@ -48,5 +53,62 @@ export function calculateMealVouchers(
     smartVoucherValuePerUnit: safeSmartValue,
     totalSmartVouchersValue,
     netBalance,
+  };
+}
+
+/**
+ * Calculates quarterly meal vouchers ledger summary across the 3 months of the quarter.
+ *
+ * Q1: Months 1, 2, 3
+ * Q2: Months 4, 5, 6
+ * Q3: Months 7, 8, 9
+ * Q4: Months 10, 11, 12
+ */
+export function calculateQuarterlyMealVouchers(
+  year: number,
+  quarterNumber: number,
+  daysMap: Record<string, { status?: string; date: string }>,
+  timeEntriesMap: Record<string, { canteenUsed?: boolean; isSmartWork?: boolean; date: string }>,
+  canteenCost?: number,
+  smartValue?: number
+): QuarterlyMealVoucherSummary {
+  const quarterStartMonth = (quarterNumber - 1) * 3 + 1;
+  const quarterEndMonth = quarterStartMonth + 2;
+
+  let totalSmartCount = 0;
+  let totalCanteenCount = 0;
+
+  for (let m = quarterStartMonth; m <= quarterEndMonth; m++) {
+    const paddedM = String(m).padStart(2, '0');
+    const prefix = `${year}-${paddedM}-`;
+
+    for (const [dateStr, entry] of Object.entries(timeEntriesMap)) {
+      if (dateStr.startsWith(prefix) && entry.canteenUsed) {
+        totalCanteenCount++;
+      }
+    }
+
+    for (const [dateStr, day] of Object.entries(daysMap)) {
+      if (dateStr.startsWith(prefix)) {
+        const entry = timeEntriesMap[dateStr];
+        const isSmart = day.status === 'smart' || entry?.isSmartWork === true;
+        if (isSmart) {
+          totalSmartCount++;
+        }
+      }
+    }
+  }
+
+  const baseSummary = calculateMealVouchers(
+    totalCanteenCount,
+    totalSmartCount,
+    canteenCost,
+    smartValue
+  );
+
+  return {
+    ...baseSummary,
+    quarterId: `${year}-Q${quarterNumber}`,
+    quarterNumber,
   };
 }

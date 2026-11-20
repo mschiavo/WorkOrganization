@@ -14,6 +14,7 @@ export interface CalendarDayCardProps {
   isHoliday?: boolean;
   isWeekend?: boolean;
   isFuture?: boolean;
+  canteenUsed?: boolean;
   holidayName?: string;
   compact?: boolean;
   onClick?: (date: string) => void;
@@ -43,6 +44,7 @@ export const CalendarDayCard: React.FC<CalendarDayCardProps> = ({
   isHoliday = false,
   isWeekend = false,
   isFuture,
+  canteenUsed,
   holidayName,
   compact = false,
   onClick,
@@ -97,6 +99,27 @@ export const CalendarDayCard: React.FC<CalendarDayCardProps> = ({
             >
               Festivo
             </span>
+          )}
+          {status === 'presenza' && (
+            canteenUsed ? (
+              <span
+                className={styles.canteenIcon}
+                data-testid="day-canteen-icon"
+                data-used="true"
+                title="Mensa utilizzata (-1,50 €)"
+              >
+                🍽️
+              </span>
+            ) : (
+              <span
+                className={styles.canteenIcon}
+                data-testid="day-canteen-icon"
+                data-used="false"
+                title="Mensa non utilizzata (pranzo al sacco / fuori)"
+              >
+                🥪
+              </span>
+            )
           )}
           {isConfirmed && (
             isFutureDay ? (

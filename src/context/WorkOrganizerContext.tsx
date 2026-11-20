@@ -16,8 +16,8 @@ import {
   calculateQuarterBalance,
 } from '../core/domain/bancaOreManager';
 import {
-  MealVoucherSummary,
-  calculateMealVouchers,
+  QuarterlyMealVoucherSummary,
+  calculateQuarterlyMealVouchers,
 } from '../core/domain/mealVouchersLedger';
 import { calculateDailyTime } from '../core/domain/timeCalculator';
 import {
@@ -48,7 +48,7 @@ export interface WorkOrganizerContextType {
 
   monthValidation: MonthValidationResult;
   quarterSummary: QuarterSummary;
-  mealVouchers: MealVoucherSummary;
+  mealVouchers: QuarterlyMealVoucherSummary;
   leaveBalance: LeaveBalanceSummary;
 }
 
@@ -203,33 +203,14 @@ export const WorkOrganizerProvider: React.FC<{
     return calculateQuarterBalance(currentYear, qInfo.quarterNumber, monthDeltas);
   }, [currentYear, currentMonth, timeEntries, settings.minLunchBreakMinutes]);
 
-  // Computed: Meal Vouchers
-  const mealVouchers: MealVoucherSummary = useMemo(() => {
-    const paddedMonth = String(currentMonth).padStart(2, '0');
-    const monthPrefix = `${currentYear}-${paddedMonth}`;
-
-    let canteenCount = 0;
-    let smartCount = 0;
-
-    for (const [dateStr, day] of Object.entries(days)) {
-      if (dateStr.startsWith(monthPrefix)) {
-        if (day.status === 'smart') {
-          smartCount++;
-        }
-      }
-    }
-
-    for (const [dateStr, entry] of Object.entries(timeEntries)) {
-      if (dateStr.startsWith(monthPrefix)) {
-        if (entry.canteenUsed) {
-          canteenCount++;
-        }
-      }
-    }
-
-    return calculateMealVouchers(
-      canteenCount,
-      smartCount,
+  // Computed: Meal Vouchers (Quarterly)
+  const mealVouchers: QuarterlyMealVoucherSummary = useMemo(() => {
+    const qInfo = getQuarterForMonth(currentYear, currentMonth);
+    return calculateQuarterlyMealVouchers(
+      currentYear,
+      qInfo.quarterNumber,
+      days,
+      timeEntries,
       settings.canteenVoucherCost,
       settings.smartVoucherValue
     );

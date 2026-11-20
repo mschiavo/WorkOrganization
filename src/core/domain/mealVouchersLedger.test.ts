@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateMealVouchers,
+  calculateQuarterlyMealVouchers,
   MealVoucherSummary,
 } from './mealVouchersLedger';
 
@@ -92,6 +93,47 @@ describe('MealVouchersLedger Domain Engine', () => {
       expect(summary.totalCanteenExpense).toBe(0.00);
       expect(summary.totalSmartVouchersValue).toBe(0.00);
       expect(summary.netBalance).toBe(0.00);
+    });
+  });
+
+  describe('calculateQuarterlyMealVouchers', () => {
+    it('aggregates canteen and smart working days across the 3 months of the quarter', () => {
+      const daysMap = {
+        '2026-10-01': { date: '2026-10-01', status: 'presenza' },
+        '2026-10-02': { date: '2026-10-02', status: 'smart' },
+        '2026-11-05': { date: '2026-11-05', status: 'smart' },
+        '2026-12-10': { date: '2026-12-10', status: 'smart' },
+        // Out of quarter (September Q3)
+        '2026-09-15': { date: '2026-09-15', status: 'smart' },
+      };
+
+      const timeEntriesMap = {
+        // Oct: 1 canteen used
+        '2026-10-01': { date: '2026-10-01', canteenUsed: true },
+        // Nov: 1 canteen used
+        '2026-11-02': { date: '2026-11-02', canteenUsed: true },
+        // Out of quarter canteen (September Q3)
+        '2026-09-15': { date: '2026-09-15', canteenUsed: true },
+      };
+
+      // Q4 is months 10, 11, 12
+      // Smart count in Q4 = 3 (Oct 2, Nov 5, Dec 10) * 8.00€ = 24.00€
+      // Canteen in Q4 = 2 (Oct 1, Nov 2) * 1.50€ = 3.00€
+      // Net balance = 24.00 - 3.00 = +21.00€
+      const result = calculateQuarterlyMealVouchers(
+        2026,
+        4,
+        daysMap,
+        timeEntriesMap
+      );
+
+      expect(result.quarterId).toBe('2026-Q4');
+      expect(result.quarterNumber).toBe(4);
+      expect(result.smartVoucherCount).toBe(3);
+      expect(result.canteenUsedCount).toBe(2);
+      expect(result.totalSmartVouchersValue).toBe(24.00);
+      expect(result.totalCanteenExpense).toBe(3.00);
+      expect(result.netBalance).toBe(21.00);
     });
   });
 });

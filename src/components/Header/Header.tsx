@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSettings, onOpenAuth }) =>
       {/* Brand & Version */}
       <div className={styles.brandGroup}>
         <h1 className={styles.logoTitle}>WorkOrganizer</h1>
-        <span className={styles.versionBadge}>v0.5.3</span>
+        <span className={styles.versionBadge}>v0.6</span>
       </div>
 
       {/* Center: Month Selector */}

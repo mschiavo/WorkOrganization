@@ -3,7 +3,7 @@ import { Laptop, Clock, Utensils, Palmtree } from 'lucide-react';
 import { useWorkOrganizer } from '../../context/WorkOrganizerContext';
 import { MonthValidationResult } from '../../core/domain/policyValidator';
 import { QuarterSummary } from '../../core/domain/bancaOreManager';
-import { MealVoucherSummary } from '../../core/domain/mealVouchersLedger';
+import { MealVoucherSummary, QuarterlyMealVoucherSummary } from '../../core/domain/mealVouchersLedger';
 import { LeaveBalanceSummary } from '../../core/domain/leaveManager';
 import { minutesToHHmm } from '../../core/domain/timeCalculator';
 import styles from './Header.module.css';
@@ -11,7 +11,7 @@ import styles from './Header.module.css';
 export interface KpiBadgesProps {
   monthValidation?: MonthValidationResult;
   quarterSummary?: QuarterSummary;
-  mealVouchers?: MealVoucherSummary;
+  mealVouchers?: QuarterlyMealVoucherSummary | MealVoucherSummary;
   leaveBalance?: LeaveBalanceSummary;
   maxSmartDays?: number;
 }
@@ -25,7 +25,7 @@ export const KpiBadges: React.FC<KpiBadgesProps> = ({
 }) => {
   let ctxValidation: MonthValidationResult | undefined;
   let ctxQuarter: QuarterSummary | undefined;
-  let ctxVouchers: MealVoucherSummary | undefined;
+  let ctxVouchers: QuarterlyMealVoucherSummary | MealVoucherSummary | undefined;
   let ctxLeave: LeaveBalanceSummary | undefined;
   let ctxMaxSmart: number | undefined;
 
@@ -53,6 +53,8 @@ export const KpiBadges: React.FC<KpiBadgesProps> = ({
 
   const bancaOreStatus = quarter.totalDeltaMinutes >= 0 ? 'positive' : 'negative';
   const vouchersStatus = vouchers.netBalance >= 0 ? 'positive' : 'negative';
+  const quarterId = 'quarterId' in vouchers ? (vouchers as QuarterlyMealVoucherSummary).quarterId : undefined;
+  const quarterSuffix = quarterId ? ` (${quarterId.split('-')[1]})` : '';
 
   return (
     <div className={styles.kpiGroup}>
@@ -84,10 +86,10 @@ export const KpiBadges: React.FC<KpiBadgesProps> = ({
         className={styles.kpiBadge}
         data-testid="kpi-buoni"
         data-status={vouchersStatus}
-        title={`Smart maturate: € ${(vouchers.smartVoucherCount * vouchers.smartVoucherValuePerUnit).toFixed(2)}, Mensa usata: € ${(vouchers.canteenUsedCount * vouchers.canteenCostPerUnit).toFixed(2)}`}
+        title={`Buoni e Mensa Trimestrali ${quarterId || quarter.quarterId}: Smart maturate € ${(vouchers.smartVoucherCount * vouchers.smartVoucherValuePerUnit).toFixed(2)}, Mensa usata € ${(vouchers.canteenUsedCount * vouchers.canteenCostPerUnit).toFixed(2)}`}
       >
         <Utensils size={14} />
-        <span>Buoni: € {vouchers.netBalance.toFixed(2)}</span>
+        <span>Buoni{quarterSuffix}: € {vouchers.netBalance.toFixed(2)}</span>
       </div>
 
       {leave && (
