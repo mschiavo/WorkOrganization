@@ -1,229 +1,132 @@
 // ==UserScript==
 // @name         Zucchetti to WorkOrganizer Exporter
 // @namespace    https://github.com/mschiavo/WorkOrganization
-// @version      1.3.0
-// @description  Estrae le timbrature e il cartellino dal portale Zucchetti e le esporta per WorkOrganizer in formato JSON e CSV.
+// @version      2.0.0
+// @description  Estrae le timbrature e il cartellino dal portale Zucchetti (HR Workflow / Presenze) e le esporta per WorkOrganizer in formato JSON e CSV.
 // @author       mschiavo & Gemini CLI
 // @match        https://saas.hrzucchetti.it/*
 // @match        https://*.hrzucchetti.it/*
 // @match        https://*.zucchetti.it/*
+// @match        *://*/WFINFOCAMERE/*
 // @match        *://*/HRPortal/*
 // @match        *://*/Presenze/*
 // @match        *://*/ZConnect/*
 // @include      /^https?:\/\/.*zucchetti.*$/
 // @grant        GM_setClipboard
-// @allFrames    true
 // @run-at       document-end
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  // --- Parser Helpers ---
-  function normalizeDate(raw, defaultYear = new Date().getFullYear()) {
-    if (!raw) return null;
-    const str = String(raw).trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-    const itFull = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-    if (itFull) return `${itFull[3]}-${itFull[2].padStart(2, '0')}-${itFull[1].padStart(2, '0')}`;
-    const itShort = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{2})\b/);
-    if (itShort) return `20${itShort[3]}-${itShort[2].padStart(2, '0')}-${itShort[1].padStart(2, '0')}`;
-    const itMonth = str.match(/(\d{1,2})\/(\d{1,2})\b/);
-    if (itMonth) return `${defaultYear}-${itMonth[2].padStart(2, '0')}-${itMonth[1].padStart(2, '0')}`;
-    return null;
-  }
-
-  function normalizeTime(raw) {
-    if (!raw) return undefined;
-    const str = String(raw).trim();
-    const colon = str.match(/^(\d{1,2}):(\d{2})$/);
-    if (colon) return `${colon[1].padStart(2, '0')}:${colon[2]}`;
-    const dot = str.match(/^(\d{1,2})\.(\d{2})$/);
-    if (dot) return `${dot[1].padStart(2, '0')}:${dot[2]}`;
-    return undefined;
-  }
-
-  function parseFlexibleDuration(input) {
-    if (!input) return 0;
-    const str = String(input).trim();
-    const colon = str.match(/^(\d{1,2}):(\d{2})$/);
-    if (colon) return parseInt(colon[1], 10) * 60 + parseInt(colon[2], 10);
-    const combined = str.match(/^(\d+)\s*h\s*(\d+)\s*m?$/i);
-    if (combined) return parseInt(combined[1], 10) * 60 + parseInt(combined[2], 10);
-    const minutes = str.match(/^(\d+)\s*m$/i);
-    if (minutes) return parseInt(minutes[1], 10);
-    const hours = str.match(/^(\d+)\s*h$/i);
-    if (hours) return parseInt(hours[1], 10) * 60;
-    return 0;
-  }
-
-  function extractRowsFromDoc(doc, defaultYear = new Date().getFullYear()) {
-    if (!doc) return [];
-    const extractedRows = [];
-
-    // 1. Table rows
-    const tables = doc.querySelectorAll('table');
-    tables.forEach((tbl) => {
-      const trs = tbl.querySelectorAll('tr');
-      trs.forEach((tr) => {
-        const cells = Array.from(tr.querySelectorAll('td, th')).map((c) =>
-          c.innerText.replace(/\u00a0/g, ' ').trim()
-        );
-        if (cells.length >= 3 && cells.some((cell) => normalizeDate(cell, defaultYear))) {
-          extractedRows.push(cells);
-        }
-      });
-    });
-
-    // 2. Div-based grids
-    const gridRows = doc.querySelectorAll('[class*="row"], [class*="grid-row"], .dhtmlx_grid_data tr');
-    gridRows.forEach((r) => {
-      const cells = Array.from(r.children).map((c) => c.innerText.replace(/\u00a0/g, ' ').trim());
-      if (cells.length >= 3 && cells.some((cell) => normalizeDate(cell, defaultYear))) {
-        extractedRows.push(cells);
-      }
-    });
-
-    return extractedRows;
-  }
-
-  function getAllDocs(win = window.top || window) {
-    let docs = [];
+  function findCartellinoText() {
+    let text = '';
+    const winList = [window.top || window];
     try {
-      if (win.document) docs.push(win.document);
-    } catch (e) {}
-
-    try {
-      for (let i = 0; i < win.frames.length; i++) {
-        try {
-          docs = docs.concat(getAllDocs(win.frames[i]));
-        } catch (e) {}
+      for (let i = 0; i < (window.top || window).frames.length; i++) {
+        try { winList.push((window.top || window).frames[i]); } catch (e) {}
       }
     } catch (e) {}
 
-    return docs;
-  }
-
-  function extractAllRows(defaultYear = new Date().getFullYear()) {
-    const docs = getAllDocs();
-    let allRows = [];
-    docs.forEach((doc) => {
+    for (const w of winList) {
       try {
-        const r = extractRowsFromDoc(doc, defaultYear);
-        if (r.length > 0) allRows = allRows.concat(r);
+        if (w.document && w.document.body) {
+          const bodyText = w.document.body.innerText;
+          if (/\b\d{1,2}\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b/i.test(bodyText)) {
+            text = bodyText;
+            break;
+          }
+        }
       } catch (e) {}
-    });
-    return allRows;
+    }
+
+    return text;
   }
 
-  function parseRowsToData(rows, defaultYear = new Date().getFullYear()) {
+  function detectPeriod(text) {
+    const yearMatch = text.match(/\b(202[0-9])\b/);
+    const year = yearMatch ? parseInt(yearMatch[1], 10) : new Date().getFullYear();
+
+    const monthMap = {
+      gennaio: 1, febbraio: 2, marzo: 3, aprile: 4, maggio: 5, giugno: 6,
+      luglio: 7, agosto: 8, settembre: 9, ottobre: 10, novembre: 11, dicembre: 12
+    };
+
+    let month = new Date().getMonth() + 1;
+    // Look for active selected month radio/button if present in documents
+    try {
+      const activeEl = document.querySelector('input[type="radio"]:checked, option:selected, .selected, .active');
+      if (activeEl && activeEl.innerText) {
+        const m = monthMap[activeEl.innerText.trim().toLowerCase()];
+        if (m) month = m;
+      }
+    } catch (e) {}
+
+    return { year, month };
+  }
+
+  function parseWorkflowCartellino(rawText, year, month) {
     const days = {};
     const timeEntries = {};
+    const paddedM = String(month).padStart(2, '0');
 
-    for (const row of rows) {
-      let dateStr = null;
-      let dateColIdx = -1;
+    const dayRegex = /(\d{1,2})\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b([\s\S]*?)(?=(?:(?:\r?\n)\s*\d{1,2}\s+(?:Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b)|$)/gi;
+    let match;
 
-      for (let c = 0; c < row.length; c++) {
-        const d = normalizeDate(row[c], defaultYear);
-        if (d) {
-          dateStr = d;
-          dateColIdx = c;
-          break;
-        }
-      }
+    while ((match = dayRegex.exec(rawText)) !== null) {
+      const dayNum = parseInt(match[1], 10);
+      const weekday = match[2];
+      const content = match[3].replace(/\s+/g, ' ').trim();
+      const paddedD = String(dayNum).padStart(2, '0');
+      const dateStr = `${year}-${paddedM}-${paddedD}`;
 
-      if (!dateStr) continue;
-
-      const times = [];
-      const nonTime = [];
-
-      for (let c = 0; c < row.length; c++) {
-        if (c === dateColIdx) continue;
-        const t = normalizeTime(row[c]);
-        if (t) {
-          times.push(t);
-        } else if (row[c] && row[c].trim()) {
-          nonTime.push(row[c].trim());
-        }
-      }
-
-      const in1 = times[0];
-      const out1 = times[1];
-      const in2 = times[2];
-      const out2 = times[3];
-
-      const actualOut1 = times.length >= 4 ? out1 : undefined;
-      const actualIn2 = times.length >= 4 ? in2 : undefined;
-      const actualOut2 = times.length >= 4 ? out2 : (times.length === 2 ? out1 : undefined);
-
-      const combined = nonTime.join(' ').toLowerCase();
-
+      const timesMatch = content.match(/(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})/);
       let status = 'presenza';
       let isSmart = false;
-      let permMin = 0;
-      let canteenUsed = false;
+      let in1, out1, in2, out2;
 
-      for (const cell of nonTime) {
-        const lower = cell.toLowerCase().trim();
-        if (['si', 'sì', 'yes', 's', '1', 'mensa'].includes(lower)) {
-          canteenUsed = true;
-        }
-      }
-
-      if (combined.includes('smart') || combined.includes('agile') || combined.includes('telelavoro') || combined === 'sw') {
+      if (timesMatch) {
+        in1 = timesMatch[1];
+        out1 = timesMatch[2];
+        in2 = timesMatch[3];
+        out2 = timesMatch[4];
+        status = 'presenza';
+      } else if (/SMART WORKING/i.test(content) || /\b1SW\b/.test(content)) {
         status = 'smart';
         isSmart = true;
-      } else if (combined.includes('ferie') || combined.includes('fer.')) {
+      } else if (/FERIE/i.test(content)) {
         status = 'ferie';
-      } else if (combined.includes('par') || combined.includes('rol') || combined.includes('permess')) {
-        const durationMatch = combined.match(/(\d+\s*h(?:\s*\d+m?)?|\d+:\d{2}|\d+\s*m)/i);
-        if (durationMatch) {
-          permMin = parseFlexibleDuration(durationMatch[1]);
-          status = in1 ? 'presenza' : 'par';
-        } else if (!in1) {
-          status = 'par';
-        }
-      } else if (combined.includes('chiusura') || combined.includes('festiv')) {
+      } else if (/PAR/i.test(content) || /ROL/i.test(content)) {
+        status = 'par';
+      } else if (/FES/i.test(content)) {
         status = 'chiusura';
-      } else if (in1) {
-        status = 'presenza';
+      } else if (weekday === 'Sab' || weekday === 'Dom') {
+        status = 'non_lavorativo';
       } else {
-        const [y, m, d] = dateStr.split('-').map(Number);
-        const dayOfWeek = new Date(y, m - 1, d).getDay();
-        status = dayOfWeek === 0 || dayOfWeek === 6 ? 'non_lavorativo' : 'non_lavorativo';
+        status = 'presenza';
       }
 
-      const potentialNotes = nonTime.filter(
-        (c) => !['si', 'sì', 'yes', 's', '1', 'no', 'presenza', 'smart', 'ferie', 'par'].includes(c.toLowerCase().trim())
-      );
-      const noteText = potentialNotes.length > 0 ? potentialNotes.join(' - ') : undefined;
+      const canteenUsed = Boolean(in1 && out2 && status === 'presenza');
 
       days[dateStr] = {
         date: dateStr,
         status,
         isConfirmed: status !== 'non_lavorativo',
-        notes: noteText,
       };
 
-      if (status === 'smart' || in1 || actualOut2 || permMin > 0 || canteenUsed) {
+      if (status === 'smart' || in1 || canteenUsed) {
         timeEntries[dateStr] = {
           date: dateStr,
           morningIn: in1,
-          lunchOut: actualOut1,
-          lunchIn: actualIn2,
-          eveningOut: actualOut2,
-          permissionMinutes: permMin > 0 ? permMin : undefined,
+          lunchOut: out1,
+          lunchIn: in2,
+          eveningOut: out2,
           canteenUsed,
           isSmartWork: isSmart,
         };
       }
     }
 
-    return { days, timeEntries };
-  }
-
-  function buildPayload(days, timeEntries) {
     return {
       version: '1.0.0',
       exportedAt: new Date().toISOString(),
@@ -250,29 +153,8 @@
     };
   }
 
-  function buildCsv(days, timeEntries) {
-    const header = 'Data;Stato;Entrata1;Uscita1;Entrata2;Uscita2;Permesso;Mensa;Note';
-    const allDates = Array.from(new Set([...Object.keys(days), ...Object.keys(timeEntries)])).sort();
-
-    const rows = allDates.map((dateStr) => {
-      const d = days[dateStr];
-      const e = timeEntries[dateStr];
-      const status = d?.status || (e?.isSmartWork ? 'smart' : (e?.morningIn ? 'presenza' : ''));
-      const in1 = e?.morningIn || '';
-      const out1 = e?.lunchOut || '';
-      const in2 = e?.lunchIn || '';
-      const out2 = e?.eveningOut || '';
-      const perm = e?.permissionMinutes ? `${e.permissionMinutes}m` : '';
-      const mensa = e?.canteenUsed ? 'Si' : (e && status === 'presenza' ? 'No' : '');
-      const note = d?.notes || '';
-      return `${dateStr};${status};${in1};${out1};${in2};${out2};${perm};${mensa};${note}`;
-    });
-
-    return [header, ...rows].join('\n');
-  }
-
-  function downloadFile(content, fileName, mimeType) {
-    const blob = new Blob([content], { type: mimeType });
+  function downloadJson(payload, fileName) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -283,20 +165,8 @@
     URL.revokeObjectURL(url);
   }
 
-  // --- Frame messaging listener (for child iframes) ---
-  if (window.self !== window.top) {
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'WO_EXTRACT_REQ') {
-        const rows = extractRowsFromDoc(document, new Date().getFullYear());
-        window.top.postMessage({ type: 'WO_EXTRACT_RES', rows }, '*');
-      }
-    });
-    return; // Don't mount floating widget inside child iframes
-  }
-
-  // --- Mount floating widget inside Top Window ---
   function initTopWidget() {
-    const rootDoc = document;
+    const rootDoc = window.top ? window.top.document : document;
     if (!rootDoc || !rootDoc.body) {
       setTimeout(initTopWidget, 500);
       return;
@@ -350,13 +220,16 @@
     btn.onclick = () => {
       panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
       if (panel.style.display === 'block') {
-        const rows = extractAllRows(new Date().getFullYear());
+        const text = findCartellinoText();
+        const { year, month } = detectPeriod(text);
+        const payload = parseWorkflowCartellino(text, year, month);
+        const count = Object.keys(payload.days).length;
         const statusInfo = panel.querySelector('#wo-status-info');
-        if (rows.length > 0) {
-          statusInfo.innerText = `✅ Trovate ${rows.length} righe nel cartellino!`;
+        if (count > 0) {
+          statusInfo.innerText = `✅ Rilevati ${count} giorni (${year}-${String(month).padStart(2, '0')})!`;
           statusInfo.style.color = '#4ade80';
         } else {
-          statusInfo.innerText = `⚠️ Nessuna riga con date rilevata a video.`;
+          statusInfo.innerText = `⚠️ Nessun giorno rilevato nel cartellino.`;
           statusInfo.style.color = '#f87171';
         }
       }
@@ -368,19 +241,16 @@
         <span id="wo-close-btn" style="cursor: pointer; opacity: 0.6; font-size: 16px;">✕</span>
       </div>
       <div style="font-size: 12px; color: #94a3b8; margin-bottom: 12px; line-height: 1.4;">
-        Estrae le timbrature visibili a schermo per il ripristino istantaneo in WorkOrganizer.
+        Estrae le timbrature del cartellino per l'importazione diretta in WorkOrganizer.
       </div>
       <div id="wo-status-info" style="font-size: 12px; padding: 8px; background: rgba(56, 189, 248, 0.1); border-radius: 6px; margin-bottom: 14px; color: #38bdf8;">
-        Pronto per la scansione...
+        Pronto per l'estrazione...
       </div>
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <button id="wo-btn-json" style="background: #0284c7; color: white; border: none; padding: 9px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+        <button id="wo-btn-json" style="background: #0284c7; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
           📥 Scarica JSON per WorkOrganizer
         </button>
-        <button id="wo-btn-csv" style="background: #334155; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;">
-          📄 Scarica CSV
-        </button>
-        <button id="wo-btn-copy" style="background: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+        <button id="wo-btn-copy" style="background: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
           📋 Copia JSON negli appunti
         </button>
       </div>
@@ -392,43 +262,18 @@
 
     panel.querySelector('#wo-close-btn').onclick = () => (panel.style.display = 'none');
 
-    function collectAllData() {
-      const rows = extractAllRows(new Date().getFullYear());
-      const { days, timeEntries } = parseRowsToData(rows, new Date().getFullYear());
-      const daysCount = Object.keys(days).length;
-
-      const statusInfo = panel.querySelector('#wo-status-info');
-      if (daysCount > 0) {
-        statusInfo.innerText = `✅ Esportati ${daysCount} giorni con successo!`;
-        statusInfo.style.color = '#4ade80';
-      } else {
-        statusInfo.innerText = `⚠️ Nessuna riga con date rilevata.`;
-        statusInfo.style.color = '#f87171';
-      }
-
-      return { days, timeEntries, count: daysCount };
-    }
-
     panel.querySelector('#wo-btn-json').onclick = () => {
-      const { days, timeEntries, count } = collectAllData();
-      if (count === 0) return;
-      const payload = buildPayload(days, timeEntries);
-      const fileName = `WorkOrganization_Zucchetti_${new Date().toISOString().slice(0, 10)}.json`;
-      downloadFile(JSON.stringify(payload, null, 2), fileName, 'application/json');
-    };
-
-    panel.querySelector('#wo-btn-csv').onclick = () => {
-      const { days, timeEntries, count } = collectAllData();
-      if (count === 0) return;
-      const csv = buildCsv(days, timeEntries);
-      const fileName = `WorkOrganization_Zucchetti_${new Date().toISOString().slice(0, 10)}.csv`;
-      downloadFile(csv, fileName, 'text/csv');
+      const text = findCartellinoText();
+      const { year, month } = detectPeriod(text);
+      const payload = parseWorkflowCartellino(text, year, month);
+      const fileName = `WorkOrganization_Zucchetti_${year}-${String(month).padStart(2, '0')}.json`;
+      downloadJson(payload, fileName);
     };
 
     panel.querySelector('#wo-btn-copy').onclick = () => {
-      const { days, timeEntries, count } = collectAllData();
-      if (count === 0) return;
-      const payload = buildPayload(days, timeEntries);
+      const text = findCartellinoText();
+      const { year, month } = detectPeriod(text);
+      const payload = parseWorkflowCartellino(text, year, month);
       const jsonStr = JSON.stringify(payload, null, 2);
       if (typeof GM_setClipboard !== 'undefined') {
         GM_setClipboard(jsonStr);
@@ -436,7 +281,7 @@
         navigator.clipboard.writeText(jsonStr);
       }
       const statusInfo = panel.querySelector('#wo-status-info');
-      statusInfo.innerText = `📋 Copiato negli appunti! Incollalo in WorkOrganizer.`;
+      statusInfo.innerText = `📋 Copiato negli appunti!`;
       statusInfo.style.color = '#38bdf8';
     };
   }

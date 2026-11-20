@@ -1,7 +1,71 @@
 import { describe, it, expect } from 'vitest';
-import { parseZucchettiTableRows, parseZucchettiHtmlTable } from './zucchettiParser';
+import { parseZucchettiTableRows, parseZucchettiHtmlTable, parseZucchettiWorkflowText } from './zucchettiParser';
 
 describe('Zucchetti Cartellino Parser', () => {
+  const realZucchettiSample = `
+    1 Dom  FES 
+    2 Lun 08:0012:0512:3716:47 0:15ORE POSITIVE  S25 
+    3 Mar 07:5412:0112:4016:28 0:05ORE NEGATIVE FULL-TIME dalle 16:28 alle 16:33  S25 
+    4 Mer 08:0311:5912:3316:53 0:16ORE POSITIVE  S25 
+    5 Gio 08:1512:0012:3016:47 0:02ORE POSITIVE  S25 
+    6 Ven 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    7 Sab  SAB 
+    8 Dom  DOM 
+    9 Lun 8:00FERIE dalle 07:30 alle 11:30 FERIE dalle 12:00 alle 16:00  FERIE S25 
+    10 Mar 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    11 Mer 07:5612:1012:4316:50 0:21ORE POSITIVE  S25 
+    12 Gio 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    13 Ven 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    14 Sab  SAB 
+    15 Dom  DOM 
+    16 Lun 8:00PAR GIORNO dalle 07:30 alle 11:30 PAR GIORNO dalle 12:00 alle 16:00  PAR GIORNO S25 
+    17 Mar 08:1112:0212:4816:44 0:13ORE NEGATIVE FULL-TIME dalle 16:44 alle 16:57  S25 
+    18 Mer 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    19 Gio 8:001SW - SMART WORKING/LAVORO AGILE dalle 07:30 alle 11:30 1SW - SMART WORKING/LAVORO AGILE dalle 12:00 alle 16:00  1SW - SMART WORKING/LAVORO AGILE S25 
+    20 Ven  1SW - SMART WORKING/LAVORO AGILE S25 
+    21 Sab  SAB 
+    22 Dom  DOM 
+    23 Lun  PAR GIORNO S25 
+    24 Mar  S25 
+    25 Mer  S25 
+    26 Gio  S25 
+    27 Ven  S25 
+    28 Sab  SAB 
+    29 Dom  DOM 
+    30 Lun  S25
+  `;
+
+  it('parses real Zucchetti Workflow cartellino text directly into BackupPayload', () => {
+    const payload = parseZucchettiWorkflowText(realZucchettiSample, 2026, 11);
+
+    expect(Object.keys(payload.days).length).toBe(30);
+
+    // Day 2: Presenza con 4 timbrature
+    const d2 = payload.days['2026-11-02'];
+    expect(d2?.status).toBe('presenza');
+    expect(payload.timeEntries['2026-11-02']?.morningIn).toBe('08:00');
+    expect(payload.timeEntries['2026-11-02']?.lunchOut).toBe('12:05');
+    expect(payload.timeEntries['2026-11-02']?.lunchIn).toBe('12:37');
+    expect(payload.timeEntries['2026-11-02']?.eveningOut).toBe('16:47');
+    expect(payload.timeEntries['2026-11-02']?.canteenUsed).toBe(true);
+
+    // Day 6: Smart Working
+    const d6 = payload.days['2026-11-06'];
+    expect(d6?.status).toBe('smart');
+    expect(payload.timeEntries['2026-11-06']?.isSmartWork).toBe(true);
+
+    // Day 9: Ferie
+    const d9 = payload.days['2026-11-09'];
+    expect(d9?.status).toBe('ferie');
+
+    // Day 16: PAR
+    const d16 = payload.days['2026-11-16'];
+    expect(d16?.status).toBe('par');
+
+    // Day 1: Festivo (chiusura / non_lavorativo)
+    const d1 = payload.days['2026-11-01'];
+    expect(d1?.status).toBe('chiusura');
+  });
   it('parses typical Zucchetti HTML table rows into WorkOrganizer BackupPayload', () => {
     const htmlTable = `
       <table class="gridCartellino">

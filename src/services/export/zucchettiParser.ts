@@ -200,3 +200,84 @@ export function parseZucchettiHtmlTable(html: string, defaultYear: number = new 
 
   return parseZucchettiTableRows(rows, defaultYear);
 }
+
+/**
+ * Parses Zucchetti HR-WorkFlow raw text format (e.g. from hfpr_bcapcarte).
+ */
+export function parseZucchettiWorkflowText(
+  rawText: string,
+  year: number = new Date().getFullYear(),
+  month: number = new Date().getMonth() + 1
+): BackupPayload {
+  const days: Record<string, CalendarDayInfo> = {};
+  const timeEntries: Record<string, StoredTimeEntry> = {};
+
+  const paddedM = String(month).padStart(2, '0');
+  const dayRegex = /(\d{1,2})\s+(Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b([\s\S]*?)(?=(?:(?:\r?\n)\s*\d{1,2}\s+(?:Lun|Mar|Mer|Gio|Ven|Sab|Dom)\b)|$)/gi;
+  let match: RegExpExecArray | null;
+
+  while ((match = dayRegex.exec(rawText)) !== null) {
+    const dayNum = parseInt(match[1], 10);
+    const weekday = match[2];
+    const content = match[3].replace(/\s+/g, ' ').trim();
+    const paddedD = String(dayNum).padStart(2, '0');
+    const dateStr = `${year}-${paddedM}-${paddedD}`;
+
+    const timesMatch = content.match(/(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})\s*(\d{2}:\d{2})/);
+    let status: DayStatus = 'presenza';
+    let isSmart = false;
+    let in1: string | undefined;
+    let out1: string | undefined;
+    let in2: string | undefined;
+    let out2: string | undefined;
+
+    if (timesMatch) {
+      in1 = timesMatch[1];
+      out1 = timesMatch[2];
+      in2 = timesMatch[3];
+      out2 = timesMatch[4];
+      status = 'presenza';
+    } else if (/SMART WORKING/i.test(content) || /\b1SW\b/.test(content)) {
+      status = 'smart';
+      isSmart = true;
+    } else if (/FERIE/i.test(content)) {
+      status = 'ferie';
+    } else if (/PAR/i.test(content) || /ROL/i.test(content)) {
+      status = 'par';
+    } else if (/FES/i.test(content)) {
+      status = 'chiusura';
+    } else if (weekday === 'Sab' || weekday === 'Dom') {
+      status = 'non_lavorativo';
+    } else {
+      status = 'presenza';
+    }
+
+    const canteenUsed = Boolean(in1 && out2 && status === 'presenza');
+
+    days[dateStr] = {
+      date: dateStr,
+      status,
+      isConfirmed: status !== 'non_lavorativo',
+    };
+
+    if (status === 'smart' || in1 || canteenUsed) {
+      timeEntries[dateStr] = {
+        date: dateStr,
+        morningIn: in1,
+        lunchOut: out1,
+        lunchIn: in2,
+        eveningOut: out2,
+        canteenUsed,
+        isSmartWork: isSmart,
+      };
+    }
+  }
+
+  return {
+    version: '1.0.0',
+    exportedAt: new Date().toISOString(),
+    settings: { ...DEFAULT_SETTINGS },
+    days,
+    timeEntries,
+  };
+}
