@@ -145,10 +145,10 @@ export const MonthlyReportSummary: React.FC = () => {
             className={`${styles.statValue} ${leaveBalance.ferieRemainingHours >= 0 ? styles.statHighlight : styles.statNegative}`}
             data-testid="report-stat-ferie-balance"
           >
-            {leaveBalance.ferieRemainingHours}h
+            {Number(leaveBalance.ferieRemainingHours.toFixed(2))}h
           </span>
           <span className={styles.statSubtext}>
-            Spettanti: {leaveBalance.ferieTotalEntitledHours}h | Godute: {leaveBalance.ferieTakenHours}h | Pianificate: {leaveBalance.feriePlannedHours}h
+            Spettanti: {Number(leaveBalance.ferieTotalEntitledHours.toFixed(2))}h | Godute: {Number(leaveBalance.ferieTakenHours.toFixed(2))}h | Pianificate: {Number(leaveBalance.feriePlannedHours.toFixed(2))}h
           </span>
         </div>
 
@@ -159,10 +159,10 @@ export const MonthlyReportSummary: React.FC = () => {
             className={`${styles.statValue} ${leaveBalance.parRemainingHours >= 0 ? styles.statPositive : styles.statNegative}`}
             data-testid="report-stat-par-balance"
           >
-            {leaveBalance.parRemainingHours}h
+            {Number(leaveBalance.parRemainingHours.toFixed(2))}h
           </span>
           <span className={styles.statSubtext}>
-            Spettanti: {leaveBalance.parTotalEntitledHours}h | Usati: {leaveBalance.parTakenHours}h
+            Spettanti: {Number(leaveBalance.parTotalEntitledHours.toFixed(2))}h | Usati: {Number(leaveBalance.parTakenHours.toFixed(2))}h
           </span>
         </div>
       </div>

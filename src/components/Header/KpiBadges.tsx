@@ -97,10 +97,10 @@ export const KpiBadges: React.FC<KpiBadgesProps> = ({
           className={styles.kpiBadge}
           data-testid="kpi-ferie"
           data-status={leave.ferieRemainingHours >= 0 ? 'positive' : 'negative'}
-          title={`Ferie Spettanti: ${leave.ferieTotalEntitledHours}h, Godute: ${leave.ferieTakenHours}h, Pianificate: ${leave.feriePlannedHours}h`}
+          title={`Ferie Spettanti: ${Number(leave.ferieTotalEntitledHours.toFixed(2))}h, Godute: ${Number(leave.ferieTakenHours.toFixed(2))}h, Pianificate: ${Number(leave.feriePlannedHours.toFixed(2))}h`}
         >
           <Palmtree size={14} />
-          <span>Ferie: {leave.ferieRemainingHours}h</span>
+          <span>Ferie: {Number(leave.ferieRemainingHours.toFixed(2))}h</span>
         </div>
       )}
 
@@ -109,10 +109,10 @@ export const KpiBadges: React.FC<KpiBadgesProps> = ({
           className={styles.kpiBadge}
           data-testid="kpi-par"
           data-status={leave.parRemainingHours >= 0 ? 'positive' : 'negative'}
-          title={`PAR Spettanti: ${leave.parTotalEntitledHours}h, Usati: ${leave.parTakenHours}h`}
+          title={`PAR Spettanti: ${Number(leave.parTotalEntitledHours.toFixed(2))}h, Usati: ${Number(leave.parTakenHours.toFixed(2))}h`}
         >
           <Clock size={14} />
-          <span>PAR: {leave.parRemainingHours}h</span>
+          <span>PAR: {Number(leave.parRemainingHours.toFixed(2))}h</span>
         </div>
       )}
     </div>

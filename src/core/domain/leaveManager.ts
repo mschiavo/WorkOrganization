@@ -23,6 +23,7 @@ export interface LeaveBalanceSummary {
  * Calculates annual leave balances (Ferie and PAR) for a specific year,
  * factoring in current allowances, carryover residuals from the previous year,
  * actual taken hours (from full days and partial permissions), and planned days ('idea_ferie' and 'idea_par').
+ * Rounds all calculations to 2 decimal places to prevent JavaScript floating point precision artifacts.
  */
 export function calculateAnnualLeaveBalance(
   year: number,
@@ -32,9 +33,9 @@ export function calculateAnnualLeaveBalance(
   standardDayHours: number = 8
 ): LeaveBalanceSummary {
   const ferieTotalEntitledHours =
-    (settings.yearlyFerieHours ?? 160) + (settings.prevYearFerieResidualHours ?? 0);
+    Math.round(((settings.yearlyFerieHours ?? 160) + (settings.prevYearFerieResidualHours ?? 0)) * 100) / 100;
   const parTotalEntitledHours =
-    (settings.yearlyParHours ?? 88) + (settings.prevYearParResidualHours ?? 0);
+    Math.round(((settings.yearlyParHours ?? 88) + (settings.prevYearParResidualHours ?? 0)) * 100) / 100;
 
   const yearPrefix = `${year}-`;
 
@@ -57,9 +58,10 @@ export function calculateAnnualLeaveBalance(
     }
   }
 
-  const ferieTakenHours = ferieDaysTakenCount * standardDayHours;
-  const feriePlannedHours = ferieDaysPlannedCount * standardDayHours;
-  const ferieRemainingHours = ferieTotalEntitledHours - ferieTakenHours - feriePlannedHours;
+  const ferieTakenHours = Math.round(ferieDaysTakenCount * standardDayHours * 100) / 100;
+  const feriePlannedHours = Math.round(ferieDaysPlannedCount * standardDayHours * 100) / 100;
+  const ferieRemainingHours =
+    Math.round((ferieTotalEntitledHours - ferieTakenHours - feriePlannedHours) * 100) / 100;
 
   let totalPermissionMinutes = 0;
   for (const [dateStr, entry] of Object.entries(timeEntriesMap)) {
@@ -69,8 +71,8 @@ export function calculateAnnualLeaveBalance(
   }
 
   const parHourlyTaken = Math.round((totalPermissionMinutes / 60) * 100) / 100;
-  const parTakenHours = parDaysTakenCount * standardDayHours + parHourlyTaken;
-  const parPlannedHours = parDaysPlannedCount * standardDayHours;
+  const parTakenHours = Math.round((parDaysTakenCount * standardDayHours + parHourlyTaken) * 100) / 100;
+  const parPlannedHours = Math.round(parDaysPlannedCount * standardDayHours * 100) / 100;
   const parRemainingHours = Math.round((parTotalEntitledHours - parTakenHours - parPlannedHours) * 100) / 100;
 
   return {

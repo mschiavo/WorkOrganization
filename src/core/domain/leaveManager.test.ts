@@ -82,4 +82,25 @@ describe('leaveManager Domain Engine', () => {
     // 100 - 11 - 8 = 81 ore rimanenti
     expect(summary.parRemainingHours).toBe(81);
   });
+
+  it('correctly rounds ferie remaining with decimal residuals without floating point artifacts', () => {
+    const settings: LeaveSettings = {
+      yearlyFerieHours: 160,
+      prevYearFerieResidualHours: 1.2,
+      yearlyParHours: 104,
+      prevYearParResidualHours: 4.1,
+    };
+
+    // 20 ferie taken = 160h
+    const daysMap: Record<string, any> = {};
+    for (let i = 1; i <= 20; i++) {
+      daysMap[`2026-06-${String(i).padStart(2, '0')}`] = { date: `2026-06-${String(i).padStart(2, '0')}`, status: 'ferie' };
+    }
+
+    const summary = calculateAnnualLeaveBalance(2026, daysMap, {}, settings);
+
+    // 161.2 - 160 must be exactly 1.2, not 1.1999999999999886!
+    expect(summary.ferieRemainingHours).toBe(1.2);
+    expect(summary.ferieRemainingHours).not.toBe(1.1999999999999886);
+  });
 });
