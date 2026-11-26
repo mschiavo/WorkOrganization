@@ -54,6 +54,18 @@ export interface StorageIdentity {
   projectRef?: string;
 }
 
+export interface PendingMutation {
+  id: string;
+  type: 'save_day_status' | 'save_time_entry' | 'save_settings';
+  date?: string;
+  payload: any;
+  clientTimestamp: string;
+  version: number;
+  retryCount: number;
+  status: 'pending' | 'in_flight' | 'error';
+  lastError?: string;
+}
+
 export type PersistenceStatus = 'persisted' | 'memory-only' | 'error';
 
 export function extractProjectRef(url?: string | null): string {
@@ -369,12 +381,55 @@ export const localCache = {
   clearUserData(identity?: StorageIdentity): void {
     safeRemoveItem(getScopedKey('calendar_days', identity));
     safeRemoveItem(getScopedKey('time_entries', identity));
+    safeRemoveItem(getScopedKey('pending_mutations', identity));
+  },
+
+  // --- Identity-Scoped Outbox / Pending Mutations Queue ---
+  getPendingMutations(identity?: StorageIdentity): PendingMutation[] {
+    const key = getScopedKey('pending_mutations', identity);
+    const raw = safeGetItem(key);
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {}
+    return [];
+  },
+
+  savePendingMutations(mutations: PendingMutation[], identity?: StorageIdentity): void {
+    const key = getScopedKey('pending_mutations', identity);
+    safeSetItem(key, JSON.stringify(mutations));
+  },
+
+  enqueuePendingMutation(mutation: PendingMutation, identity?: StorageIdentity): void {
+    const current = this.getPendingMutations(identity);
+    const existingIndex = current.findIndex(
+      (m) => m.type === mutation.type && m.date === mutation.date
+    );
+    if (existingIndex >= 0) {
+      current[existingIndex] = { ...current[existingIndex], ...mutation };
+    } else {
+      current.push(mutation);
+    }
+    this.savePendingMutations(current, identity);
+  },
+
+  removePendingMutation(id: string, identity?: StorageIdentity): void {
+    const current = this.getPendingMutations(identity);
+    const filtered = current.filter((m) => m.id !== id);
+    this.savePendingMutations(filtered, identity);
+  },
+
+  clearPendingMutations(identity?: StorageIdentity): void {
+    const key = getScopedKey('pending_mutations', identity);
+    safeRemoveItem(key);
   },
 
   clearAll(identity?: StorageIdentity): void {
     safeRemoveItem(getScopedKey('settings', identity));
     safeRemoveItem(getScopedKey('calendar_days', identity));
     safeRemoveItem(getScopedKey('time_entries', identity));
+    safeRemoveItem(getScopedKey('pending_mutations', identity));
     safeRemoveItem(GLOBAL_KEYS.SUPABASE_CONFIG);
     this.clearLegacyUnclaimedData();
     memoryStore.clear();

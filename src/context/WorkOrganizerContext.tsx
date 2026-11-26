@@ -45,6 +45,8 @@ export interface WorkOrganizerContextType {
   updateTimeEntry: (date: string, entry: Partial<StoredTimeEntry>) => Promise<void>;
   updateSettings: (newSettings: Partial<AppSettings>) => Promise<void>;
   refreshData: () => Promise<void>;
+  flushPendingSync: () => Promise<void>;
+  pendingMutationsCount: number;
 
   monthValidation: MonthValidationResult;
   quarterSummary: QuarterSummary;
@@ -90,9 +92,34 @@ export const WorkOrganizerProvider: React.FC<{
   const [timeEntries, setTimeEntries] = useState<Record<string, StoredTimeEntry>>(() => localCache.getTimeEntries(activeIdentity));
   const [settings, setSettings] = useState<AppSettings>(() => localCache.getSettings(activeIdentity));
   const [loading, setLoading] = useState<boolean>(true);
+  const [pendingCount, setPendingCount] = useState<number>(() => localCache.getPendingMutations(activeIdentity).length);
 
   // Invalidation token for dropping obsolete in-flight asynchronous responses across identity switches
   const sessionTokenRef = useRef<number>(0);
+
+  const flushPendingSync = useCallback(async () => {
+    if (activeIdentity.userId) {
+      await workDataService.flushPendingMutations(activeIdentity.userId, activeIdentity);
+      setPendingCount(localCache.getPendingMutations(activeIdentity).length);
+    }
+  }, [activeIdentity]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      flushPendingSync();
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', handleOnline);
+    }
+    if (activeIdentity.userId) {
+      flushPendingSync();
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('online', handleOnline);
+      }
+    };
+  }, [activeIdentity, flushPendingSync]);
 
   // Identity and year synchronization
   useEffect(() => {
@@ -174,6 +201,7 @@ export const WorkOrganizerProvider: React.FC<{
     async (date: string, status: DayStatus, notes?: string) => {
       const updatedDay = await workDataService.saveDayStatus(date, status, notes, activeIdentity.userId, activeIdentity);
       setDays((prev) => ({ ...prev, [date]: updatedDay }));
+      setPendingCount(localCache.getPendingMutations(activeIdentity).length);
     },
     [activeIdentity]
   );
@@ -185,6 +213,7 @@ export const WorkOrganizerProvider: React.FC<{
       if (result.syncedDay) {
         setDays((prev) => ({ ...prev, [date]: result.syncedDay! }));
       }
+      setPendingCount(localCache.getPendingMutations(activeIdentity).length);
     },
     [activeIdentity]
   );
@@ -193,6 +222,7 @@ export const WorkOrganizerProvider: React.FC<{
     async (newSettings: Partial<AppSettings>) => {
       const merged = await workDataService.saveSettings(newSettings, activeIdentity.userId, activeIdentity);
       setSettings(merged);
+      setPendingCount(localCache.getPendingMutations(activeIdentity).length);
     },
     [activeIdentity]
   );
@@ -281,6 +311,8 @@ export const WorkOrganizerProvider: React.FC<{
         updateTimeEntry,
         updateSettings,
         refreshData,
+        flushPendingSync,
+        pendingMutationsCount: pendingCount,
         monthValidation,
         quarterSummary,
         mealVouchers,

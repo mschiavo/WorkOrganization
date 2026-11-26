@@ -6,6 +6,7 @@ import { getSupabaseClient } from '../supabase/client';
 export interface StoredTimeEntry extends TimeEntryInput {
   date: string;
   canteenUsed?: boolean;
+  updatedAt?: string;
 }
 
 function mapSupabaseSettingsToAppSettings(data: any): AppSettings {
@@ -119,6 +120,14 @@ export const workDataService = {
     }
 
     try {
+      const pendingMutations = localCache.getPendingMutations(identity);
+      const pendingDayDates = new Set(
+        pendingMutations.filter((m) => m.type === 'save_day_status').map((m) => m.date)
+      );
+      const pendingEntryDates = new Set(
+        pendingMutations.filter((m) => m.type === 'save_time_entry').map((m) => m.date)
+      );
+
       // Load Calendar Days
       const { data: daysData } = await client
         .from('calendar_days')
@@ -128,17 +137,33 @@ export const workDataService = {
         .lte('date', endDate);
 
       if (daysData && Array.isArray(daysData)) {
-        const remoteDays: Record<string, CalendarDayInfo> = {};
+        const remoteDaysToSave: Record<string, CalendarDayInfo> = {};
         for (const row of daysData) {
-          remoteDays[row.date] = {
-            date: row.date,
-            status: row.status as DayStatus,
-            notes: row.notes ?? undefined,
-            isConfirmed: row.is_confirmed ?? false,
-          };
+          // If this date has an uncommitted local pending edit, preserve local!
+          if (pendingDayDates.has(row.date)) {
+            continue;
+          }
+
+          const localExisting = days[row.date];
+          const remoteTime = new Date(row.updated_at || 0).getTime();
+          const localTime = new Date(localExisting?.updatedAt || 0).getTime();
+
+          // Last-Write-Wins: accept remote if it's newer or local has no timestamp
+          if (!localExisting || remoteTime >= localTime) {
+            const remoteDay: CalendarDayInfo = {
+              date: row.date,
+              status: row.status as DayStatus,
+              notes: row.notes ?? undefined,
+              isConfirmed: row.is_confirmed ?? false,
+              updatedAt: row.updated_at,
+            };
+            days[row.date] = remoteDay;
+            remoteDaysToSave[row.date] = remoteDay;
+          }
         }
-        days = { ...days, ...remoteDays };
-        localCache.saveCalendarDays(remoteDays, identity);
+        if (Object.keys(remoteDaysToSave).length > 0) {
+          localCache.saveCalendarDays(remoteDaysToSave, identity);
+        }
       }
 
       // Load Time Entries
@@ -150,21 +175,35 @@ export const workDataService = {
         .lte('date', endDate);
 
       if (timeEntriesData && Array.isArray(timeEntriesData)) {
-        const remoteEntries: Record<string, StoredTimeEntry> = {};
+        const remoteEntriesToSave: Record<string, StoredTimeEntry> = {};
         for (const row of timeEntriesData) {
-          remoteEntries[row.date] = {
-            date: row.date,
-            morningIn: row.morning_in ?? undefined,
-            lunchOut: row.lunch_out ?? undefined,
-            lunchIn: row.lunch_in ?? undefined,
-            eveningOut: row.evening_out ?? undefined,
-            permissionMinutes: row.permission_minutes ?? 0,
-            canteenUsed: row.canteen_used ?? false,
-            isSmartWork: row.is_smart_work ?? false,
-          };
+          if (pendingEntryDates.has(row.date)) {
+            continue;
+          }
+
+          const localExisting = timeEntries[row.date];
+          const remoteTime = new Date(row.updated_at || 0).getTime();
+          const localTime = new Date(localExisting?.updatedAt || 0).getTime();
+
+          if (!localExisting || remoteTime >= localTime) {
+            const remoteEntry: StoredTimeEntry = {
+              date: row.date,
+              morningIn: row.morning_in ?? undefined,
+              lunchOut: row.lunch_out ?? undefined,
+              lunchIn: row.lunch_in ?? undefined,
+              eveningOut: row.evening_out ?? undefined,
+              permissionMinutes: row.permission_minutes ?? 0,
+              canteenUsed: row.canteen_used ?? false,
+              isSmartWork: row.is_smart_work ?? false,
+              updatedAt: row.updated_at,
+            };
+            timeEntries[row.date] = remoteEntry;
+            remoteEntriesToSave[row.date] = remoteEntry;
+          }
         }
-        timeEntries = { ...timeEntries, ...remoteEntries };
-        localCache.saveTimeEntries(remoteEntries, identity);
+        if (Object.keys(remoteEntriesToSave).length > 0) {
+          localCache.saveTimeEntries(remoteEntriesToSave, identity);
+        }
       }
     } catch {
       // Supabase query failed, return cached local data
@@ -183,33 +222,64 @@ export const workDataService = {
     const existing = localCache.getCalendarDays(identity)[date];
     const isConfirmed = status === 'idea_smart' ? false : (existing?.isConfirmed ?? true);
     const resolvedNotes = notes !== undefined ? notes : existing?.notes;
+    const nowIso = new Date().toISOString();
 
     const dayInfo: CalendarDayInfo = {
       date,
       status,
       notes: resolvedNotes,
       isConfirmed,
+      updatedAt: nowIso,
     };
 
     localCache.saveCalendarDay(date, dayInfo, identity);
 
     if (userId) {
       const client = getSupabaseClient();
+      let syncError: string | null = null;
       if (client) {
         try {
-          await client.from('calendar_days').upsert(
+          const { error } = await client.from('calendar_days').upsert(
             {
               user_id: userId,
               date,
               status,
               notes: resolvedNotes,
               is_confirmed: isConfirmed,
-              updated_at: new Date().toISOString(),
+              updated_at: nowIso,
             },
             { onConflict: 'user_id,date' }
           );
-        } catch {
-          // ignore error in offline mode
+          if (error) {
+            syncError = error.message;
+          }
+        } catch (err: any) {
+          syncError = err?.message || 'Network error';
+        }
+      } else {
+        syncError = 'Supabase client not configured';
+      }
+
+      if (syncError) {
+        localCache.enqueuePendingMutation(
+          {
+            id: `mut_day_${date}_${Date.now()}`,
+            type: 'save_day_status',
+            date,
+            payload: { date, status, notes: resolvedNotes, isConfirmed, updatedAt: nowIso },
+            clientTimestamp: nowIso,
+            version: 1,
+            retryCount: 0,
+            status: 'error',
+            lastError: syncError,
+          },
+          identity
+        );
+      } else {
+        const queue = localCache.getPendingMutations(identity);
+        const match = queue.find((m) => m.type === 'save_day_status' && m.date === date);
+        if (match) {
+          localCache.removePendingMutation(match.id, identity);
         }
       }
     }
@@ -228,7 +298,8 @@ export const workDataService = {
   }> {
     const existingEntries = localCache.getTimeEntries(identity);
     const currentEntry: StoredTimeEntry = existingEntries[date] ?? { date };
-    const mergedEntry: StoredTimeEntry = { ...currentEntry, ...entry, date };
+    const nowIso = new Date().toISOString();
+    const mergedEntry: StoredTimeEntry = { ...currentEntry, ...entry, date, updatedAt: nowIso };
 
     localCache.saveTimeEntry(date, mergedEntry, identity);
 
@@ -240,18 +311,21 @@ export const workDataService = {
     if (isSmart) {
       syncedDay = await this.saveDayStatus(date, 'smart', undefined, userId, identity);
       syncedDay.isConfirmed = true;
+      syncedDay.updatedAt = nowIso;
       localCache.saveCalendarDay(date, syncedDay, identity);
     } else if (hasPunches) {
       syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId, identity);
       syncedDay.isConfirmed = true;
+      syncedDay.updatedAt = nowIso;
       localCache.saveCalendarDay(date, syncedDay, identity);
     }
 
     if (userId) {
       const client = getSupabaseClient();
+      let syncError: string | null = null;
       if (client) {
         try {
-          await client.from('time_entries').upsert(
+          const { error } = await client.from('time_entries').upsert(
             {
               user_id: userId,
               date,
@@ -262,17 +336,127 @@ export const workDataService = {
               permission_minutes: mergedEntry.permissionMinutes ?? 0,
               canteen_used: mergedEntry.canteenUsed ?? false,
               is_smart_work: mergedEntry.isSmartWork ?? false,
-              updated_at: new Date().toISOString(),
+              updated_at: nowIso,
             },
             { onConflict: 'user_id,date' }
           );
-        } catch {
-          // ignore error in offline mode
+          if (error) {
+            syncError = error.message;
+          }
+        } catch (err: any) {
+          syncError = err?.message || 'Network error';
+        }
+      } else {
+        syncError = 'Supabase client not configured';
+      }
+
+      if (syncError) {
+        localCache.enqueuePendingMutation(
+          {
+            id: `mut_entry_${date}_${Date.now()}`,
+            type: 'save_time_entry',
+            date,
+            payload: { ...mergedEntry },
+            clientTimestamp: nowIso,
+            version: 1,
+            retryCount: 0,
+            status: 'error',
+            lastError: syncError,
+          },
+          identity
+        );
+      } else {
+        const queue = localCache.getPendingMutations(identity);
+        const match = queue.find((m) => m.type === 'save_time_entry' && m.date === date);
+        if (match) {
+          localCache.removePendingMutation(match.id, identity);
         }
       }
     }
 
     return { timeEntry: mergedEntry, syncedDay };
+  },
+
+  async flushPendingMutations(
+    userId?: string | null,
+    identity?: StorageIdentity
+  ): Promise<{ succeededCount: number; failedCount: number; remainingCount: number }> {
+    if (!userId) {
+      return { succeededCount: 0, failedCount: 0, remainingCount: 0 };
+    }
+    const client = getSupabaseClient();
+    if (!client) {
+      return {
+        succeededCount: 0,
+        failedCount: 0,
+        remainingCount: localCache.getPendingMutations(identity).length,
+      };
+    }
+
+    const mutations = localCache.getPendingMutations(identity);
+    let succeededCount = 0;
+    let failedCount = 0;
+
+    for (const m of mutations) {
+      try {
+        let err: any = null;
+        if (m.type === 'save_day_status') {
+          const { error } = await client.from('calendar_days').upsert(
+            {
+              user_id: userId,
+              date: m.date,
+              status: m.payload.status,
+              notes: m.payload.notes ?? null,
+              is_confirmed: m.payload.isConfirmed ?? true,
+              updated_at: m.payload.updatedAt || m.clientTimestamp,
+            },
+            { onConflict: 'user_id,date' }
+          );
+          err = error;
+        } else if (m.type === 'save_time_entry') {
+          const { error } = await client.from('time_entries').upsert(
+            {
+              user_id: userId,
+              date: m.date,
+              morning_in: m.payload.morningIn ?? null,
+              lunch_out: m.payload.lunchOut ?? null,
+              lunch_in: m.payload.lunchIn ?? null,
+              evening_out: m.payload.eveningOut ?? null,
+              permission_minutes: m.payload.permissionMinutes ?? 0,
+              canteen_used: m.payload.canteenUsed ?? false,
+              is_smart_work: m.payload.isSmartWork ?? false,
+              updated_at: m.payload.updatedAt || m.clientTimestamp,
+            },
+            { onConflict: 'user_id,date' }
+          );
+          err = error;
+        } else if (m.type === 'save_settings') {
+          const payload = mapAppSettingsToSupabase(m.payload, userId);
+          const { error } = await client.from('app_settings').upsert(payload, { onConflict: 'user_id' });
+          err = error;
+        }
+
+        if (err) {
+          failedCount++;
+          m.retryCount += 1;
+          m.lastError = err.message;
+          m.status = m.retryCount >= 5 ? 'error' : 'pending';
+          localCache.enqueuePendingMutation(m, identity);
+        } else {
+          succeededCount++;
+          localCache.removePendingMutation(m.id, identity);
+        }
+      } catch (exception: any) {
+        failedCount++;
+        m.retryCount += 1;
+        m.lastError = exception?.message || 'Network exception';
+        m.status = m.retryCount >= 5 ? 'error' : 'pending';
+        localCache.enqueuePendingMutation(m, identity);
+      }
+    }
+
+    const remainingCount = localCache.getPendingMutations(identity).length;
+    return { succeededCount, failedCount, remainingCount };
   },
 
   async saveSettings(

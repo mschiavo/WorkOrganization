@@ -14,6 +14,7 @@ export interface CalendarDayInfo {
   status: DayStatus;
   notes?: string;
   isConfirmed?: boolean;
+  updatedAt?: string;
 }
 
 export interface WeekValidationResult {

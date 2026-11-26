@@ -40,6 +40,7 @@ describe('workDataService', () => {
         status: 'presenza',
         notes: 'Ufficio Milano',
         isConfirmed: true,
+        updatedAt: expect.any(String),
       });
       expect(localCache.getCalendarDays()['2026-10-06']).toEqual(day1);
 
@@ -71,6 +72,7 @@ describe('workDataService', () => {
         lunchIn: '13:45',
         eveningOut: '17:45',
         canteenUsed: true,
+        updatedAt: expect.any(String),
       });
 
       const cached = localCache.getTimeEntries()['2026-10-08'];
