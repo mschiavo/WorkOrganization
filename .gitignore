@@ -28,6 +28,9 @@ build/Release
 out/
 .nuxt
 
+# Personal cartellini PDF documents
+*.pdf
+
 # dotenv environment variable files
 .env
 .env.local
