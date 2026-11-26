@@ -101,6 +101,22 @@ describe('DayDetailCard Feature', () => {
     expect(screen.getByTestId('btn-status-ferie')).toHaveAttribute('data-active', 'true');
   });
 
+  it('resets a day by clearing status, punches, and notes via btn-reset-day', async () => {
+    localCache.saveCalendarDay('2026-10-20', { date: '2026-10-20', status: 'smart', notes: 'Important note' });
+    localCache.saveTimeEntry('2026-10-20', { date: '2026-10-20', morningIn: '08:30', isSmartWork: true });
+
+    await renderWithProviders(<DayDetailCard date="2026-10-20" />);
+
+    expect(screen.getByTestId('btn-reset-day')).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('btn-reset-day'));
+    });
+
+    expect(localCache.getCalendarDays()['2026-10-20']).toBeUndefined();
+    expect(localCache.getTimeEntries()['2026-10-20']).toBeUndefined();
+  });
+
   it('entering morningIn dynamically calculates expected exits 8h and 7h', async () => {
     await renderWithProviders(<DayDetailCard date="2026-10-06" />);
 

@@ -205,6 +205,27 @@
   color: var(--text-secondary);
 }
 
+.resetDayBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--border-color, #334155);
+  color: var(--text-muted, #94a3b8);
+  border-radius: var(--radius-sm, 6px);
+  padding: 0.25rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.resetDayBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #ef4444;
+  color: #f87171;
+}
+
 .statusButtonsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

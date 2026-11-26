@@ -43,6 +43,7 @@ export interface WorkOrganizerContextType {
 
   updateDayStatus: (date: string, status: DayStatus, notes?: string) => Promise<void>;
   updateTimeEntry: (date: string, entry: Partial<StoredTimeEntry>) => Promise<void>;
+  resetDay: (date: string) => Promise<void>;
   updateSettings: (newSettings: Partial<AppSettings>) => Promise<void>;
   refreshData: () => Promise<void>;
   flushPendingSync: () => Promise<void>;
@@ -218,6 +219,24 @@ export const WorkOrganizerProvider: React.FC<{
     [activeIdentity]
   );
 
+  const resetDay = useCallback(
+    async (date: string) => {
+      await workDataService.deleteDay(date, activeIdentity.userId, activeIdentity);
+      setDays((prev) => {
+        const next = { ...prev };
+        delete next[date];
+        return next;
+      });
+      setTimeEntries((prev) => {
+        const next = { ...prev };
+        delete next[date];
+        return next;
+      });
+      setPendingCount(localCache.getPendingMutations(activeIdentity).length);
+    },
+    [activeIdentity]
+  );
+
   const updateSettings = useCallback(
     async (newSettings: Partial<AppSettings>) => {
       const merged = await workDataService.saveSettings(newSettings, activeIdentity.userId, activeIdentity);
@@ -318,6 +337,7 @@ export const WorkOrganizerProvider: React.FC<{
         setSelectedDate,
         updateDayStatus,
         updateTimeEntry,
+        resetDay,
         updateSettings,
         refreshData,
         flushPendingSync,

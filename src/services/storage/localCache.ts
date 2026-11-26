@@ -242,6 +242,13 @@ export const localCache = {
     safeSetItem(key, JSON.stringify(updated));
   },
 
+  deleteCalendarDay(date: string, identity?: StorageIdentity): void {
+    const key = getScopedKey('calendar_days', identity);
+    const current = this.getCalendarDays(identity);
+    delete current[date];
+    safeSetItem(key, JSON.stringify(current));
+  },
+
   getTimeEntries(identity?: StorageIdentity): Record<string, any> {
     const target = identity || activeIdentity;
     const scopedKey = getScopedKey('time_entries', target);
@@ -274,6 +281,13 @@ export const localCache = {
     const current = this.getTimeEntries(identity);
     const updated = { ...current, ...entriesMap };
     safeSetItem(key, JSON.stringify(updated));
+  },
+
+  deleteTimeEntry(date: string, identity?: StorageIdentity): void {
+    const key = getScopedKey('time_entries', identity);
+    const current = this.getTimeEntries(identity);
+    delete current[date];
+    safeSetItem(key, JSON.stringify(current));
   },
 
   getSupabaseConfig(): SupabaseConfig | null {

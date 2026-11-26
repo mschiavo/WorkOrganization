@@ -1,4 +1,5 @@
 import React from 'react';
+import { RotateCcw } from 'lucide-react';
 import { useWorkOrganizer } from '../../context/WorkOrganizerContext';
 import { calculateDailyTime, minutesToHHmm } from '../../core/domain/timeCalculator';
 import { DayStatus } from '../../core/domain/policyValidator';
@@ -43,6 +44,7 @@ export const DayDetailCard: React.FC<DayDetailCardProps> = ({ date, onClose }) =
     settings,
     updateTimeEntry,
     updateDayStatus,
+    resetDay,
   } = useWorkOrganizer();
 
   const targetDate = date || selectedDate;
@@ -127,7 +129,21 @@ export const DayDetailCard: React.FC<DayDetailCardProps> = ({ date, onClose }) =
 
       {/* Stato Giornata Buttons */}
       <div className={styles.statusSection}>
-        <div className={styles.statusSectionLabel}>Stato Giornata:</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div className={styles.statusSectionLabel} style={{ marginBottom: 0 }}>Stato Giornata:</div>
+          <button
+            type="button"
+            data-testid="btn-reset-day"
+            className={styles.resetDayBtn}
+            title="Azzera lo stato del giorno e rimuovi le timbrature"
+            onClick={async () => {
+              await resetDay(targetDate);
+            }}
+          >
+            <RotateCcw size={12} />
+            <span>Resetta Giorno</span>
+          </button>
+        </div>
         <div className={styles.statusButtonsGrid}>
           {availableStatuses.map((opt) => (
             <button

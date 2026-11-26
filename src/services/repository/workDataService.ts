@@ -397,6 +397,25 @@ export const workDataService = {
     return { timeEntry: mergedEntry, syncedDay };
   },
 
+  async deleteDay(date: string, userId?: string | null, identity?: StorageIdentity): Promise<void> {
+    // 1. Remove from local cache
+    localCache.deleteCalendarDay(date, identity);
+    localCache.deleteTimeEntry(date, identity);
+
+    // 2. If cloud user, remove from Supabase
+    if (userId) {
+      const client = getSupabaseClient();
+      if (client) {
+        try {
+          await client.from('calendar_days').delete().eq('user_id', userId).eq('date', date);
+          await client.from('time_entries').delete().eq('user_id', userId).eq('date', date);
+        } catch {
+          // ignore offline
+        }
+      }
+    }
+  },
+
   async flushPendingMutations(
     userId?: string | null,
     identity?: StorageIdentity
