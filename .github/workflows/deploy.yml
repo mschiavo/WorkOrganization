@@ -1,7 +1,11 @@
-name: Deploy to GitHub Pages
+name: CI & GitHub Pages Deployment
 
 on:
   push:
+    branches:
+      - main
+      - develop
+  pull_request:
     branches:
       - main
       - develop
@@ -17,10 +21,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -38,6 +39,9 @@ jobs:
       - name: Run Test Suite
         run: npm run test
 
+      - name: Typecheck
+        run: npx tsc --noEmit
+
       - name: Build Production Bundle
         run: npm run build
         env:
@@ -45,13 +49,23 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages Artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

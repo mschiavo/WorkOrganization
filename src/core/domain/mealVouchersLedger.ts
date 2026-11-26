@@ -84,17 +84,16 @@ export function calculateQuarterlyMealVouchers(
 
     for (const [dateStr, entry] of Object.entries(timeEntriesMap)) {
       if (dateStr.startsWith(prefix) && entry.canteenUsed) {
-        totalCanteenCount++;
+        const day = daysMap[dateStr];
+        if (!day || day.status === 'presenza') {
+          totalCanteenCount++;
+        }
       }
     }
 
     for (const [dateStr, day] of Object.entries(daysMap)) {
-      if (dateStr.startsWith(prefix)) {
-        const entry = timeEntriesMap[dateStr];
-        const isSmart = day.status === 'smart' || entry?.isSmartWork === true;
-        if (isSmart) {
-          totalSmartCount++;
-        }
+      if (dateStr.startsWith(prefix) && day.status === 'smart') {
+        totalSmartCount++;
       }
     }
   }

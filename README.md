@@ -134,7 +134,7 @@ npm run dev
 L'applicazione sarà disponibile su `http://localhost:5173`.
 
 ### 3. Esecuzione Suite di Test
-Per eseguire l'intera suite di test unitari e di integrazione (170 test):
+Per eseguire l'intera suite di test unitari e di integrazione con approccio TDD:
 ```bash
 npm test
 ```
@@ -145,7 +145,7 @@ npx vitest
 
 ### 4. Verifica Type Checking TypeScript
 ```bash
-npx tsc
+npx tsc --noEmit
 ```
 
 ### 5. Build di Produzione
@@ -172,15 +172,15 @@ Se desideri sincronizzare i dati su Supabase invece di operare unicamente in loc
 
 ---
 
-## 🧩 Integrazione Zucchetti (Tampermonkey Userscript)
+## 🧩 Integrazione Zucchetti (Tampermonkey Userscript & Estrattore PDF)
 
-È disponibile uno Userscript pronto per **Tampermonkey** in [`tools/tampermonkey/zucchetti-to-workorganizer.user.js`](tools/tampermonkey/zucchetti-to-workorganizer.user.js) che inietta un pulsante galleggiante sul portale web Zucchetti aziendale (HR Portal, Infinity, Presenze Web, ZConnect) per esportare con 1 clic le timbrature, lo smart working, le ferie e la mensa del mese in formato JSON o CSV pronto per WorkOrganizer. Consulta la guida in [`tools/tampermonkey/README.md`](tools/tampermonkey/README.md).
+- **Tampermonkey Userscript:** Disponibile in [`tools/tampermonkey/zucchetti-to-workorganizer.user.js`](tools/tampermonkey/zucchetti-to-workorganizer.user.js) per estrazione con 1-click dal portale aziendale Zucchetti.
+- **Estrattore Geometrico PDF:** Disponibile in [`scripts/import_pdf_cartellino.py`](scripts/import_pdf_cartellino.py) per elaborare e aggregare in automatico più file PDF mensili del cartellino Zucchetti generando il file master JSON pronto per l'importazione.
 
 ---
 
 ## 🚀 Deploy su GitHub Pages
 
-Il repository include già il workflow GitHub Actions configurato in `.github/workflows/deploy.yml`.
-1. Vai nelle impostazioni del repository GitHub: **Settings > Pages**.
-2. Sotto **Build and deployment > Source**, seleziona **GitHub Actions**.
-3. Ad ogni push sul ramo `main`, l'applicazione verrà compilata, verificata con i test e distribuita automaticamente.
+Il repository include il workflow GitHub Actions configurato in `.github/workflows/deploy.yml`:
+- I push su `develop` o le pull request eseguono i test, typecheck e build di verifica senza pubblicare sul sito.
+- I push sul ramo `main` compilano, verificano ed eseguono il deploy automatico su GitHub Pages.

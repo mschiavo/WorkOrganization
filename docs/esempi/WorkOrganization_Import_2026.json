@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "exportedAt": "2026-11-26T10:11:10.856724",
+  "exportedAt": "2026-11-26T12:08:53.469607",
   "settings": {
     "maxSmartDaysMonth": 10,
     "minPresenceDaysWeek": 1,
@@ -1698,6 +1698,7 @@
       "lunchOut": "11:56",
       "lunchIn": "12:27",
       "eveningOut": "16:59",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1707,6 +1708,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:31",
       "eveningOut": "16:49",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1716,6 +1718,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:35",
       "eveningOut": "17:18",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1725,6 +1728,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1734,7 +1738,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:57",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-01-14": {
@@ -1743,6 +1748,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:31",
       "eveningOut": "17:21",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1752,6 +1758,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1761,6 +1768,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1770,7 +1778,8 @@
       "lunchOut": "12:03",
       "lunchIn": "12:31",
       "eveningOut": "17:35",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-01-20": {
@@ -1779,6 +1788,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1788,7 +1798,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "19:24",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-01-22": {
@@ -1797,6 +1808,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1806,6 +1818,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1815,7 +1828,8 @@
       "lunchOut": "12:01",
       "lunchIn": "12:28",
       "eveningOut": "17:02",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-01-27": {
@@ -1824,6 +1838,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1833,6 +1848,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1842,6 +1858,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1851,6 +1868,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1860,7 +1878,8 @@
       "lunchOut": "12:03",
       "lunchIn": "12:31",
       "eveningOut": "17:30",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-03": {
@@ -1869,6 +1888,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1878,6 +1898,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1887,6 +1908,7 @@
       "lunchOut": "12:04",
       "lunchIn": "12:45",
       "eveningOut": "17:11",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1896,6 +1918,7 @@
       "lunchOut": "12:12",
       "lunchIn": "12:49",
       "eveningOut": "17:15",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1905,6 +1928,7 @@
       "lunchOut": "11:59",
       "lunchIn": "12:30",
       "eveningOut": "17:34",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1914,6 +1938,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1923,6 +1948,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:30",
       "eveningOut": "19:20",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -1932,6 +1958,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1941,7 +1968,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:35",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-16": {
@@ -1950,7 +1978,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:51",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-17": {
@@ -1959,6 +1988,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1968,7 +1998,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "12:50",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-19": {
@@ -1977,6 +2008,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1986,6 +2018,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -1995,7 +2028,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:53",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-24": {
@@ -2004,7 +2038,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:30",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-02-25": {
@@ -2013,6 +2048,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2022,6 +2058,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2031,6 +2068,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2040,7 +2078,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:55",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-03": {
@@ -2049,6 +2088,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2058,7 +2098,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:09",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-05": {
@@ -2067,7 +2108,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:10",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-06": {
@@ -2076,6 +2118,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2085,7 +2128,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "17:02",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-10": {
@@ -2094,6 +2138,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2103,7 +2148,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:30",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-12": {
@@ -2112,6 +2158,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2121,6 +2168,7 @@
       "lunchOut": "11:59",
       "lunchIn": "12:38",
       "eveningOut": "17:15",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2130,6 +2178,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2139,7 +2188,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:53",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-18": {
@@ -2148,6 +2198,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2157,6 +2208,7 @@
       "lunchOut": "12:10",
       "lunchIn": "12:50",
       "eveningOut": "16:51",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2166,6 +2218,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2175,6 +2228,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:30",
       "eveningOut": "17:09",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2184,6 +2238,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2193,6 +2248,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2202,6 +2258,7 @@
       "lunchOut": "12:07",
       "lunchIn": "12:51",
       "eveningOut": "16:01",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2211,7 +2268,8 @@
       "lunchOut": "12:43",
       "lunchIn": "13:12",
       "eveningOut": "16:08",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-03-30": {
@@ -2220,6 +2278,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2229,6 +2288,7 @@
       "lunchOut": "12:03",
       "lunchIn": "12:35",
       "eveningOut": "16:30",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2238,6 +2298,7 @@
       "lunchOut": "13:13",
       "lunchIn": "13:56",
       "eveningOut": "17:08",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2247,7 +2308,18 @@
       "lunchOut": "12:09",
       "lunchIn": "12:28",
       "eveningOut": "18:17",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
+      "isSmartWork": false
+    },
+    "2026-04-03": {
+      "date": "2026-04-03",
+      "morningIn": null,
+      "lunchOut": null,
+      "lunchIn": null,
+      "eveningOut": null,
+      "permissionMinutes": 480,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-04-07": {
@@ -2256,7 +2328,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:45",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-04-08": {
@@ -2265,7 +2338,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "17:12",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-04-09": {
@@ -2274,6 +2348,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2283,6 +2358,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2292,7 +2368,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:45",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-04-14": {
@@ -2301,7 +2378,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "17:06",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-04-15": {
@@ -2310,6 +2388,7 @@
       "lunchOut": "12:52",
       "lunchIn": "14:02",
       "eveningOut": "16:39",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2319,6 +2398,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2328,6 +2408,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2337,6 +2418,7 @@
       "lunchOut": "11:53",
       "lunchIn": "12:25",
       "eveningOut": "17:11",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2346,6 +2428,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2355,6 +2438,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2364,6 +2448,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2373,6 +2458,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2382,6 +2468,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2391,6 +2478,7 @@
       "lunchOut": "12:28",
       "lunchIn": "13:17",
       "eveningOut": "16:30",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2400,6 +2488,7 @@
       "lunchOut": "11:57",
       "lunchIn": "12:32",
       "eveningOut": "17:02",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2409,6 +2498,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2418,6 +2508,7 @@
       "lunchOut": "11:57",
       "lunchIn": "12:34",
       "eveningOut": "17:13",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2427,6 +2518,7 @@
       "lunchOut": "12:44",
       "lunchIn": "13:33",
       "eveningOut": "17:11",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2436,7 +2528,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "17:12",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-07": {
@@ -2445,6 +2538,7 @@
       "lunchOut": "12:43",
       "lunchIn": "14:07",
       "eveningOut": "17:20",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2454,6 +2548,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2463,7 +2558,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:53",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-12": {
@@ -2472,7 +2568,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:51",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-13": {
@@ -2481,6 +2578,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2490,6 +2588,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2499,6 +2598,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2508,7 +2608,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "16:58",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-19": {
@@ -2517,6 +2618,7 @@
       "lunchOut": "12:25",
       "lunchIn": "13:00",
       "eveningOut": "16:28",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2526,6 +2628,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2535,6 +2638,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2544,6 +2648,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2553,7 +2658,8 @@
       "lunchOut": "12:52",
       "lunchIn": "13:18",
       "eveningOut": "17:08",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-26": {
@@ -2562,7 +2668,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "17:16",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-05-27": {
@@ -2571,6 +2678,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2580,6 +2688,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2589,6 +2698,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2598,6 +2708,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2607,7 +2718,8 @@
       "lunchOut": "13:13",
       "lunchIn": "13:37",
       "eveningOut": "16:15",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-06-17": {
@@ -2616,6 +2728,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2625,6 +2738,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2634,6 +2748,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2643,6 +2758,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2652,6 +2768,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2661,6 +2778,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:33",
       "eveningOut": "15:51",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2670,6 +2788,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2679,6 +2798,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2688,6 +2808,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2697,6 +2818,7 @@
       "lunchOut": "11:58",
       "lunchIn": "12:30",
       "eveningOut": "17:30",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2706,6 +2828,7 @@
       "lunchOut": "12:22",
       "lunchIn": "12:57",
       "eveningOut": "16:20",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2715,6 +2838,7 @@
       "lunchOut": "12:36",
       "lunchIn": "13:06",
       "eveningOut": "16:30",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2724,7 +2848,8 @@
       "lunchOut": "11:57",
       "lunchIn": "12:23",
       "eveningOut": "16:54",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-07-07": {
@@ -2733,6 +2858,7 @@
       "lunchOut": "12:26",
       "lunchIn": "13:13",
       "eveningOut": "16:48",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2742,6 +2868,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2751,6 +2878,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2760,7 +2888,8 @@
       "lunchOut": "11:58",
       "lunchIn": "12:22",
       "eveningOut": "17:22",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-07-14": {
@@ -2769,6 +2898,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:30",
       "eveningOut": "16:42",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2778,6 +2908,7 @@
       "lunchOut": "12:45",
       "lunchIn": "13:17",
       "eveningOut": "17:14",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2787,6 +2918,7 @@
       "lunchOut": "12:10",
       "lunchIn": "12:49",
       "eveningOut": "17:48",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2796,6 +2928,7 @@
       "lunchOut": "12:44",
       "lunchIn": "13:17",
       "eveningOut": "16:23",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2805,6 +2938,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2814,6 +2948,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:41",
       "eveningOut": "17:15",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2823,6 +2958,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2832,6 +2968,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2841,6 +2978,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2850,6 +2988,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2859,6 +2998,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2868,6 +3008,7 @@
       "lunchOut": "12:42",
       "lunchIn": "14:04",
       "eveningOut": "17:09",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2877,6 +3018,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2886,6 +3028,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2895,6 +3038,7 @@
       "lunchOut": "12:05",
       "lunchIn": "12:35",
       "eveningOut": "16:58",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2904,7 +3048,8 @@
       "lunchOut": "11:52",
       "lunchIn": "12:21",
       "eveningOut": "16:26",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-08-05": {
@@ -2913,6 +3058,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:32",
       "eveningOut": "16:46",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2922,6 +3068,7 @@
       "lunchOut": "12:21",
       "lunchIn": "12:56",
       "eveningOut": "17:36",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2931,6 +3078,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:38",
       "eveningOut": "14:57",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2940,6 +3088,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:51",
       "eveningOut": "16:43",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2949,6 +3098,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2958,6 +3108,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2967,6 +3118,7 @@
       "lunchOut": "12:23",
       "lunchIn": "12:56",
       "eveningOut": "16:45",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2976,6 +3128,7 @@
       "lunchOut": "12:10",
       "lunchIn": "12:40",
       "eveningOut": "16:50",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -2985,6 +3138,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -2994,6 +3148,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3003,6 +3158,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3012,6 +3168,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3021,6 +3178,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3030,6 +3188,7 @@
       "lunchOut": "12:53",
       "lunchIn": "13:30",
       "eveningOut": "16:07",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3039,6 +3198,7 @@
       "lunchOut": "12:14",
       "lunchIn": "12:45",
       "eveningOut": "16:46",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3048,6 +3208,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3057,6 +3218,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3066,6 +3228,7 @@
       "lunchOut": "12:34",
       "lunchIn": "14:01",
       "eveningOut": "16:37",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3075,6 +3238,7 @@
       "lunchOut": "12:03",
       "lunchIn": "12:33",
       "eveningOut": "16:38",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3084,6 +3248,7 @@
       "lunchOut": "12:36",
       "lunchIn": "13:14",
       "eveningOut": "16:44",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3093,6 +3258,7 @@
       "lunchOut": "12:29",
       "lunchIn": "13:13",
       "eveningOut": "15:57",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3102,6 +3268,7 @@
       "lunchOut": "12:19",
       "lunchIn": "12:56",
       "eveningOut": "16:39",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3111,7 +3278,8 @@
       "lunchOut": "12:23",
       "lunchIn": "12:37",
       "eveningOut": "16:53",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-09-10": {
@@ -3120,6 +3288,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3129,6 +3298,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3138,6 +3308,7 @@
       "lunchOut": "12:32",
       "lunchIn": "13:03",
       "eveningOut": "16:45",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3147,6 +3318,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3156,6 +3328,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3165,6 +3338,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3174,6 +3348,7 @@
       "lunchOut": "12:26",
       "lunchIn": "13:01",
       "eveningOut": "15:45",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3183,6 +3358,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3192,6 +3368,7 @@
       "lunchOut": "12:11",
       "lunchIn": "12:48",
       "eveningOut": "15:38",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3201,6 +3378,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3210,6 +3388,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3219,6 +3398,7 @@
       "lunchOut": "12:08",
       "lunchIn": "12:44",
       "eveningOut": "15:43",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3228,7 +3408,8 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": "12:10",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-09-29": {
@@ -3237,6 +3418,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3246,6 +3428,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3255,7 +3438,8 @@
       "lunchOut": "12:06",
       "lunchIn": "12:35",
       "eveningOut": "17:36",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-10-02": {
@@ -3264,6 +3448,7 @@
       "lunchOut": "11:59",
       "lunchIn": "12:33",
       "eveningOut": "16:05",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3273,6 +3458,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3282,6 +3468,7 @@
       "lunchOut": "13:00",
       "lunchIn": "13:39",
       "eveningOut": "17:00",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3291,6 +3478,7 @@
       "lunchOut": "12:47",
       "lunchIn": "13:23",
       "eveningOut": "16:33",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3300,6 +3488,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3309,6 +3498,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3318,6 +3508,7 @@
       "lunchOut": "12:34",
       "lunchIn": "13:07",
       "eveningOut": "17:13",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3327,6 +3518,7 @@
       "lunchOut": "12:07",
       "lunchIn": "12:58",
       "eveningOut": "16:50",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3336,6 +3528,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3345,6 +3538,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3354,6 +3548,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3363,6 +3558,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3372,6 +3568,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3381,7 +3578,8 @@
       "lunchOut": "11:56",
       "lunchIn": "12:25",
       "eveningOut": "16:28",
-      "canteenUsed": true,
+      "permissionMinutes": 0,
+      "canteenUsed": false,
       "isSmartWork": false
     },
     "2026-10-29": {
@@ -3390,6 +3588,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3399,6 +3598,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3408,6 +3608,7 @@
       "lunchOut": "12:05",
       "lunchIn": "12:37",
       "eveningOut": "16:47",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3417,6 +3618,7 @@
       "lunchOut": "12:01",
       "lunchIn": "12:40",
       "eveningOut": "16:28",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3426,6 +3628,7 @@
       "lunchOut": "11:59",
       "lunchIn": "12:33",
       "eveningOut": "16:53",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3435,6 +3638,7 @@
       "lunchOut": "12:00",
       "lunchIn": "12:30",
       "eveningOut": "16:47",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3444,6 +3648,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3453,6 +3658,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3462,6 +3668,7 @@
       "lunchOut": "12:10",
       "lunchIn": "12:43",
       "eveningOut": "16:50",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3471,6 +3678,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3480,8 +3688,19 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
+    },
+    "2026-11-16": {
+      "date": "2026-11-16",
+      "morningIn": null,
+      "lunchOut": null,
+      "lunchIn": null,
+      "eveningOut": null,
+      "permissionMinutes": 480,
+      "canteenUsed": false,
+      "isSmartWork": false
     },
     "2026-11-17": {
       "date": "2026-11-17",
@@ -3489,6 +3708,7 @@
       "lunchOut": "12:02",
       "lunchIn": "12:48",
       "eveningOut": "16:44",
+      "permissionMinutes": 0,
       "canteenUsed": true,
       "isSmartWork": false
     },
@@ -3498,6 +3718,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3507,6 +3728,7 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
     },
@@ -3516,8 +3738,19 @@
       "lunchOut": null,
       "lunchIn": null,
       "eveningOut": null,
+      "permissionMinutes": 0,
       "canteenUsed": false,
       "isSmartWork": true
+    },
+    "2026-11-23": {
+      "date": "2026-11-23",
+      "morningIn": null,
+      "lunchOut": null,
+      "lunchIn": null,
+      "eveningOut": null,
+      "permissionMinutes": 480,
+      "canteenUsed": false,
+      "isSmartWork": false
     }
   }
 }

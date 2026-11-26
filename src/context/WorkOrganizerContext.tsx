@@ -252,7 +252,16 @@ export const WorkOrganizerProvider: React.FC<{
 
       for (const [dateStr, entry] of Object.entries(timeEntries)) {
         if (dateStr.startsWith(prefix)) {
-          const calc = calculateDailyTime(entry, settings.minLunchBreakMinutes);
+          const day = days[dateStr];
+          // Planned days must not count towards actual bank hours
+          if (day?.status === 'idea_smart' || day?.status === 'idea_ferie' || day?.status === 'idea_par') {
+            continue;
+          }
+          const calc = calculateDailyTime(entry, {
+            minLunchMinutes: settings.minLunchBreakMinutes,
+            standardDayHours: settings.standardDayHours,
+            reducedDayHours: settings.reducedDayHours,
+          });
           monthTotalDelta += calc.deltaMinutes;
         }
       }
@@ -261,7 +270,7 @@ export const WorkOrganizerProvider: React.FC<{
     }
 
     return calculateQuarterBalance(currentYear, qInfo.quarterNumber, monthDeltas);
-  }, [currentYear, currentMonth, timeEntries, settings.minLunchBreakMinutes]);
+  }, [currentYear, currentMonth, timeEntries, days, settings.minLunchBreakMinutes, settings.standardDayHours, settings.reducedDayHours]);
 
   // Computed: Meal Vouchers (Quarterly)
   const mealVouchers: QuarterlyMealVoucherSummary = useMemo(() => {

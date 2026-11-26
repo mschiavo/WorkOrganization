@@ -362,4 +362,66 @@ describe('TimeCalculator Domain Service', () => {
       expect(result.expectedExit7h).toBe('05:30');
     });
   });
+
+  describe('P2.2 Strict Calculation & Incomplete Day Rules', () => {
+    it('08:00 / 12:00 / mancante / 16:30 non accredita un delta definitivo di +30 minuti', () => {
+      const input: TimeEntryInput = {
+        morningIn: '08:00',
+        lunchOut: '12:00',
+        lunchIn: null, // Asymmetric missing lunch entry
+        eveningOut: '16:30',
+      };
+
+      const result = calculateDailyTime(input);
+
+      // Must apply at least min lunch break (30m) or mark incomplete/provisional, and NEVER credit +30m delta!
+      expect(result.deltaMinutes).not.toBe(30);
+      expect(result.deltaMinutes).toBeLessThanOrEqual(0);
+      expect(result.isComplete).toBe(false);
+    });
+
+    it('09:00 -> 08:00 senza cambio data valido non accredita +14h30 o 23h', () => {
+      const input: TimeEntryInput = {
+        morningIn: '09:00',
+        eveningOut: '08:00',
+      };
+
+      const result = calculateDailyTime(input);
+
+      // Inverted daytime punches are invalid and must not accrue 22-23 hours
+      expect(result.workedMinutes).toBe(0);
+      expect(result.isValidSequence).toBe(false);
+    });
+
+    it('con nominale 7h30, ridotto 6h30 e pausa 30m, ingresso alle 08:00 produce uscite 16:00 e 15:00', () => {
+      const input: TimeEntryInput = {
+        morningIn: '08:00',
+      };
+
+      const result = calculateDailyTime(input, {
+        minLunchMinutes: 30,
+        standardDayHours: 7.5, // 7h30m = 450m
+        reducedDayHours: 6.5,  // 6h30m = 390m
+      });
+
+      // 08:00 (480) + 30m lunch + 7h30 (450) = 960m -> 16:00
+      expect(result.expectedExit8h).toBe('16:00');
+      // 08:00 (480) + 30m lunch + 6h30 (390) = 900m -> 15:00
+      expect(result.expectedExit7h).toBe('15:00');
+    });
+
+    it('permessi in smart riducono le ore effettive ma conservano la quadratura contrattuale (delta 0)', () => {
+      const input: TimeEntryInput = {
+        isSmartWork: true,
+        permissionMinutes: 120, // 2h permission
+      };
+
+      const result = calculateDailyTime(input, {
+        standardDayHours: 8,
+      });
+
+      expect(result.workedMinutes).toBe(360); // 6h effettive
+      expect(result.deltaMinutes).toBe(0);    // quadratura a 8h
+    });
+  });
 });

@@ -30,7 +30,7 @@ describe('excelExporter', () => {
       },
     };
 
-    const wb = generateMonthExcelWorkbook(2026, 10, sampleDays, sampleEntries, DEFAULT_SETTINGS);
+    const wb = generateMonthExcelWorkbook(2026, 10, sampleDays, sampleEntries, DEFAULT_SETTINGS, XLSX);
 
     expect(wb).toBeDefined();
     expect(wb.SheetNames.length).toBe(1);
@@ -67,5 +67,12 @@ describe('excelExporter', () => {
     const totalRow = jsonAoa[32];
     expect(totalRow[0]).toBe('TOTALI');
     expect(totalRow[9]).toBe('16:00'); // 8h + 8h = 16h total worked
+  });
+
+  it('loads XLSX dynamically via getXlsxModule', async () => {
+    const { getXlsxModule } = await import('./excelExporter');
+    const module = await getXlsxModule();
+    expect(module).toBeDefined();
+    expect(typeof module.utils.book_new).toBe('function');
   });
 });

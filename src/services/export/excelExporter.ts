@@ -1,4 +1,4 @@
-import * as XLSX from 'xlsx';
+import type * as XLSXTypes from 'xlsx';
 import { CalendarDayInfo, DayStatus } from '../../core/domain/policyValidator';
 import { StoredTimeEntry } from '../repository/workDataService';
 import { AppSettings } from '../storage/localCache';
@@ -18,13 +18,27 @@ const STATUS_LABELS: Record<DayStatus, string> = {
   non_lavorativo: 'Non Lavorativo',
 };
 
+let cachedXlsx: typeof XLSXTypes | null = null;
+
+export async function getXlsxModule(): Promise<typeof XLSXTypes> {
+  if (cachedXlsx) return cachedXlsx;
+  try {
+    cachedXlsx = await import('xlsx');
+    return cachedXlsx;
+  } catch (err: any) {
+    console.error('Failed to dynamically import xlsx module:', err);
+    throw new Error('Impossibile caricare il modulo di esportazione Excel.');
+  }
+}
+
 export function generateMonthExcelWorkbook(
   year: number,
   month: number,
   days: Record<string, CalendarDayInfo>,
   timeEntries: Record<string, StoredTimeEntry>,
-  settings: AppSettings
-): XLSX.WorkBook {
+  settings: AppSettings,
+  XLSX: typeof XLSXTypes
+): XLSXTypes.WorkBook {
   const daysInMonth = new Date(year, month, 0).getDate();
   const paddedMonth = String(month).padStart(2, '0');
 
@@ -102,7 +116,7 @@ export function generateMonthExcelWorkbook(
     }
 
     if (timeRecord?.canteenUsed) {
-      totalMensaCount++;
+      totalMensaCount += 1;
     }
 
     rows.push([
@@ -125,7 +139,10 @@ export function generateMonthExcelWorkbook(
   }
 
   // Totals Row
-  rows.push([
+  const totalWorkedStr = minutesToHHmm(totalWorkedMinutes);
+  const totalDeltaStr = minutesToHHmm(totalDeltaMinutes, true);
+
+  const totalsRow: (string | number)[] = [
     'TOTALI',
     '',
     '',
@@ -135,17 +152,18 @@ export function generateMonthExcelWorkbook(
     '',
     '',
     '',
-    minutesToHHmm(totalWorkedMinutes),
+    totalWorkedStr,
     '',
     '',
-    minutesToHHmm(totalDeltaMinutes, true),
-    totalMensaCount > 0 ? `${totalMensaCount} pasti` : '',
+    totalDeltaStr,
+    `Mense: ${totalMensaCount}`,
     '',
-  ]);
+  ];
+  rows.push(totalsRow);
 
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
-  // Set column widths
+  // Column widths definition for readability
   worksheet['!cols'] = [
     { wch: 12 }, // Data
     { wch: 8 },  // Giorno
@@ -171,15 +189,20 @@ export function generateMonthExcelWorkbook(
   return workbook;
 }
 
-export function downloadMonthExcel(
+export async function downloadMonthExcel(
   year: number,
   month: number,
   days: Record<string, CalendarDayInfo>,
   timeEntries: Record<string, StoredTimeEntry>,
   settings: AppSettings
-): void {
-  const workbook = generateMonthExcelWorkbook(year, month, days, timeEntries, settings);
-  const paddedMonth = String(month).padStart(2, '0');
-  const filename = `Timbrature_${year}_${paddedMonth}.xlsx`;
-  XLSX.writeFile(workbook, filename);
+): Promise<void> {
+  try {
+    const XLSX = await getXlsxModule();
+    const workbook = generateMonthExcelWorkbook(year, month, days, timeEntries, settings, XLSX);
+    const paddedMonth = String(month).padStart(2, '0');
+    const filename = `Timbrature_${year}_${paddedMonth}.xlsx`;
+    XLSX.writeFile(workbook, filename);
+  } catch (err: any) {
+    alert(err?.message || 'Impossibile esportare il file Excel.');
+  }
 }

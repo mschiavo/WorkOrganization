@@ -315,21 +315,29 @@ export const workDataService = {
 
     localCache.saveTimeEntry(date, mergedEntry, identity);
 
-    // Auto-sync status with calendar day
+    // Auto-sync status with calendar day ONLY if current status was not an explicit user leave (ferie, par, chiusura)
     let syncedDay: CalendarDayInfo | undefined;
-    const isSmart = mergedEntry.isSmartWork === true;
-    const hasPunches = Boolean(mergedEntry.morningIn || mergedEntry.eveningOut);
+    const existingDay = localCache.getCalendarDays(identity)[date];
+    const currentStatus = existingDay?.status;
+    const isExplicitLeave = currentStatus === 'ferie' || currentStatus === 'par' || currentStatus === 'idea_ferie' || currentStatus === 'idea_par' || currentStatus === 'chiusura';
 
-    if (isSmart) {
-      syncedDay = await this.saveDayStatus(date, 'smart', undefined, userId, identity);
-      syncedDay.isConfirmed = true;
-      syncedDay.updatedAt = nowIso;
-      localCache.saveCalendarDay(date, syncedDay, identity);
-    } else if (hasPunches) {
-      syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId, identity);
-      syncedDay.isConfirmed = true;
-      syncedDay.updatedAt = nowIso;
-      localCache.saveCalendarDay(date, syncedDay, identity);
+    if (!isExplicitLeave) {
+      if (mergedEntry.isSmartWork === true) {
+        syncedDay = await this.saveDayStatus(date, 'smart', undefined, userId, identity);
+        syncedDay.isConfirmed = true;
+        syncedDay.updatedAt = nowIso;
+        localCache.saveCalendarDay(date, syncedDay, identity);
+      } else if (mergedEntry.isSmartWork === false && (currentStatus === 'smart' || currentStatus === 'idea_smart')) {
+        syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId, identity);
+        syncedDay.isConfirmed = true;
+        syncedDay.updatedAt = nowIso;
+        localCache.saveCalendarDay(date, syncedDay, identity);
+      } else if (Boolean(mergedEntry.morningIn || mergedEntry.eveningOut) && (currentStatus === 'idea_smart' || !currentStatus || currentStatus === 'non_lavorativo')) {
+        syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId, identity);
+        syncedDay.isConfirmed = true;
+        syncedDay.updatedAt = nowIso;
+        localCache.saveCalendarDay(date, syncedDay, identity);
+      }
     }
 
     if (userId) {
