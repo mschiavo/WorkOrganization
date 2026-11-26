@@ -40,7 +40,7 @@ describe('backupService', () => {
     const result = parseAndValidateBackup(jsonStr);
 
     expect(result.version).toBe('1.0.0');
-    expect(result.settings.maxSmartDaysMonth).toBe(10);
+    expect(result.settings?.maxSmartDaysMonth).toBe(10);
     expect(result.days['2026-10-05'].notes).toBe('Ufficio sede centrale');
     expect(result.timeEntries['2026-10-05'].morningIn).toBe('08:30');
   });
@@ -56,5 +56,92 @@ describe('backupService', () => {
     expect(() => parseAndValidateBackup(invalidObj)).toThrow(
       'Versione del backup mancante.'
     );
+  });
+
+  describe('P1.3 Strict Validation Requirements', () => {
+    it('rejects unsupported versions like version 9', () => {
+      const payload = JSON.stringify({
+        version: '9',
+        days: {},
+        timeEntries: {},
+      });
+      expect(() => parseAndValidateBackup(payload)).toThrow(/versione del backup non supportata/i);
+    });
+
+    it('rejects records with numeric morningIn or invalid time punch format', () => {
+      const payload = JSON.stringify({
+        version: '1.0.0',
+        days: {},
+        timeEntries: {
+          '2026-10-05': {
+            date: '2026-10-05',
+            morningIn: 8.5, // Numeric instead of string "08:30"
+          },
+        },
+      });
+      expect(() => parseAndValidateBackup(payload)).toThrow(/orario.*non valido/i);
+    });
+
+    it('rejects impossible calendar dates such as 2026-02-30 or month 13', () => {
+      const payload = JSON.stringify({
+        version: '1.0.0',
+        days: {
+          '2026-02-30': {
+            date: '2026-02-30',
+            status: 'presenza',
+          },
+        },
+      });
+      expect(() => parseAndValidateBackup(payload)).toThrow(/data di calendario non reale/i);
+    });
+
+    it('rejects key and date attribute mismatch', () => {
+      const payload = JSON.stringify({
+        version: '1.0.0',
+        days: {
+          '2026-10-05': {
+            date: '2026-10-06', // Mismatched date
+            status: 'presenza',
+          },
+        },
+      });
+      expect(() => parseAndValidateBackup(payload)).toThrow(/mancata corrispondenza tra chiave e data/i);
+    });
+
+    it('rejects invalid day status causality', () => {
+      const payload = JSON.stringify({
+        version: '1.0.0',
+        days: {
+          '2026-10-05': {
+            date: '2026-10-05',
+            status: 'unsupported_status',
+          },
+        },
+      });
+      expect(() => parseAndValidateBackup(payload)).toThrow(/causale o stato non valido/i);
+    });
+
+    it('identifies partial local backup when cloud is unreachable', () => {
+      const jsonStr = createBackupJson(DEFAULT_SETTINGS, sampleDays, sampleEntries, {
+        isPartialOfflineCopy: true,
+        exportScope: 'local_partial',
+      });
+      const parsed = parseAndValidateBackup(jsonStr);
+
+      expect(parsed.isPartialOfflineCopy).toBe(true);
+      expect(parsed.exportScope).toBe('local_partial');
+    });
+
+    it('returns undefined settings when backup omits settings so callers preserve current settings', () => {
+      const payload = JSON.stringify({
+        version: '1.0.0',
+        days: sampleDays,
+        timeEntries: sampleEntries,
+      });
+      const result = parseAndValidateBackup(payload);
+
+      expect(result.settings).toBeUndefined();
+      expect(result.days['2026-10-05']).toBeDefined();
+    });
   });
 });

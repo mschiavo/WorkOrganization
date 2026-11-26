@@ -2,11 +2,23 @@ import { CalendarDayInfo, DayStatus } from '../../core/domain/policyValidator';
 import { TimeEntryInput } from '../../core/domain/timeCalculator';
 import { localCache, AppSettings, StorageIdentity } from '../storage/localCache';
 import { getSupabaseClient } from '../supabase/client';
+import { BackupPayload, createBackupJson, parseAndValidateBackup } from '../export/backupService';
 
 export interface StoredTimeEntry extends TimeEntryInput {
   date: string;
   canteenUsed?: boolean;
   updatedAt?: string;
+}
+
+export interface ImportResult {
+  success: boolean;
+  mode: 'merge' | 'replace';
+  savedDaysCount: number;
+  savedEntriesCount: number;
+  failedDaysCount: number;
+  failedEntriesCount: number;
+  cloudSynced: boolean;
+  errorDetails?: string[];
 }
 
 function mapSupabaseSettingsToAppSettings(data: any): AppSettings {
@@ -543,5 +555,238 @@ export const workDataService = {
     } catch {
       // ignore error in offline mode
     }
+  },
+
+  async importBackupPayload(
+    payload: BackupPayload,
+    mode: 'merge' | 'replace' = 'merge',
+    userId?: string | null,
+    identity?: StorageIdentity
+  ): Promise<ImportResult> {
+    const errorDetails: string[] = [];
+    let savedDaysCount = 0;
+    let savedEntriesCount = 0;
+    let failedDaysCount = 0;
+    let failedEntriesCount = 0;
+    let cloudSynced = true;
+
+    // 1. Settings handling: only apply if payload explicitly has settings
+    if (payload.settings) {
+      await this.saveSettings(payload.settings, userId, identity);
+    }
+
+    // 2. Mode handling: if replace, clear current local cache for active identity
+    if (mode === 'replace') {
+      localCache.clearUserData(identity);
+    }
+
+    // 3. Save to local storage
+    if (payload.days && Object.keys(payload.days).length > 0) {
+      localCache.saveCalendarDays(payload.days, identity);
+      savedDaysCount = Object.keys(payload.days).length;
+    }
+    if (payload.timeEntries && Object.keys(payload.timeEntries).length > 0) {
+      localCache.saveTimeEntries(payload.timeEntries, identity);
+      savedEntriesCount = Object.keys(payload.timeEntries).length;
+    }
+
+    // 4. Cloud sync in batches (chunk size 50)
+    if (userId) {
+      const client = getSupabaseClient();
+      if (!client) {
+        cloudSynced = false;
+        errorDetails.push('Supabase non connesso: dati salvati solo localmente.');
+      } else {
+        if (mode === 'replace') {
+          try {
+            await client.from('calendar_days').delete().eq('user_id', userId);
+            await client.from('time_entries').delete().eq('user_id', userId);
+          } catch (delErr: any) {
+            console.warn('Errore pulizia remota replace:', delErr.message);
+          }
+        }
+
+        const daysRows = Object.values(payload.days || {}).map((d) => ({
+          user_id: userId,
+          date: d.date,
+          status: d.status,
+          notes: d.notes ?? null,
+          is_confirmed: d.isConfirmed ?? false,
+          updated_at: d.updatedAt || new Date().toISOString(),
+        }));
+
+        const CHUNK_SIZE = 50;
+        for (let i = 0; i < daysRows.length; i += CHUNK_SIZE) {
+          const chunk = daysRows.slice(i, i + CHUNK_SIZE);
+          try {
+            const { error } = await client.from('calendar_days').upsert(chunk, { onConflict: 'user_id,date' });
+            if (error) {
+              cloudSynced = false;
+              failedDaysCount += chunk.length;
+              errorDetails.push(`Errore lotto ${Math.floor(i / CHUNK_SIZE) + 1} giorni: ${error.message}`);
+              for (const row of chunk) {
+                localCache.enqueuePendingMutation(
+                  {
+                    id: `mut_batch_day_${row.date}_${Date.now()}`,
+                    type: 'save_day_status',
+                    date: row.date,
+                    payload: row,
+                    clientTimestamp: row.updated_at,
+                    version: 1,
+                    retryCount: 0,
+                    status: 'error',
+                    lastError: error.message,
+                  },
+                  identity
+                );
+              }
+            }
+          } catch (err: any) {
+            cloudSynced = false;
+            failedDaysCount += chunk.length;
+            errorDetails.push(`Eccezione lotto ${Math.floor(i / CHUNK_SIZE) + 1} giorni: ${err.message}`);
+          }
+        }
+
+        const entriesRows = Object.values(payload.timeEntries || {}).map((e) => ({
+          user_id: userId,
+          date: e.date,
+          morning_in: e.morningIn ?? null,
+          lunch_out: e.lunchOut ?? null,
+          lunch_in: e.lunchIn ?? null,
+          evening_out: e.eveningOut ?? null,
+          permission_minutes: e.permissionMinutes ?? 0,
+          canteen_used: e.canteenUsed ?? false,
+          is_smart_work: e.isSmartWork ?? false,
+          updated_at: e.updatedAt || new Date().toISOString(),
+        }));
+
+        for (let i = 0; i < entriesRows.length; i += CHUNK_SIZE) {
+          const chunk = entriesRows.slice(i, i + CHUNK_SIZE);
+          try {
+            const { error } = await client.from('time_entries').upsert(chunk, { onConflict: 'user_id,date' });
+            if (error) {
+              cloudSynced = false;
+              failedEntriesCount += chunk.length;
+              errorDetails.push(`Errore lotto ${Math.floor(i / CHUNK_SIZE) + 1} timbrature: ${error.message}`);
+              for (const row of chunk) {
+                localCache.enqueuePendingMutation(
+                  {
+                    id: `mut_batch_entry_${row.date}_${Date.now()}`,
+                    type: 'save_time_entry',
+                    date: row.date,
+                    payload: row,
+                    clientTimestamp: row.updated_at,
+                    version: 1,
+                    retryCount: 0,
+                    status: 'error',
+                    lastError: error.message,
+                  },
+                  identity
+                );
+              }
+            }
+          } catch (err: any) {
+            cloudSynced = false;
+            failedEntriesCount += chunk.length;
+            errorDetails.push(`Eccezione lotto ${Math.floor(i / CHUNK_SIZE) + 1} timbrature: ${err.message}`);
+          }
+        }
+      }
+    } else {
+      cloudSynced = false;
+    }
+
+    const success = failedDaysCount === 0 && failedEntriesCount === 0;
+
+    return {
+      success,
+      mode,
+      savedDaysCount,
+      savedEntriesCount,
+      failedDaysCount,
+      failedEntriesCount,
+      cloudSynced,
+      errorDetails: errorDetails.length > 0 ? errorDetails : undefined,
+    };
+  },
+
+  async exportFullBackup(
+    userId?: string | null,
+    identity?: StorageIdentity
+  ): Promise<{ json: string; filename: string; payload: BackupPayload }> {
+    const settings = localCache.getSettings(identity);
+    const days: Record<string, CalendarDayInfo> = { ...localCache.getCalendarDays(identity) };
+    const timeEntries: Record<string, StoredTimeEntry> = { ...localCache.getTimeEntries(identity) };
+    let isPartialOfflineCopy = false;
+    let exportScope: 'full_cloud' | 'local_partial' = 'full_cloud';
+
+    if (userId) {
+      const client = getSupabaseClient();
+      if (client) {
+        try {
+          // Fetch all calendar_days across all years
+          const { data: daysData, error: daysErr } = await client
+            .from('calendar_days')
+            .select('*')
+            .eq('user_id', userId);
+
+          if (!daysErr && daysData && Array.isArray(daysData)) {
+            for (const row of daysData) {
+              days[row.date] = {
+                date: row.date,
+                status: row.status as DayStatus,
+                notes: row.notes ?? undefined,
+                isConfirmed: row.is_confirmed ?? false,
+                updatedAt: row.updated_at,
+              };
+            }
+          }
+
+          // Fetch all time_entries across all years
+          const { data: entriesData, error: entriesErr } = await client
+            .from('time_entries')
+            .select('*')
+            .eq('user_id', userId);
+
+          if (!entriesErr && entriesData && Array.isArray(entriesData)) {
+            for (const row of entriesData) {
+              timeEntries[row.date] = {
+                date: row.date,
+                morningIn: row.morning_in ?? undefined,
+                lunchOut: row.lunch_out ?? undefined,
+                lunchIn: row.lunch_in ?? undefined,
+                eveningOut: row.evening_out ?? undefined,
+                permissionMinutes: row.permission_minutes ?? 0,
+                canteenUsed: row.canteen_used ?? false,
+                isSmartWork: row.is_smart_work ?? false,
+                updatedAt: row.updated_at,
+              };
+            }
+          }
+        } catch {
+          isPartialOfflineCopy = true;
+          exportScope = 'local_partial';
+        }
+      } else {
+        isPartialOfflineCopy = true;
+        exportScope = 'local_partial';
+      }
+    } else {
+      isPartialOfflineCopy = true;
+      exportScope = 'local_partial';
+    }
+
+    const pending = localCache.getPendingMutations(identity);
+    const json = createBackupJson(settings, days, timeEntries, {
+      isPartialOfflineCopy,
+      exportScope,
+      pendingMutationsCount: pending.length,
+    });
+    const parsedPayload = parseAndValidateBackup(json);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const filename = `WorkOrganization_Backup_${exportScope === 'local_partial' ? 'Local_' : ''}${dateStr}.json`;
+
+    return { json, filename, payload: parsedPayload };
   },
 };

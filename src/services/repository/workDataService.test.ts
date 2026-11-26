@@ -354,5 +354,84 @@ describe('workDataService', () => {
       await workDataService.saveSettings({ maxSmartDaysMonth: 9 }, 'user-456');
       expect(mockClient.from).toHaveBeenCalledWith('app_settings');
     });
+
+    it('importBackupPayload in merge mode preserves unmentioned existing days', async () => {
+      localCache.saveCalendarDay('2026-05-01', { date: '2026-05-01', status: 'chiusura' });
+
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        days: {
+          '2026-10-15': { date: '2026-10-15', status: 'smart' as const },
+        },
+        timeEntries: {},
+      };
+
+      const result = await workDataService.importBackupPayload(payload, 'merge');
+      expect(result.success).toBe(true);
+      expect(result.mode).toBe('merge');
+
+      // Both existing day and new imported day exist
+      expect(localCache.getCalendarDays()['2026-05-01']?.status).toBe('chiusura');
+      expect(localCache.getCalendarDays()['2026-10-15']?.status).toBe('smart');
+    });
+
+    it('importBackupPayload in replace mode replaces existing days', async () => {
+      localCache.saveCalendarDay('2026-05-01', { date: '2026-05-01', status: 'chiusura' });
+
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        days: {
+          '2026-10-15': { date: '2026-10-15', status: 'smart' as const },
+        },
+        timeEntries: {},
+      };
+
+      const result = await workDataService.importBackupPayload(payload, 'replace');
+      expect(result.success).toBe(true);
+      expect(result.mode).toBe('replace');
+
+      // Old day is gone, only imported day remains
+      expect(localCache.getCalendarDays()['2026-05-01']).toBeUndefined();
+      expect(localCache.getCalendarDays()['2026-10-15']?.status).toBe('smart');
+    });
+
+    it('reports failure and queues failed batches when a cloud batch upsert errors during import', async () => {
+      let callCount = 0;
+      const mockClient = {
+        from: vi.fn(() => ({
+          upsert: vi.fn().mockImplementation(async () => {
+            callCount++;
+            if (callCount === 2) {
+              return { error: { message: 'Supabase batch 2 failed with 500' } };
+            }
+            return { error: null };
+          }),
+        })),
+      };
+
+      vi.spyOn(supabaseClientModule, 'getSupabaseClient').mockReturnValue(mockClient as any);
+
+      // Create 120 days so it splits into at least 2 batches of 50/100
+      const daysBatch: Record<string, any> = {};
+      for (let i = 1; i <= 120; i++) {
+        const dStr = `2026-01-${String(i % 28 + 1).padStart(2, '0')}`;
+        daysBatch[`date_${i}`] = { date: dStr, status: 'presenza' as const };
+      }
+
+      const payload = {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        days: daysBatch,
+        timeEntries: {},
+      };
+
+      const res = await workDataService.importBackupPayload(payload, 'merge', 'user-batch-fail');
+
+      expect(res.cloudSynced).toBe(false);
+      expect(res.errorDetails?.length).toBeGreaterThan(0);
+      expect(res.errorDetails?.[0]).toContain('batch 2 failed');
+    });
   });
 });

@@ -14,7 +14,7 @@ import { useWorkOrganizer } from '../../context/WorkOrganizerContext';
 import { useAuth } from '../../services/supabase/authContext';
 import { workDataService } from '../../services/repository/workDataService';
 import { DEFAULT_SETTINGS, localCache } from '../../services/storage/localCache';
-import { createBackupJson, parseAndValidateBackup } from '../../services/export/backupService';
+import { parseAndValidateBackup } from '../../services/export/backupService';
 import { downloadMonthExcel } from '../../services/export/excelExporter';
 import styles from './Settings.module.css';
 
@@ -51,6 +51,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
   const [supabaseUrl, setSupabaseUrl] = useState('');
   const [supabaseKey, setSupabaseKey] = useState('');
+  const [importMode, setImportMode] = useState<'merge' | 'replace'>('merge');
 
   useEffect(() => {
     if (isOpen) {
@@ -119,15 +120,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     downloadMonthExcel(currentYear, currentMonth, days, timeEntries, settings);
   };
 
-  const handleExportJson = () => {
-    const jsonStr = createBackupJson(settings, days, timeEntries);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `WorkOrganizer_Backup_${currentYear}_${String(currentMonth).padStart(2, '0')}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExportJson = async () => {
+    try {
+      const { json, filename, payload } = await workDataService.exportFullBackup(user?.id);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      if (payload.isPartialOfflineCopy) {
+        alert('Copia locale scaricata. Attenzione: la connessione cloud non era disponibile, il file include i dati locali e le modifiche in attesa.');
+      }
+    } catch (err: any) {
+      alert(`Errore esportazione backup: ${err.message}`);
+    }
   };
 
   const handleImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,20 +146,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       const text = await file.text();
       const backup = parseAndValidateBackup(text);
 
-      localCache.saveSettings(backup.settings);
-      localCache.saveCalendarDays(backup.days);
-      localCache.saveTimeEntries(backup.timeEntries);
-
-      if (user?.id) {
-        await updateSettings(backup.settings);
-        await workDataService.syncAllData(backup.days, backup.timeEntries, user.id);
+      if (importMode === 'replace') {
+        const confirmed = window.confirm(
+          'Attenzione: la modalità Sostitutiva (Replace) cancellerà lo storico attuale per sostituirlo con il contenuto del file. Confermi di voler procedere?'
+        );
+        if (!confirmed) {
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
       }
 
+      if (backup.settings) {
+        await updateSettings(backup.settings);
+      }
+
+      const result = await workDataService.importBackupPayload(backup, importMode, user?.id);
+
       await refreshData();
-      alert('Backup ripristinato e sincronizzato con successo!');
+      if (result.cloudSynced) {
+        alert(`Backup importato e sincronizzato con il cloud con successo! (${result.savedDaysCount} giorni)`);
+      } else if (result.errorDetails && result.errorDetails.length > 0) {
+        alert(`Importazione parziale: salvati ${result.savedDaysCount} giorni in locale.\nErrori di sincronizzazione cloud:\n${result.errorDetails.join('\n')}`);
+      } else {
+        alert(`Dati importati in locale con successo (${result.savedDaysCount} giorni).`);
+      }
       onClose();
     } catch (err: any) {
       alert(`Errore nel ripristino del backup: ${err.message}`);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -415,6 +438,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           {/* Section: Backup, Export & Reset */}
           <div className={styles.settingsSection}>
             <h3 className={styles.sectionTitle}>Esportazione Dati & Backup</h3>
+
+            <div style={{ marginBottom: '14px', maxWidth: '380px' }}>
+              <label htmlFor="select-import-mode" style={{ fontSize: '12px', color: 'var(--text-muted, #94a3b8)', display: 'block', marginBottom: '4px' }}>
+                Modalità di importazione:
+              </label>
+              <select
+                id="select-import-mode"
+                data-testid="select-import-mode"
+                className={styles.textInput}
+                style={{ padding: '6px 10px', fontSize: '13px', width: '100%' }}
+                value={importMode}
+                onChange={(e) => setImportMode(e.target.value as 'merge' | 'replace')}
+              >
+                <option value="merge">Unisci allo storico attuale (Merge - Consigliato)</option>
+                <option value="replace">Sostituzione integrale (Replace)</option>
+              </select>
+            </div>
+
             <div className={styles.actionButtonsRow}>
               <button
                 type="button"

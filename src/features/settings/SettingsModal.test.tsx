@@ -85,4 +85,14 @@ describe('SettingsModal Component', () => {
     fireEvent.click(screen.getByTestId('btn-reset-defaults'));
     expect(smartInput).toHaveValue(DEFAULT_SETTINGS.maxSmartDaysMonth);
   });
+
+  it('renders import mode selector defaulting to merge', async () => {
+    await renderSettingsModal(true);
+
+    const modeSelect = screen.getByTestId('select-import-mode');
+    expect(modeSelect).toHaveValue('merge');
+
+    fireEvent.change(modeSelect, { target: { value: 'replace' } });
+    expect(modeSelect).toHaveValue('replace');
+  });
 });
