@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient, isSupabaseConfigured } from './client';
-import { localCache } from '../storage/localCache';
+import { localCache, StorageIdentity, extractProjectRef } from '../storage/localCache';
 
 export interface AuthContextType {
   user: User | { id: string; email: string } | null;
@@ -9,6 +9,7 @@ export interface AuthContextType {
   isGuest: boolean;
   isConfigured: boolean;
   loading: boolean;
+  activeIdentity?: StorageIdentity;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -36,6 +37,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [configured, setConfigured] = useState<boolean>(() => isSupabaseConfigured());
+
+  const activeIdentity: StorageIdentity = React.useMemo(() => {
+    if (user && !isGuest && user.id !== GUEST_USER.id) {
+      const config = localCache.getSupabaseConfig();
+      const projectRef = extractProjectRef(config?.url || (import.meta.env.VITE_SUPABASE_URL as string));
+      return { scope: 'cloud', userId: user.id, projectRef };
+    }
+    return { scope: 'guest' };
+  }, [user, isGuest]);
+
+  useEffect(() => {
+    localCache.setActiveIdentity(activeIdentity);
+  }, [activeIdentity]);
 
   useEffect(() => {
     const isConf = isSupabaseConfigured();
@@ -138,12 +152,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (client) {
       await client.auth.signOut().catch(() => {});
     }
+    if (isGuest) {
+      localCache.clearUserData({ scope: 'guest' });
+    }
     setUser(null);
     setSession(null);
     setIsGuest(false);
     try {
       localStorage.removeItem(GUEST_STORAGE_KEY);
-      localCache.clearUserData();
     } catch {
       // ignore
     }
@@ -168,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isGuest,
         isConfigured: configured,
         loading,
+        activeIdentity,
         signIn,
         signUp,
         signOut,

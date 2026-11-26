@@ -1,6 +1,6 @@
 import { CalendarDayInfo, DayStatus } from '../../core/domain/policyValidator';
 import { TimeEntryInput } from '../../core/domain/timeCalculator';
-import { localCache, AppSettings } from '../storage/localCache';
+import { localCache, AppSettings, StorageIdentity } from '../storage/localCache';
 import { getSupabaseClient } from '../supabase/client';
 
 export interface StoredTimeEntry extends TimeEntryInput {
@@ -64,8 +64,8 @@ function mapAppSettingsToSupabase(settings: Partial<AppSettings>, userId: string
 }
 
 export const workDataService = {
-  async loadSettings(userId?: string | null): Promise<AppSettings> {
-    let settings = localCache.getSettings();
+  async loadSettings(userId?: string | null, identity?: StorageIdentity): Promise<AppSettings> {
+    let settings = localCache.getSettings(identity);
     if (!userId) {
       return settings;
     }
@@ -82,7 +82,7 @@ export const workDataService = {
 
       if (data && !error) {
         settings = mapSupabaseSettingsToAppSettings(data);
-        localCache.saveSettings(settings);
+        localCache.saveSettings(settings, identity);
       }
     } catch {
       // offline fallback
@@ -93,7 +93,8 @@ export const workDataService = {
   async loadMonthData(
     year: number,
     _month: number,
-    userId?: string | null
+    userId?: string | null,
+    identity?: StorageIdentity
   ): Promise<{
     days: Record<string, CalendarDayInfo>;
     timeEntries: Record<string, StoredTimeEntry>;
@@ -104,9 +105,9 @@ export const workDataService = {
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
 
-    let settings = localCache.getSettings();
-    let days = localCache.getCalendarDays();
-    let timeEntries = localCache.getTimeEntries();
+    let settings = localCache.getSettings(identity);
+    let days = localCache.getCalendarDays(identity);
+    let timeEntries = localCache.getTimeEntries(identity);
 
     if (!userId) {
       return { days, timeEntries, settings };
@@ -137,7 +138,7 @@ export const workDataService = {
           };
         }
         days = { ...days, ...remoteDays };
-        localCache.saveCalendarDays(remoteDays);
+        localCache.saveCalendarDays(remoteDays, identity);
       }
 
       // Load Time Entries
@@ -163,7 +164,7 @@ export const workDataService = {
           };
         }
         timeEntries = { ...timeEntries, ...remoteEntries };
-        localCache.saveTimeEntries(remoteEntries);
+        localCache.saveTimeEntries(remoteEntries, identity);
       }
     } catch {
       // Supabase query failed, return cached local data
@@ -176,9 +177,10 @@ export const workDataService = {
     date: string,
     status: DayStatus,
     notes?: string,
-    userId?: string | null
+    userId?: string | null,
+    identity?: StorageIdentity
   ): Promise<CalendarDayInfo> {
-    const existing = localCache.getCalendarDays()[date];
+    const existing = localCache.getCalendarDays(identity)[date];
     const isConfirmed = status === 'idea_smart' ? false : (existing?.isConfirmed ?? true);
     const resolvedNotes = notes !== undefined ? notes : existing?.notes;
 
@@ -189,7 +191,7 @@ export const workDataService = {
       isConfirmed,
     };
 
-    localCache.saveCalendarDay(date, dayInfo);
+    localCache.saveCalendarDay(date, dayInfo, identity);
 
     if (userId) {
       const client = getSupabaseClient();
@@ -218,16 +220,17 @@ export const workDataService = {
   async saveTimeEntry(
     date: string,
     entry: Partial<StoredTimeEntry>,
-    userId?: string | null
+    userId?: string | null,
+    identity?: StorageIdentity
   ): Promise<{
     timeEntry: StoredTimeEntry;
     syncedDay?: CalendarDayInfo;
   }> {
-    const existingEntries = localCache.getTimeEntries();
+    const existingEntries = localCache.getTimeEntries(identity);
     const currentEntry: StoredTimeEntry = existingEntries[date] ?? { date };
     const mergedEntry: StoredTimeEntry = { ...currentEntry, ...entry, date };
 
-    localCache.saveTimeEntry(date, mergedEntry);
+    localCache.saveTimeEntry(date, mergedEntry, identity);
 
     // Auto-sync status with calendar day
     let syncedDay: CalendarDayInfo | undefined;
@@ -235,13 +238,13 @@ export const workDataService = {
     const hasPunches = Boolean(mergedEntry.morningIn || mergedEntry.eveningOut);
 
     if (isSmart) {
-      syncedDay = await this.saveDayStatus(date, 'smart', undefined, userId);
+      syncedDay = await this.saveDayStatus(date, 'smart', undefined, userId, identity);
       syncedDay.isConfirmed = true;
-      localCache.saveCalendarDay(date, syncedDay);
+      localCache.saveCalendarDay(date, syncedDay, identity);
     } else if (hasPunches) {
-      syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId);
+      syncedDay = await this.saveDayStatus(date, 'presenza', undefined, userId, identity);
       syncedDay.isConfirmed = true;
-      localCache.saveCalendarDay(date, syncedDay);
+      localCache.saveCalendarDay(date, syncedDay, identity);
     }
 
     if (userId) {
@@ -272,8 +275,12 @@ export const workDataService = {
     return { timeEntry: mergedEntry, syncedDay };
   },
 
-  async saveSettings(settings: Partial<AppSettings>, userId?: string | null): Promise<AppSettings> {
-    const merged = localCache.saveSettings(settings);
+  async saveSettings(
+    settings: Partial<AppSettings>,
+    userId?: string | null,
+    identity?: StorageIdentity
+  ): Promise<AppSettings> {
+    const merged = localCache.saveSettings(settings, identity);
 
     if (userId) {
       const client = getSupabaseClient();
@@ -305,8 +312,12 @@ export const workDataService = {
   async syncAllData(
     days: Record<string, CalendarDayInfo>,
     timeEntries: Record<string, StoredTimeEntry>,
-    userId?: string | null
+    userId?: string | null,
+    identity?: StorageIdentity
   ): Promise<void> {
+    localCache.saveCalendarDays(days, identity);
+    localCache.saveTimeEntries(timeEntries, identity);
+
     if (!userId) return;
     const client = getSupabaseClient();
     if (!client) return;

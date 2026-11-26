@@ -1,6 +1,6 @@
 /**
  * Local Storage Cache for WorkOrganization
- * Provides persistent offline storage and fallback when Supabase is not connected.
+ * Provides persistent offline storage, multi-account isolation, and fallback when Supabase is not connected.
  */
 
 export interface AppSettings {
@@ -46,32 +46,92 @@ export interface SupabaseConfig {
   anonKey: string;
 }
 
-const STORAGE_KEYS = {
+export type StorageScopeType = 'guest' | 'cloud' | 'legacy';
+
+export interface StorageIdentity {
+  scope: StorageScopeType;
+  userId?: string;
+  projectRef?: string;
+}
+
+export type PersistenceStatus = 'persisted' | 'memory-only' | 'error';
+
+export function extractProjectRef(url?: string | null): string {
+  if (!url) return 'default';
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname;
+    const parts = host.split('.');
+    if (parts.length >= 3 && parts[1] === 'supabase' && parts[2] === 'co') {
+      return parts[0];
+    }
+    return host.replace(/[^a-zA-Z0-9_-]/g, '_');
+  } catch {
+    return String(url).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 32);
+  }
+}
+
+// Global / client-level keys (independent of user account identity)
+const GLOBAL_KEYS = {
+  SUPABASE_CONFIG: 'workorganizer_supabase_config',
+} as const;
+
+// Unowned legacy keys (pre-v0.7.1)
+const LEGACY_KEYS = {
   SETTINGS: 'workorganizer_settings',
   CALENDAR_DAYS: 'workorganizer_calendar_days',
   TIME_ENTRIES: 'workorganizer_time_entries',
-  SUPABASE_CONFIG: 'workorganizer_supabase_config',
 } as const;
+
+const memoryStore = new Map<string, string>();
+let currentPersistenceStatus: PersistenceStatus = 'persisted';
+let activeIdentity: StorageIdentity = { scope: 'guest' };
+
+function computeKeyPrefix(identity: StorageIdentity): string {
+  if (identity.scope === 'cloud' && identity.userId) {
+    const proj = identity.projectRef ? identity.projectRef.replace(/[^a-zA-Z0-9_-]/g, '_') : 'default';
+    const user = identity.userId.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return `wo_cloud_${proj}_${user}_`;
+  }
+  if (identity.scope === 'guest') {
+    return 'wo_guest_';
+  }
+  return 'workorganizer_';
+}
+
+function getScopedKey(baseSuffix: string, identity?: StorageIdentity): string {
+  const target = identity || activeIdentity;
+  return computeKeyPrefix(target) + baseSuffix;
+}
 
 function safeGetItem(key: string): string | null {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
-      return window.localStorage.getItem(key);
+      const val = window.localStorage.getItem(key);
+      if (val !== null) return val;
+      // If localStorage is functioning and key was explicitly null, return null unless memory-only
+      if (currentPersistenceStatus !== 'memory-only') {
+        return null;
+      }
     }
   } catch {
-    // LocalStorage unavailable or access denied
+    // LocalStorage unavailable
   }
-  return null;
+  return memoryStore.get(key) ?? null;
 }
 
 function safeSetItem(key: string, value: string): void {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.setItem(key, value);
+      memoryStore.set(key, value);
+      currentPersistenceStatus = 'persisted';
+      return;
     }
   } catch {
-    // LocalStorage quota exceeded or unavailable
+    currentPersistenceStatus = 'memory-only';
   }
+  memoryStore.set(key, value);
 }
 
 function safeRemoveItem(key: string): void {
@@ -82,11 +142,35 @@ function safeRemoveItem(key: string): void {
   } catch {
     // LocalStorage access denied
   }
+  memoryStore.delete(key);
 }
 
 export const localCache = {
-  getSettings(): AppSettings {
-    const raw = safeGetItem(STORAGE_KEYS.SETTINGS);
+  setActiveIdentity(identity: StorageIdentity): void {
+    activeIdentity = { ...identity };
+  },
+
+  getActiveIdentity(): StorageIdentity {
+    return { ...activeIdentity };
+  },
+
+  getPersistenceStatus(): PersistenceStatus {
+    return currentPersistenceStatus;
+  },
+
+  resetForTesting(): void {
+    memoryStore.clear();
+    currentPersistenceStatus = 'persisted';
+    activeIdentity = { scope: 'guest' };
+  },
+
+  getSettings(identity?: StorageIdentity): AppSettings {
+    const target = identity || activeIdentity;
+    const scopedKey = getScopedKey('settings', target);
+    let raw = safeGetItem(scopedKey);
+    if (!raw && target.scope === 'guest') {
+      raw = safeGetItem(LEGACY_KEYS.SETTINGS);
+    }
     if (!raw) return { ...DEFAULT_SETTINGS };
 
     try {
@@ -104,15 +188,21 @@ export const localCache = {
     return { ...DEFAULT_SETTINGS };
   },
 
-  saveSettings(settings: Partial<AppSettings>): AppSettings {
-    const current = this.getSettings();
+  saveSettings(settings: Partial<AppSettings>, identity?: StorageIdentity): AppSettings {
+    const key = getScopedKey('settings', identity);
+    const current = this.getSettings(identity);
     const merged: AppSettings = { ...current, ...settings };
-    safeSetItem(STORAGE_KEYS.SETTINGS, JSON.stringify(merged));
+    safeSetItem(key, JSON.stringify(merged));
     return merged;
   },
 
-  getCalendarDays(): Record<string, any> {
-    const raw = safeGetItem(STORAGE_KEYS.CALENDAR_DAYS);
+  getCalendarDays(identity?: StorageIdentity): Record<string, any> {
+    const target = identity || activeIdentity;
+    const scopedKey = getScopedKey('calendar_days', target);
+    let raw = safeGetItem(scopedKey);
+    if (!raw && target.scope === 'guest') {
+      raw = safeGetItem(LEGACY_KEYS.CALENDAR_DAYS);
+    }
     if (!raw) return {};
 
     try {
@@ -126,20 +216,27 @@ export const localCache = {
     return {};
   },
 
-  saveCalendarDay(date: string, data: any): void {
-    const days = this.getCalendarDays();
+  saveCalendarDay(date: string, data: any, identity?: StorageIdentity): void {
+    const key = getScopedKey('calendar_days', identity);
+    const days = this.getCalendarDays(identity);
     days[date] = data;
-    safeSetItem(STORAGE_KEYS.CALENDAR_DAYS, JSON.stringify(days));
+    safeSetItem(key, JSON.stringify(days));
   },
 
-  saveCalendarDays(daysMap: Record<string, any>): void {
-    const current = this.getCalendarDays();
+  saveCalendarDays(daysMap: Record<string, any>, identity?: StorageIdentity): void {
+    const key = getScopedKey('calendar_days', identity);
+    const current = this.getCalendarDays(identity);
     const updated = { ...current, ...daysMap };
-    safeSetItem(STORAGE_KEYS.CALENDAR_DAYS, JSON.stringify(updated));
+    safeSetItem(key, JSON.stringify(updated));
   },
 
-  getTimeEntries(): Record<string, any> {
-    const raw = safeGetItem(STORAGE_KEYS.TIME_ENTRIES);
+  getTimeEntries(identity?: StorageIdentity): Record<string, any> {
+    const target = identity || activeIdentity;
+    const scopedKey = getScopedKey('time_entries', target);
+    let raw = safeGetItem(scopedKey);
+    if (!raw && target.scope === 'guest') {
+      raw = safeGetItem(LEGACY_KEYS.TIME_ENTRIES);
+    }
     if (!raw) return {};
 
     try {
@@ -153,20 +250,22 @@ export const localCache = {
     return {};
   },
 
-  saveTimeEntry(date: string, entry: any): void {
-    const entries = this.getTimeEntries();
+  saveTimeEntry(date: string, entry: any, identity?: StorageIdentity): void {
+    const key = getScopedKey('time_entries', identity);
+    const entries = this.getTimeEntries(identity);
     entries[date] = entry;
-    safeSetItem(STORAGE_KEYS.TIME_ENTRIES, JSON.stringify(entries));
+    safeSetItem(key, JSON.stringify(entries));
   },
 
-  saveTimeEntries(entriesMap: Record<string, any>): void {
-    const current = this.getTimeEntries();
+  saveTimeEntries(entriesMap: Record<string, any>, identity?: StorageIdentity): void {
+    const key = getScopedKey('time_entries', identity);
+    const current = this.getTimeEntries(identity);
     const updated = { ...current, ...entriesMap };
-    safeSetItem(STORAGE_KEYS.TIME_ENTRIES, JSON.stringify(updated));
+    safeSetItem(key, JSON.stringify(updated));
   },
 
   getSupabaseConfig(): SupabaseConfig | null {
-    const raw = safeGetItem(STORAGE_KEYS.SUPABASE_CONFIG);
+    const raw = safeGetItem(GLOBAL_KEYS.SUPABASE_CONFIG);
     if (!raw) return null;
 
     try {
@@ -192,25 +291,93 @@ export const localCache = {
 
   saveSupabaseConfig(config: SupabaseConfig | null): void {
     if (!config) {
-      safeRemoveItem(STORAGE_KEYS.SUPABASE_CONFIG);
+      safeRemoveItem(GLOBAL_KEYS.SUPABASE_CONFIG);
     } else {
-      safeSetItem(STORAGE_KEYS.SUPABASE_CONFIG, JSON.stringify(config));
+      safeSetItem(GLOBAL_KEYS.SUPABASE_CONFIG, JSON.stringify(config));
     }
   },
 
-  /**
-   * Clears only user-specific data (calendar days and time punches),
-   * preserving application settings and Supabase configuration.
-   */
-  clearUserData(): void {
-    safeRemoveItem(STORAGE_KEYS.CALENDAR_DAYS);
-    safeRemoveItem(STORAGE_KEYS.TIME_ENTRIES);
+  // --- Legacy Unowned Cache Migration & Explicit Recovery ---
+  hasLegacyUnclaimedData(): boolean {
+    const rawDays = safeGetItem(LEGACY_KEYS.CALENDAR_DAYS);
+    const rawEntries = safeGetItem(LEGACY_KEYS.TIME_ENTRIES);
+    const rawSettings = safeGetItem(LEGACY_KEYS.SETTINGS);
+    return Boolean(
+      (rawDays && rawDays !== '{}') ||
+      (rawEntries && rawEntries !== '{}') ||
+      rawSettings
+    );
   },
 
-  clearAll(): void {
-    safeRemoveItem(STORAGE_KEYS.SETTINGS);
-    safeRemoveItem(STORAGE_KEYS.CALENDAR_DAYS);
-    safeRemoveItem(STORAGE_KEYS.TIME_ENTRIES);
-    safeRemoveItem(STORAGE_KEYS.SUPABASE_CONFIG);
+  getLegacyUnclaimedData(): {
+    days: Record<string, any>;
+    timeEntries: Record<string, any>;
+    settings: AppSettings;
+  } {
+    let days: Record<string, any> = {};
+    let timeEntries: Record<string, any> = {};
+    let settings: AppSettings = { ...DEFAULT_SETTINGS };
+
+    const rawDays = safeGetItem(LEGACY_KEYS.CALENDAR_DAYS);
+    if (rawDays) {
+      try { days = JSON.parse(rawDays) || {}; } catch {}
+    }
+    const rawEntries = safeGetItem(LEGACY_KEYS.TIME_ENTRIES);
+    if (rawEntries) {
+      try { timeEntries = JSON.parse(rawEntries) || {}; } catch {}
+    }
+    const rawSettings = safeGetItem(LEGACY_KEYS.SETTINGS);
+    if (rawSettings) {
+      try { settings = { ...DEFAULT_SETTINGS, ...JSON.parse(rawSettings) }; } catch {}
+    }
+
+    return { days, timeEntries, settings };
+  },
+
+  importLegacyDataToActiveIdentity(): void {
+    const legacy = this.getLegacyUnclaimedData();
+    if (Object.keys(legacy.days).length > 0) {
+      this.saveCalendarDays(legacy.days);
+    }
+    if (Object.keys(legacy.timeEntries).length > 0) {
+      this.saveTimeEntries(legacy.timeEntries);
+    }
+    this.saveSettings(legacy.settings);
+  },
+
+  migrateLegacyDataToGuest(): void {
+    // If guest has no data yet, populate guest with legacy data
+    const guestDays = this.getCalendarDays({ scope: 'guest' });
+    if (Object.keys(guestDays).length === 0 && this.hasLegacyUnclaimedData()) {
+      const legacy = this.getLegacyUnclaimedData();
+      this.saveCalendarDays(legacy.days, { scope: 'guest' });
+      this.saveTimeEntries(legacy.timeEntries, { scope: 'guest' });
+      this.saveSettings(legacy.settings, { scope: 'guest' });
+    }
+  },
+
+  clearLegacyUnclaimedData(): void {
+    safeRemoveItem(LEGACY_KEYS.SETTINGS);
+    safeRemoveItem(LEGACY_KEYS.CALENDAR_DAYS);
+    safeRemoveItem(LEGACY_KEYS.TIME_ENTRIES);
+  },
+
+  /**
+   * Clears only user-specific data (calendar days and time punches) for the active identity,
+   * preserving application settings and Supabase configuration.
+   */
+  clearUserData(identity?: StorageIdentity): void {
+    safeRemoveItem(getScopedKey('calendar_days', identity));
+    safeRemoveItem(getScopedKey('time_entries', identity));
+  },
+
+  clearAll(identity?: StorageIdentity): void {
+    safeRemoveItem(getScopedKey('settings', identity));
+    safeRemoveItem(getScopedKey('calendar_days', identity));
+    safeRemoveItem(getScopedKey('time_entries', identity));
+    safeRemoveItem(GLOBAL_KEYS.SUPABASE_CONFIG);
+    this.clearLegacyUnclaimedData();
+    memoryStore.clear();
+    currentPersistenceStatus = 'persisted';
   },
 };

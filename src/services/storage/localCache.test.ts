@@ -4,6 +4,7 @@ import { localCache, DEFAULT_SETTINGS } from './localCache';
 describe('localCache Service', () => {
   beforeEach(() => {
     localStorage.clear();
+    localCache.resetForTesting();
   });
 
   describe('Settings', () => {
@@ -187,6 +188,93 @@ describe('localCache Service', () => {
       expect(localCache.getCalendarDays()).toEqual({});
       expect(localCache.getTimeEntries()).toEqual({});
       expect(localCache.getSupabaseConfig()).toEqual({ url: 'https://test.supabase.co', anonKey: 'k' });
+    });
+  });
+
+  describe('P1.1 Identity Scoping & Account Isolation', () => {
+    it('isolates calendar days, time entries, and settings between Guest, User A, and User B', () => {
+      // 1. Guest scope
+      localCache.setActiveIdentity({ scope: 'guest' });
+      localCache.saveCalendarDay('2026-11-01', { status: 'presenza', notes: 'Guest note' });
+      localCache.saveTimeEntry('2026-11-01', { morningIn: '09:00' });
+      localCache.saveSettings({ yearlyFerieHours: 120 });
+
+      expect(localCache.getCalendarDays()['2026-11-01']?.notes).toBe('Guest note');
+      expect(localCache.getSettings().yearlyFerieHours).toBe(120);
+
+      // 2. Switch to User A on Project X
+      localCache.setActiveIdentity({ scope: 'cloud', userId: 'user-a', projectRef: 'proj-x' });
+      expect(localCache.getCalendarDays()['2026-11-01']).toBeUndefined();
+      expect(localCache.getTimeEntries()['2026-11-01']).toBeUndefined();
+      expect(localCache.getSettings().yearlyFerieHours).toBe(DEFAULT_SETTINGS.yearlyFerieHours);
+
+      localCache.saveCalendarDay('2026-11-01', { status: 'smart', notes: 'User A note' });
+      localCache.saveSettings({ yearlyFerieHours: 180 });
+
+      // 3. Switch to User B on Project X
+      localCache.setActiveIdentity({ scope: 'cloud', userId: 'user-b', projectRef: 'proj-x' });
+      expect(localCache.getCalendarDays()['2026-11-01']).toBeUndefined();
+      expect(localCache.getSettings().yearlyFerieHours).toBe(DEFAULT_SETTINGS.yearlyFerieHours);
+
+      localCache.saveCalendarDay('2026-11-01', { status: 'ferie', notes: 'User B note' });
+
+      // 4. Switch to User A on Project Y (different Supabase project)
+      localCache.setActiveIdentity({ scope: 'cloud', userId: 'user-a', projectRef: 'proj-y' });
+      expect(localCache.getCalendarDays()['2026-11-01']).toBeUndefined();
+
+      // 5. Verify User A on Project X retained their isolated data
+      localCache.setActiveIdentity({ scope: 'cloud', userId: 'user-a', projectRef: 'proj-x' });
+      expect(localCache.getCalendarDays()['2026-11-01']?.notes).toBe('User A note');
+      expect(localCache.getCalendarDays()['2026-11-01']?.status).toBe('smart');
+      expect(localCache.getSettings().yearlyFerieHours).toBe(180);
+
+      // 6. Verify Guest retained their isolated data
+      localCache.setActiveIdentity({ scope: 'guest' });
+      expect(localCache.getCalendarDays()['2026-11-01']?.notes).toBe('Guest note');
+      expect(localCache.getSettings().yearlyFerieHours).toBe(120);
+    });
+
+    it('preserves legacy unowned cache and requires explicit import to attribute to a cloud account', () => {
+      // Simulate existing legacy data in unowned keys
+      localStorage.setItem(
+        'workorganizer_calendar_days',
+        JSON.stringify({ '2026-10-01': { date: '2026-10-01', status: 'presenza', notes: 'Legacy day' } })
+      );
+      localStorage.setItem(
+        'workorganizer_time_entries',
+        JSON.stringify({ '2026-10-01': { date: '2026-10-01', morningIn: '08:00' } })
+      );
+
+      expect(localCache.hasLegacyUnclaimedData()).toBe(true);
+
+      // User A logs into cloud: cloud scope MUST NOT automatically inherit legacy unowned data
+      localCache.setActiveIdentity({ scope: 'cloud', userId: 'user-cloud-1', projectRef: 'proj-1' });
+      expect(localCache.getCalendarDays()['2026-10-01']).toBeUndefined();
+
+      // Explicit import is required to attribute legacy data to active identity
+      localCache.importLegacyDataToActiveIdentity();
+      expect(localCache.getCalendarDays()['2026-10-01']?.notes).toBe('Legacy day');
+      expect(localCache.getTimeEntries()['2026-10-01']?.morningIn).toBe('08:00');
+    });
+
+    it('falls back to memory-only storage when localStorage throws QuotaExceededError and reports persistence status', () => {
+      localCache.setActiveIdentity({ scope: 'guest' });
+
+      // Spy on setItem to simulate storage full error
+      const originalSetItem = localStorage.setItem;
+      localStorage.setItem = () => {
+        throw new Error('QuotaExceededError: DOMException quota exceeded');
+      };
+
+      try {
+        localCache.saveCalendarDay('2026-11-10', { status: 'smart', notes: 'Memory-only test' });
+
+        // Must still be accessible from memory fallback
+        expect(localCache.getCalendarDays()['2026-11-10']?.notes).toBe('Memory-only test');
+        expect(localCache.getPersistenceStatus()).toBe('memory-only');
+      } finally {
+        localStorage.setItem = originalSetItem;
+      }
     });
   });
 });

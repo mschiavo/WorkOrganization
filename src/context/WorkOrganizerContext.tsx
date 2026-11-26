@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
-import { useAuth } from '../services/supabase/authContext';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { useAuth, GUEST_USER } from '../services/supabase/authContext';
 import {
   workDataService,
   StoredTimeEntry,
@@ -24,7 +24,7 @@ import {
   LeaveBalanceSummary,
   calculateAnnualLeaveBalance,
 } from '../core/domain/leaveManager';
-import { AppSettings, localCache } from '../services/storage/localCache';
+import { AppSettings, localCache, StorageIdentity, extractProjectRef } from '../services/storage/localCache';
 
 export interface WorkOrganizerContextType {
   currentYear: number;
@@ -67,46 +67,76 @@ export const WorkOrganizerProvider: React.FC<{
   initialYear?: number;
   initialMonth?: number;
 }> = ({ children, initialYear, initialMonth }) => {
-  const { user } = useAuth();
+  const { user, isGuest, activeIdentity: authIdentity } = useAuth();
   const today = new Date();
 
   const [currentYear, setCurrentYear] = useState<number>(initialYear ?? today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState<number>(initialMonth ?? today.getMonth() + 1);
   const [selectedDate, setSelectedDate] = useState<string>(getTodayString());
 
-  const [days, setDays] = useState<Record<string, CalendarDayInfo>>({});
-  const [timeEntries, setTimeEntries] = useState<Record<string, StoredTimeEntry>>({});
-  const [settings, setSettings] = useState<AppSettings>(() => localCache.getSettings());
+  // Determine active storage identity
+  const activeIdentity: StorageIdentity = useMemo(() => {
+    if (authIdentity) return authIdentity;
+    if (user && !isGuest && user.id !== GUEST_USER.id) {
+      const config = localCache.getSupabaseConfig();
+      const projectRef = extractProjectRef(config?.url || (import.meta.env.VITE_SUPABASE_URL as string));
+      return { scope: 'cloud', userId: user.id, projectRef };
+    }
+    return { scope: 'guest' };
+  }, [authIdentity, user, isGuest]);
+
+  // Synchronous initial state from the active identity's storage
+  const [days, setDays] = useState<Record<string, CalendarDayInfo>>(() => localCache.getCalendarDays(activeIdentity));
+  const [timeEntries, setTimeEntries] = useState<Record<string, StoredTimeEntry>>(() => localCache.getTimeEntries(activeIdentity));
+  const [settings, setSettings] = useState<AppSettings>(() => localCache.getSettings(activeIdentity));
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Load user settings on mount or when auth user changes
+  // Invalidation token for dropping obsolete in-flight asynchronous responses across identity switches
+  const sessionTokenRef = useRef<number>(0);
+
+  // Identity and year synchronization
   useEffect(() => {
-    workDataService.loadSettings(user?.id).then((loadedSettings) => {
-      setSettings(loadedSettings);
+    sessionTokenRef.current += 1;
+    const currentSession = sessionTokenRef.current;
+
+    // 1. Immediately reset state to the active identity's cache
+    localCache.setActiveIdentity(activeIdentity);
+    setDays(localCache.getCalendarDays(activeIdentity));
+    setTimeEntries(localCache.getTimeEntries(activeIdentity));
+    setSettings(localCache.getSettings(activeIdentity));
+
+    // 2. Load settings for the active identity
+    workDataService.loadSettings(activeIdentity.userId, activeIdentity).then((loadedSettings) => {
+      if (sessionTokenRef.current === currentSession) {
+        setSettings(loadedSettings);
+      }
     });
-  }, [user?.id]);
 
-  // Load calendar days & time entries for the current year
-  const loadData = useCallback(async () => {
+    // 3. Load year data for the active identity
     setLoading(true);
-    try {
-      const data = await workDataService.loadMonthData(currentYear, currentMonth, user?.id);
-      setDays((prev) => ({ ...prev, ...data.days }));
-      setTimeEntries((prev) => ({ ...prev, ...data.timeEntries }));
-    } finally {
-      setLoading(false);
-    }
-  }, [currentYear, user?.id]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+    workDataService
+      .loadMonthData(currentYear, currentMonth, activeIdentity.userId, activeIdentity)
+      .then((data) => {
+        if (sessionTokenRef.current === currentSession) {
+          setDays(data.days);
+          setTimeEntries(data.timeEntries);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (sessionTokenRef.current === currentSession) {
+          setLoading(false);
+        }
+      });
+  }, [activeIdentity.scope, activeIdentity.userId, activeIdentity.projectRef, currentYear, currentMonth]);
 
   const refreshData = useCallback(async () => {
-    const s = await workDataService.loadSettings(user?.id);
+    const s = await workDataService.loadSettings(activeIdentity.userId, activeIdentity);
     setSettings(s);
-    await loadData();
-  }, [loadData, user?.id]);
+    const data = await workDataService.loadMonthData(currentYear, currentMonth, activeIdentity.userId, activeIdentity);
+    setDays(data.days);
+    setTimeEntries(data.timeEntries);
+  }, [activeIdentity, currentYear, currentMonth]);
 
   const setMonth = useCallback((year: number, month: number) => {
     setCurrentYear(year);
@@ -142,29 +172,29 @@ export const WorkOrganizerProvider: React.FC<{
 
   const updateDayStatus = useCallback(
     async (date: string, status: DayStatus, notes?: string) => {
-      const updatedDay = await workDataService.saveDayStatus(date, status, notes, user?.id);
+      const updatedDay = await workDataService.saveDayStatus(date, status, notes, activeIdentity.userId, activeIdentity);
       setDays((prev) => ({ ...prev, [date]: updatedDay }));
     },
-    [user?.id]
+    [activeIdentity]
   );
 
   const updateTimeEntry = useCallback(
     async (date: string, entry: Partial<StoredTimeEntry>) => {
-      const result = await workDataService.saveTimeEntry(date, entry, user?.id);
+      const result = await workDataService.saveTimeEntry(date, entry, activeIdentity.userId, activeIdentity);
       setTimeEntries((prev) => ({ ...prev, [date]: result.timeEntry }));
       if (result.syncedDay) {
         setDays((prev) => ({ ...prev, [date]: result.syncedDay! }));
       }
     },
-    [user?.id]
+    [activeIdentity]
   );
 
   const updateSettings = useCallback(
     async (newSettings: Partial<AppSettings>) => {
-      const merged = await workDataService.saveSettings(newSettings, user?.id);
+      const merged = await workDataService.saveSettings(newSettings, activeIdentity.userId, activeIdentity);
       setSettings(merged);
     },
-    [user?.id]
+    [activeIdentity]
   );
 
   // Computed: Month Policy Validation
